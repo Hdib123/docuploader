@@ -1,327 +1,402 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MIGC — Centre de Documents</title>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --gold:       #B8890A;
-            --gold-dk:    #8B6A06;
-            --gold-deep:  #5C4604;
-            --gold-lt:    #D4A828;
-            --gold-pale:  #F5EDD8;
-            --gold-blush: #FCF8EE;
-            --charcoal:   #1B1B18;
-            --ink:        #2A2A26;
-            --slate:      #5A5A54;
-            --silver:     #8A8A82;
-            --mist:       #C4C3BC;
-            --cream:      #EDECEA;
-            --ivory:      #F7F6F2;
-            --white:      #FDFCF8;
-            --serif:      'DM Serif Display', Georgia, serif;
-            --sans:       'DM Sans', 'Helvetica Neue', sans-serif;
-            --mono:       'JetBrains Mono', monospace;
-        }
-        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-        html { scroll-behavior:smooth; }
-        body {
-            font-family: var(--sans);
-            background: var(--charcoal);
-            color: var(--ivory);
-            min-height: 100vh;
-            -webkit-font-smoothing: antialiased;
-            overflow-x: hidden;
-            font-size: 14px;
-            line-height: 1.65;
-        }
-        .grid-overlay {
-            position:fixed; inset:0; z-index:0; opacity:0.025; pointer-events:none;
-            background-image:
-                linear-gradient(rgba(184,137,10,0.8) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(184,137,10,0.8) 1px, transparent 1px);
-            background-size:56px 56px;
-        }
-        .blob { position:fixed; border-radius:50%; filter:blur(120px); pointer-events:none; z-index:0; animation:blobDrift 22s ease-in-out infinite alternate; }
-        .blob-1 { width:550px; height:550px; top:-18%; left:-12%; background:rgba(184,137,10,0.07); }
-        .blob-2 { width:450px; height:450px; bottom:-12%; right:-10%; background:rgba(212,168,40,0.05); animation-delay:-8s; animation-direction:alternate-reverse; }
-        .blob-3 { width:300px; height:300px; top:45%; left:55%; background:rgba(139,106,6,0.04); animation-delay:-14s; }
-        @keyframes blobDrift {
-            0%   { transform:translate(0,0) scale(1); }
-            50%  { transform:translate(30px,-25px) scale(1.06); }
-            100% { transform:translate(-15px,15px) scale(0.96); }
-        }
-        header { position:relative; z-index:1; padding:4.5rem 2rem 1rem; text-align:center; background:transparent; }
-        .header-shield { margin-bottom:1.2rem; animation:fadeInDown 0.6s ease both; }
-        header .badge {
-            display:inline-flex; align-items:center; gap:0.45rem;
-            font-size:0.62rem; font-weight:600; text-transform:uppercase; letter-spacing:0.16em;
-            color:var(--gold); border:1px solid rgba(184,137,10,0.25);
-            padding:0.32rem 0.95rem; border-radius:100px; margin-bottom:1.4rem;
-            background:rgba(184,137,10,0.06); animation:fadeInDown 0.6s 0.05s ease both;
-            font-family:var(--sans);
-        }
-        .badge .pulse-dot { width:6px; height:6px; border-radius:50%; background:var(--gold); animation:pulse 2.5s ease-in-out infinite; }
-        @keyframes pulse {
-            0%,100% { opacity:1; box-shadow:0 0 0 0 rgba(184,137,10,0.4); }
-            50% { opacity:0.5; box-shadow:0 0 0 6px rgba(184,137,10,0); }
-        }
-        header h1 {
-            font-family:var(--serif); font-size:2.8rem; font-weight:400; letter-spacing:0.04em;
-            margin-bottom:0.6rem;
-            background:linear-gradient(135deg, var(--ivory) 0%, var(--gold-pale) 35%, var(--gold) 100%);
-            -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-            animation:fadeInDown 0.6s 0.1s ease both;
-        }
-        header p { font-size:0.95rem; color:var(--silver); font-weight:400; max-width:480px; margin:0 auto; line-height:1.7; animation:fadeInDown 0.6s 0.2s ease both; }
-        .stats { display:flex; justify-content:center; gap:3rem; margin-top:2.2rem; margin-bottom:0.5rem; animation:fadeInDown 0.6s 0.3s ease both; }
-        .stat { text-align:center; }
-        .stat-value { font-family:var(--serif); font-size:1.7rem; font-weight:400; color:var(--ivory); line-height:1; }
-        .stat-label { font-size:0.62rem; color:var(--silver); text-transform:uppercase; letter-spacing:0.14em; margin-top:0.35rem; font-weight:500; }
-        .stat-sep { width:1px; background:rgba(184,137,10,0.15); align-self:stretch; }
-        .toolbar { position:relative; z-index:1; max-width:1060px; margin:1.5rem auto 0; padding:0 1.25rem; display:flex; flex-direction:column; gap:1rem; animation:fadeInDown 0.6s 0.35s ease both; }
-        .search-wrap { position:relative; max-width:400px; width:100%; margin:0 auto; }
-        .search-wrap svg { position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--silver); pointer-events:none; width:15px; height:15px; opacity:0.5; }
-        .search-input {
-            width:100%; padding:0.6rem 0.9rem 0.6rem 2.4rem;
-            background:rgba(255,255,255,0.04); border:1px solid rgba(184,137,10,0.12);
-            border-radius:10px; color:var(--ivory); font-family:var(--sans); font-size:0.85rem;
-            outline:none; transition:border-color 0.2s, background 0.2s, box-shadow 0.2s;
-        }
-        .search-input::placeholder { color:var(--slate); }
-        .search-input:focus { border-color:rgba(184,137,10,0.4); background:rgba(255,255,255,0.06); box-shadow:0 0 0 3px rgba(184,137,10,0.08); }
-        .search-clear { position:absolute; right:10px; top:50%; transform:translateY(-50%); background:rgba(255,255,255,0.08); border:none; border-radius:50%; width:20px; height:20px; color:var(--mist); font-size:12px; cursor:pointer; display:none; align-items:center; justify-content:center; line-height:1; }
-        .search-clear.visible { display:flex; }
-        .search-kbd { position:absolute; right:12px; top:50%; transform:translateY(-50%); font-size:0.62rem; font-family:var(--mono); color:var(--slate); border:1px solid rgba(184,137,10,0.12); border-radius:4px; padding:0.12rem 0.38rem; pointer-events:none; transition:opacity 0.2s; }
-        .filters { display:flex; justify-content:center; flex-wrap:wrap; gap:0.4rem; }
-        .filter-btn { font-family:var(--sans); font-size:0.7rem; font-weight:500; padding:0.32rem 0.8rem; border-radius:100px; border:1px solid rgba(184,137,10,0.1); background:rgba(184,137,10,0.03); color:var(--silver); cursor:pointer; transition:all 0.2s ease; text-transform:capitalize; letter-spacing:0.02em; }
-        .filter-btn:hover { background:rgba(184,137,10,0.08); color:var(--mist); border-color:rgba(184,137,10,0.2); }
-        .filter-btn.active { background:rgba(184,137,10,0.15); color:var(--gold-lt); border-color:rgba(184,137,10,0.35); }
-        .toolbar-row { display:flex; align-items:center; justify-content:space-between; }
-        .result-count { font-size:0.75rem; color:var(--slate); font-family:var(--sans); }
-        .result-count span { color:var(--gold); font-weight:600; }
-        .view-toggle { display:flex; gap:0.25rem; background:rgba(184,137,10,0.04); border:1px solid rgba(184,137,10,0.1); border-radius:9px; padding:0.18rem; }
-        .view-btn { width:30px; height:30px; display:flex; align-items:center; justify-content:center; border:none; border-radius:7px; background:transparent; color:var(--slate); cursor:pointer; transition:all 0.2s; }
-        .view-btn:hover { color:var(--mist); }
-        .view-btn.active { background:rgba(184,137,10,0.15); color:var(--gold); }
-        .view-btn svg { width:15px; height:15px; }
-        main { position:relative; z-index:1; max-width:1060px; margin:1rem auto 4rem; padding:0 1.25rem; }
-        .grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(310px,1fr)); gap:0.9rem; transition:all 0.3s ease; }
-        .grid.list-view { grid-template-columns:1fr; max-width:680px; margin:0 auto; }
-        .card {
-            background:rgba(42,42,38,0.5); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
-            border-radius:12px; padding:1.4rem 1.5rem 1.3rem; text-decoration:none; color:inherit;
-            display:flex; flex-direction:column; gap:0.5rem;
-            border:1px solid rgba(184,137,10,0.08);
-            transition:transform 0.3s cubic-bezier(.4,0,.2,1), box-shadow 0.3s cubic-bezier(.4,0,.2,1), border-color 0.3s cubic-bezier(.4,0,.2,1), background 0.3s cubic-bezier(.4,0,.2,1), opacity 0.3s ease;
-            position:relative; overflow:hidden; opacity:0; animation:cardIn 0.5s ease forwards;
-        }
-        .card:nth-child(1){animation-delay:0.06s;} .card:nth-child(2){animation-delay:0.12s;} .card:nth-child(3){animation-delay:0.18s;}
-        .card:nth-child(4){animation-delay:0.24s;} .card:nth-child(5){animation-delay:0.30s;} .card:nth-child(6){animation-delay:0.36s;}
-        .card:nth-child(7){animation-delay:0.42s;} .card:nth-child(8){animation-delay:0.48s;} .card:nth-child(9){animation-delay:0.54s;}
-        .card:nth-child(10){animation-delay:0.60s;}
-        @keyframes cardIn { from{opacity:0;transform:translateY(14px);} to{opacity:1;transform:translateY(0);} }
-        .card::after { content:''; position:absolute; left:0; top:18%; bottom:18%; width:2.5px; border-radius:0 2px 2px 0; background:var(--gold); opacity:0; transition:opacity 0.3s ease; }
-        .card::before { content:''; position:absolute; inset:0; border-radius:12px; background:linear-gradient(135deg,rgba(184,137,10,0.04) 0%,transparent 50%); opacity:0; transition:opacity 0.3s ease; pointer-events:none; }
-        .card:hover { transform:translateY(-3px); box-shadow:0 14px 42px rgba(0,0,0,0.35), 0 0 0 1px rgba(184,137,10,0.1), inset 0 1px 0 rgba(255,255,255,0.03); border-color:rgba(184,137,10,0.2); background:rgba(42,42,38,0.7); }
-        .card:hover::before { opacity:1; } .card:hover::after { opacity:1; }
-        .card:focus-visible { outline:2px solid var(--gold); outline-offset:2px; }
-        .card.hidden { display:none; }
-        .card-icon { width:34px; height:34px; border-radius:8px; display:flex; align-items:center; justify-content:center; margin-bottom:0.1rem; flex-shrink:0; background:rgba(184,137,10,0.1); color:var(--gold); }
-        .card-icon svg { width:17px; height:17px; }
-        .card-tag { display:inline-block; font-size:0.58rem; font-weight:600; text-transform:uppercase; letter-spacing:0.1em; padding:0.18rem 0.5rem; border-radius:4px; width:fit-content; font-family:var(--sans); background:rgba(184,137,10,0.1); color:var(--gold-lt); }
-        .card-title { font-family:var(--serif); font-size:1.08rem; font-weight:400; line-height:1.35; color:var(--ivory); letter-spacing:0.005em; }
-        .card-desc { font-size:0.82rem; color:var(--silver); line-height:1.65; }
-        .card-meta { display:flex; align-items:center; justify-content:space-between; margin-top:auto; padding-top:0.55rem; border-top:1px solid rgba(184,137,10,0.06); }
-        .card-arrow { font-size:0.75rem; font-weight:500; color:var(--gold); display:flex; align-items:center; gap:0.35rem; opacity:0; transform:translateX(-5px); transition:opacity 0.3s ease, transform 0.3s ease; font-family:var(--sans); }
-        .card:hover .card-arrow { opacity:1; transform:translateX(0); }
-        .card-version { font-size:0.6rem; color:var(--slate); font-weight:500; letter-spacing:0.06em; font-family:var(--mono); }
-        .empty-state { display:none; flex-direction:column; align-items:center; justify-content:center; padding:4rem 1rem; color:var(--slate); gap:0.6rem; animation:fadeInDown 0.3s ease; }
-        .empty-state.visible { display:flex; }
-        .empty-state svg { width:36px; height:36px; opacity:0.3; }
-        .empty-state p { font-size:0.88rem; }
-        .empty-state .empty-hint { font-size:0.75rem; opacity:0.5; }
-        .scroll-top { position:fixed; bottom:2rem; right:2rem; width:40px; height:40px; border-radius:10px; border:1px solid rgba(184,137,10,0.15); background:rgba(27,27,24,0.9); backdrop-filter:blur(12px); color:var(--gold); display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:100; opacity:0; transform:translateY(12px); transition:opacity 0.3s, transform 0.3s, background 0.2s; pointer-events:none; }
-        .scroll-top.visible { opacity:1; transform:translateY(0); pointer-events:all; }
-        .scroll-top:hover { background:rgba(184,137,10,0.12); border-color:rgba(184,137,10,0.35); }
-        .scroll-top svg { width:16px; height:16px; }
-        footer { position:relative; z-index:1; text-align:center; padding:2rem 1rem 2.5rem; font-size:0.68rem; color:var(--slate); letter-spacing:0.08em; border-top:1px solid rgba(184,137,10,0.08); max-width:1060px; margin:0 auto; font-family:var(--sans); }
-        footer .footer-brand { font-family:var(--serif); font-size:0.85rem; color:var(--silver); letter-spacing:0.05em; margin-bottom:0.3rem; }
-        footer a { color:rgba(184,137,10,0.5); text-decoration:none; } footer a:hover { color:var(--gold); }
-        @keyframes fadeInDown { from{opacity:0;transform:translateY(-10px);} to{opacity:1;transform:translateY(0);} }
-        @media (max-width:680px) {
-            header { padding:3rem 1.25rem 0.5rem; } header h1 { font-size:2rem; } header p { font-size:0.9rem; }
-            .stats { gap:1.5rem; } .stat-value { font-size:1.3rem; } .grid { grid-template-columns:1fr; }
-            .grid.list-view { max-width:100%; } .toolbar-row { flex-direction:column; gap:0.6rem; align-items:stretch; }
-            .view-toggle { align-self:center; } .result-count { text-align:center; }
-            .scroll-top { bottom:1.2rem; right:1.2rem; } .filters { gap:0.3rem; }
-            .header-shield svg { width:52px; height:64px; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MIGC — Centre de Documents</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#B8890A;--gold-dk:#8B6A06;--gold-deep:#5C4604;--gold-lt:#D4A828;
+  --gold-pale:#F5EDD8;--gold-blush:#FCF8EE;
+  --charcoal:#1B1B18;--ink:#2A2A26;--slate:#5A5A54;--silver:#8A8A82;
+  --mist:#C4C3BC;--cream:#EDECEA;--ivory:#F7F6F2;--white:#FDFCF8;
+  --serif:'DM Serif Display',Georgia,serif;
+  --sans:'DM Sans','Helvetica Neue',sans-serif;
+  --mono:'JetBrains Mono',monospace;
+  --r:14px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--charcoal);color:var(--ivory);min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden;font-size:14px;line-height:1.65}
+
+/* ── Background layers ──────────── */
+.grid-bg{position:fixed;inset:0;z-index:0;opacity:.02;pointer-events:none;
+  background-image:linear-gradient(rgba(184,137,10,.7) 1px,transparent 1px),linear-gradient(90deg,rgba(184,137,10,.7) 1px,transparent 1px);
+  background-size:60px 60px}
+.noise{position:fixed;inset:0;z-index:0;opacity:.03;pointer-events:none;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:200px 200px}
+.blob{position:fixed;border-radius:50%;filter:blur(130px);pointer-events:none;z-index:0;animation:drift 24s ease-in-out infinite alternate}
+.blob-1{width:600px;height:600px;top:-20%;left:-14%;background:rgba(184,137,10,.06)}
+.blob-2{width:500px;height:500px;bottom:-14%;right:-12%;background:rgba(212,168,40,.045);animation-delay:-9s;animation-direction:alternate-reverse}
+.blob-3{width:350px;height:350px;top:50%;left:58%;background:rgba(92,70,4,.035);animation-delay:-15s}
+@keyframes drift{0%{transform:translate(0,0) scale(1)}50%{transform:translate(35px,-28px) scale(1.07)}100%{transform:translate(-18px,18px) scale(.95)}}
+
+/* ── Vignette ───────────────────── */
+.vignette{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 70% 60% at 50% 0%,transparent 0%,var(--charcoal) 100%)}
+
+/* ── Header ─────────────────────── */
+header{position:relative;z-index:1;padding:4rem 2rem 0;text-align:center}
+.header-shield{margin-bottom:1rem;animation:fadeUp .7s ease both}
+.header-shield svg{filter:drop-shadow(0 0 24px rgba(184,137,10,.12))}
+header .badge{display:inline-flex;align-items:center;gap:.45rem;font-size:.6rem;font-weight:600;text-transform:uppercase;letter-spacing:.18em;color:var(--gold);border:1px solid rgba(184,137,10,.2);padding:.3rem .9rem;border-radius:100px;margin-bottom:1.2rem;background:rgba(184,137,10,.04);animation:fadeUp .7s .08s ease both;font-family:var(--sans)}
+.badge .pulse-dot{width:5px;height:5px;border-radius:50%;background:var(--gold);box-shadow:0 0 6px rgba(184,137,10,.5);animation:pulse 2.8s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 4px rgba(184,137,10,.5)}50%{opacity:.4;box-shadow:0 0 12px rgba(184,137,10,0)}}
+header h1{font-family:var(--serif);font-size:3rem;font-weight:400;letter-spacing:.035em;margin-bottom:.5rem;color:var(--ivory);animation:fadeUp .7s .12s ease both}
+header h1 em{font-style:normal;background:linear-gradient(135deg,var(--gold-lt),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* Decorative gold rule */
+.header-rule{display:flex;align-items:center;justify-content:center;gap:.7rem;margin:.6rem auto 0;max-width:200px;animation:fadeUp .7s .16s ease both}
+.header-rule .hr-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(184,137,10,.3),transparent)}
+.header-rule .hr-diamond{width:5px;height:5px;background:var(--gold);transform:rotate(45deg);flex-shrink:0;opacity:.6}
+
+header p{font-size:.92rem;color:var(--silver);font-weight:400;max-width:440px;margin:.9rem auto 0;line-height:1.75;animation:fadeUp .7s .2s ease both}
+
+.stats{display:flex;justify-content:center;gap:2.8rem;margin-top:2rem;animation:fadeUp .7s .28s ease both}
+.stat{text-align:center}
+.stat-value{font-family:var(--serif);font-size:1.6rem;font-weight:400;color:var(--ivory);line-height:1}
+.stat-label{font-size:.58rem;color:var(--slate);text-transform:uppercase;letter-spacing:.16em;margin-top:.35rem;font-weight:500}
+.stat-sep{width:1px;background:linear-gradient(180deg,transparent,rgba(184,137,10,.18),transparent);align-self:stretch}
+
+/* ── Toolbar ────────────────────── */
+.toolbar{position:relative;z-index:1;max-width:1080px;margin:2rem auto 0;padding:0 1.5rem;display:flex;flex-direction:column;gap:.9rem;animation:fadeUp .7s .34s ease both}
+.search-wrap{position:relative;max-width:380px;width:100%;margin:0 auto}
+.search-wrap svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--silver);pointer-events:none;width:14px;height:14px;opacity:.45}
+.search-input{width:100%;padding:.55rem .9rem .55rem 2.2rem;background:rgba(255,255,255,.03);border:1px solid rgba(184,137,10,.1);border-radius:8px;color:var(--ivory);font-family:var(--sans);font-size:.82rem;outline:none;transition:all .25s ease}
+.search-input::placeholder{color:var(--slate)}
+.search-input:focus{border-color:rgba(184,137,10,.35);background:rgba(255,255,255,.05);box-shadow:0 0 0 3px rgba(184,137,10,.06),0 4px 16px rgba(0,0,0,.15)}
+.search-clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.06);border:none;border-radius:50%;width:18px;height:18px;color:var(--mist);font-size:11px;cursor:pointer;display:none;align-items:center;justify-content:center;line-height:1}
+.search-clear.visible{display:flex}
+.search-kbd{position:absolute;right:11px;top:50%;transform:translateY(-50%);font-size:.58rem;font-family:var(--mono);color:var(--slate);border:1px solid rgba(184,137,10,.1);border-radius:3px;padding:.1rem .32rem;pointer-events:none;opacity:.6}
+
+.filters{display:flex;justify-content:center;flex-wrap:wrap;gap:.35rem}
+.filter-btn{font-family:var(--sans);font-size:.65rem;font-weight:500;padding:.28rem .72rem;border-radius:100px;border:1px solid rgba(184,137,10,.08);background:transparent;color:var(--slate);cursor:pointer;transition:all .2s ease;text-transform:capitalize;letter-spacing:.02em}
+.filter-btn:hover{background:rgba(184,137,10,.06);color:var(--mist);border-color:rgba(184,137,10,.18)}
+.filter-btn.active{background:rgba(184,137,10,.12);color:var(--gold-lt);border-color:rgba(184,137,10,.3);box-shadow:0 0 10px rgba(184,137,10,.06)}
+
+.toolbar-row{display:flex;align-items:center;justify-content:space-between}
+.result-count{font-size:.72rem;color:var(--slate);font-family:var(--sans)}
+.result-count span{color:var(--gold);font-weight:600}
+.view-toggle{display:flex;gap:.2rem;background:rgba(184,137,10,.03);border:1px solid rgba(184,137,10,.08);border-radius:8px;padding:.15rem}
+.view-btn{width:28px;height:28px;display:flex;align-items:center;justify-content:center;border:none;border-radius:6px;background:transparent;color:var(--slate);cursor:pointer;transition:all .2s}
+.view-btn:hover{color:var(--mist)}
+.view-btn.active{background:rgba(184,137,10,.12);color:var(--gold)}
+.view-btn svg{width:14px;height:14px}
+
+/* ── Section label ──────────────── */
+.section-label{display:flex;align-items:center;gap:.6rem;margin-bottom:.3rem;padding:0 .15rem}
+.section-label span{font-size:.58rem;font-weight:600;text-transform:uppercase;letter-spacing:.18em;color:var(--slate)}
+.section-label::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(184,137,10,.12),transparent 80%)}
+
+/* ── Card Grid ──────────────────── */
+main{position:relative;z-index:1;max-width:1080px;margin:1.2rem auto 4rem;padding:0 1.5rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:1rem;transition:all .3s ease}
+.grid.list-view{grid-template-columns:1fr;max-width:680px;margin:0 auto;gap:.7rem}
+
+/* ── Card ───────────────────────── */
+.card{
+  background:linear-gradient(165deg,rgba(42,42,38,.55) 0%,rgba(27,27,24,.65) 100%);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-radius:var(--r);padding:1.35rem 1.5rem 1.2rem;text-decoration:none;color:inherit;
+  display:flex;flex-direction:column;gap:.45rem;
+  border:1px solid rgba(184,137,10,.06);
+  transition:transform .35s cubic-bezier(.23,1,.32,1),box-shadow .35s ease,border-color .3s ease,background .3s ease;
+  position:relative;overflow:hidden;
+  opacity:0;animation:cardIn .55s ease forwards}
+.card:nth-child(1){animation-delay:.05s}.card:nth-child(2){animation-delay:.1s}.card:nth-child(3){animation-delay:.15s}
+.card:nth-child(4){animation-delay:.2s}.card:nth-child(5){animation-delay:.25s}.card:nth-child(6){animation-delay:.3s}
+.card:nth-child(7){animation-delay:.35s}.card:nth-child(8){animation-delay:.4s}.card:nth-child(9){animation-delay:.45s}
+.card:nth-child(10){animation-delay:.5s}
+@keyframes cardIn{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+/* Top accent bar */
+.card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0;transition:opacity .35s ease,left .35s ease,right .35s ease}
+/* Shine sweep on hover */
+.card::after{content:'';position:absolute;top:-50%;left:-60%;width:40%;height:200%;
+  background:linear-gradient(105deg,transparent 40%,rgba(184,137,10,.04) 45%,rgba(184,137,10,.07) 50%,rgba(184,137,10,.04) 55%,transparent 60%);
+  transform:skewX(-15deg);transition:left .6s ease;pointer-events:none}
+
+.card:hover{transform:translateY(-4px);
+  box-shadow:0 20px 50px rgba(0,0,0,.4),0 0 0 1px rgba(184,137,10,.12),0 0 30px rgba(184,137,10,.04);
+  border-color:rgba(184,137,10,.18);
+  background:linear-gradient(165deg,rgba(42,42,38,.7) 0%,rgba(27,27,24,.8) 100%)}
+.card:hover::before{opacity:1;left:5%;right:5%}
+.card:hover::after{left:120%}
+.card:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.card.hidden{display:none}
+
+/* Card header row */
+.card-header{display:flex;align-items:center;gap:.6rem}
+.card-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  background:rgba(184,137,10,.08);color:var(--gold);border:1px solid rgba(184,137,10,.06);
+  transition:background .3s ease,box-shadow .3s ease}
+.card-icon svg{width:17px;height:17px}
+.card:hover .card-icon{background:rgba(184,137,10,.14);box-shadow:0 0 12px rgba(184,137,10,.08)}
+
+.card-tag{display:inline-block;font-size:.55rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;
+  padding:.14rem .42rem;border-radius:3px;width:fit-content;font-family:var(--sans);
+  background:rgba(184,137,10,.08);color:var(--gold-lt);margin-left:auto}
+
+.card-title{font-family:var(--serif);font-size:1.05rem;font-weight:400;line-height:1.35;color:var(--ivory);letter-spacing:.005em;
+  transition:color .3s ease}
+.card:hover .card-title{color:var(--white)}
+
+.card-desc{font-size:.79rem;color:var(--silver);line-height:1.7}
+.card-meta{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:.5rem;border-top:1px solid rgba(184,137,10,.05)}
+.card-arrow{font-size:.72rem;font-weight:500;color:var(--gold);display:flex;align-items:center;gap:.3rem;
+  opacity:0;transform:translateX(-6px);transition:opacity .3s ease,transform .3s ease;font-family:var(--sans)}
+.card-arrow svg{width:13px;height:13px;transition:transform .2s ease}
+.card:hover .card-arrow{opacity:1;transform:translateX(0)}
+.card:hover .card-arrow svg{transform:translateX(2px)}
+.card-version{font-size:.58rem;color:var(--slate);font-weight:500;letter-spacing:.06em;font-family:var(--mono);
+  background:rgba(184,137,10,.04);padding:.12rem .4rem;border-radius:4px}
+
+/* ── Empty state ────────────────── */
+.empty-state{display:none;flex-direction:column;align-items:center;justify-content:center;padding:4rem 1rem;color:var(--slate);gap:.6rem}
+.empty-state.visible{display:flex;animation:fadeUp .3s ease}
+.empty-state svg{width:36px;height:36px;opacity:.25}
+.empty-state p{font-size:.85rem}
+.empty-state .empty-hint{font-size:.72rem;opacity:.45}
+
+/* ── Scroll-to-top ──────────────── */
+.scroll-top{position:fixed;bottom:2rem;right:2rem;width:38px;height:38px;border-radius:9px;
+  border:1px solid rgba(184,137,10,.12);background:rgba(27,27,24,.92);backdrop-filter:blur(14px);
+  color:var(--gold);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:100;
+  opacity:0;transform:translateY(12px);transition:all .3s ease;pointer-events:none}
+.scroll-top.visible{opacity:1;transform:translateY(0);pointer-events:all}
+.scroll-top:hover{background:rgba(184,137,10,.1);border-color:rgba(184,137,10,.3);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.25)}
+.scroll-top svg{width:15px;height:15px}
+
+/* ── Footer ─────────────────────── */
+footer{position:relative;z-index:1;text-align:center;padding:2.5rem 1rem 3rem;max-width:1080px;margin:0 auto;font-family:var(--sans)}
+.footer-divider{display:flex;align-items:center;justify-content:center;gap:.6rem;margin-bottom:1.2rem}
+.footer-divider .fd-line{width:40px;height:1px;background:linear-gradient(90deg,transparent,rgba(184,137,10,.2))}
+.footer-divider .fd-line:last-child{background:linear-gradient(90deg,rgba(184,137,10,.2),transparent)}
+.footer-divider .fd-shield svg{width:20px;height:24px;opacity:.35}
+footer .footer-brand{font-family:var(--serif);font-size:.8rem;color:var(--silver);letter-spacing:.06em;margin-bottom:.25rem}
+footer .footer-copy{font-size:.62rem;color:var(--slate);letter-spacing:.08em}
+footer a{color:rgba(184,137,10,.45);text-decoration:none}footer a:hover{color:var(--gold)}
+
+/* ── Animations ─────────────────── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── Responsive ─────────────────── */
+@media(max-width:680px){
+  header{padding:2.8rem 1.2rem 0}header h1{font-size:2.1rem}header p{font-size:.88rem}
+  .stats{gap:1.4rem}.stat-value{font-size:1.3rem}.grid{grid-template-columns:1fr}
+  .grid.list-view{max-width:100%}.toolbar-row{flex-direction:column;gap:.5rem;align-items:stretch}
+  .view-toggle{align-self:center}.result-count{text-align:center}
+  .scroll-top{bottom:1rem;right:1rem}.filters{gap:.25rem}
+  .header-shield svg{width:48px;height:60px}.card{padding:1.1rem 1.2rem 1rem}
+}
+</style>
 </head>
 <body>
-<div class="grid-overlay"></div>
+<div class="grid-bg"></div>
+<div class="noise"></div>
+<div class="vignette"></div>
 <div class="blob blob-1"></div>
 <div class="blob blob-2"></div>
 <div class="blob blob-3"></div>
 <header>
-    <div class="header-shield">
-        <svg width="64" height="78" viewBox="0 0 100 122">
-            <path d="M3,3 L97,3 L97,74 Q97,112 50,119 Q3,112 3,74 Z" fill="none" stroke="#B8890A" stroke-width="1.2"/>
-            <path d="M9,9 L91,9 L91,73 Q91,107 50,113 Q9,107 9,73 Z" fill="none" stroke="#B8890A" stroke-width=".4" opacity=".35"/>
-            <line x1="3" y1="32" x2="97" y2="32" stroke="#B8890A" stroke-width=".9" opacity=".5"/>
-            <text x="50" y="25" font-family="'DM Sans',sans-serif" font-size="8" fill="#B8890A" text-anchor="middle" letter-spacing="3.5" font-weight="500">MMA</text>
-            <text x="50" y="72" font-family="'DM Serif Display',Georgia,serif" font-size="30" fill="#F7F6F2" text-anchor="middle" letter-spacing="1">MIGC</text>
-        </svg>
-    </div>
-    <span class="badge"><span class="pulse-dot"></span> Espace Interne &middot; 2026</span>
-    <h1>Centre de Documents</h1>
-    <p>Acc&eacute;dez &agrave; l'ensemble des outils, simulations et documents de r&eacute;f&eacute;rence du projet.</p>
-    <div class="stats">
-        <div class="stat"><div class="stat-value">10</div><div class="stat-label">Documents</div></div>
-        <div class="stat-sep"></div>
-        <div class="stat"><div class="stat-value">6</div><div class="stat-label">Cat&eacute;gories</div></div>
-        <div class="stat-sep"></div>
-        <div class="stat"><div class="stat-value">2026</div><div class="stat-label">&Eacute;dition</div></div>
-    </div>
+  <div class="header-shield">
+    <svg width="64" height="78" viewBox="0 0 100 122">
+      <defs><linearGradient id="gShield" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#D4A828"/><stop offset="100%" stop-color="#8B6A06"/></linearGradient></defs>
+      <path d="M3,3 L97,3 L97,74 Q97,112 50,119 Q3,112 3,74 Z" fill="none" stroke="url(#gShield)" stroke-width="1.4"/>
+      <path d="M9,9 L91,9 L91,73 Q91,107 50,113 Q9,107 9,73 Z" fill="none" stroke="#B8890A" stroke-width=".35" opacity=".25"/>
+      <line x1="3" y1="32" x2="97" y2="32" stroke="#B8890A" stroke-width=".8" opacity=".4"/>
+      <text x="50" y="25" font-family="'DM Sans',sans-serif" font-size="8" fill="#B8890A" text-anchor="middle" letter-spacing="3.5" font-weight="600" opacity=".7">MMA</text>
+      <text x="50" y="72" font-family="'DM Serif Display',Georgia,serif" font-size="30" fill="#F7F6F2" text-anchor="middle" letter-spacing="1">MIGC</text>
+    </svg>
+  </div>
+  <span class="badge"><span class="pulse-dot"></span> Espace Interne &middot; 2026</span>
+  <h1>Centre de <em>Documents</em></h1>
+  <div class="header-rule"><span class="hr-line"></span><span class="hr-diamond"></span><span class="hr-line"></span></div>
+  <p>Acc&eacute;dez &agrave; l&rsquo;ensemble des outils, simulations et documents de r&eacute;f&eacute;rence du projet MIGC.</p>
+  <div class="stats">
+    <div class="stat"><div class="stat-value">10</div><div class="stat-label">Documents</div></div>
+    <div class="stat-sep"></div>
+    <div class="stat"><div class="stat-value">6</div><div class="stat-label">Cat&eacute;gories</div></div>
+    <div class="stat-sep"></div>
+    <div class="stat"><div class="stat-value">2026</div><div class="stat-label">&Eacute;dition</div></div>
+  </div>
 </header>
 <div class="toolbar">
-    <div class="search-wrap">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z"/></svg>
-        <input type="text" class="search-input" id="searchInput" placeholder="Rechercher un document&hellip;" autocomplete="off">
-        <span class="search-kbd" id="searchKbd">/</span>
-        <button class="search-clear" id="searchClear" aria-label="Effacer">&times;</button>
+  <div class="search-wrap">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z"/></svg>
+    <input type="text" class="search-input" id="searchInput" placeholder="Rechercher un document&hellip;" autocomplete="off">
+    <span class="search-kbd" id="searchKbd">/</span>
+    <button class="search-clear" id="searchClear" aria-label="Effacer">&times;</button>
+  </div>
+  <div class="filters" id="filters">
+    <button class="filter-btn active" data-filter="all">Tous</button>
+    <button class="filter-btn" data-filter="overview">Overview</button>
+    <button class="filter-btn" data-filter="operations">Op&eacute;rations</button>
+    <button class="filter-btn" data-filter="business">Business</button>
+    <button class="filter-btn" data-filter="brand">Brand</button>
+    <button class="filter-btn" data-filter="ecosysteme">&Eacute;cosyst&egrave;me</button>
+    <button class="filter-btn" data-filter="rh">RH</button>
+    <button class="filter-btn" data-filter="finance">Finance</button>
+    <button class="filter-btn" data-filter="simulation">Simulation</button>
+    <button class="filter-btn" data-filter="etude">&Eacute;tude</button>
+  </div>
+  <div class="toolbar-row">
+    <div class="result-count" id="resultCount"><span>10</span> documents</div>
+    <div class="view-toggle">
+      <button class="view-btn active" data-view="grid" aria-label="Vue grille"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></button>
+      <button class="view-btn" data-view="list" aria-label="Vue liste"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" d="M3 6h18M3 12h18M3 18h18"/></svg></button>
     </div>
-    <div class="filters" id="filters">
-        <button class="filter-btn active" data-filter="all">Tous</button>
-        <button class="filter-btn" data-filter="overview">Overview</button>
-        <button class="filter-btn" data-filter="operations">Op&eacute;rations</button>
-        <button class="filter-btn" data-filter="business">Business</button>
-        <button class="filter-btn" data-filter="brand">Brand</button>
-        <button class="filter-btn" data-filter="ecosysteme">&Eacute;cosyst&egrave;me</button>
-        <button class="filter-btn" data-filter="rh">RH</button>
-        <button class="filter-btn" data-filter="finance">Finance</button>
-        <button class="filter-btn" data-filter="simulation">Simulation</button>
-        <button class="filter-btn" data-filter="etude">&Eacute;tude</button>
-    </div>
-    <div class="toolbar-row">
-        <div class="result-count" id="resultCount"><span>10</span> documents</div>
-        <div class="view-toggle">
-            <button class="view-btn active" data-view="grid" aria-label="Vue grille"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></button>
-            <button class="view-btn" data-view="list" aria-label="Vue liste"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" d="M3 6h18M3 12h18M3 18h18"/></svg></button>
-        </div>
-    </div>
+  </div>
 </div>
 <main>
+<div class="section-label"><span>Biblioth&egrave;que</span></div>
 <div class="grid" id="grid">
 <a class="card" href="MIGC-OnePager-v3.html" data-tag="overview">
+  <div class="card-header">
     <div class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg></div>
     <span class="card-tag">Overview</span>
-    <span class="card-title">MIGC &mdash; One Pager v3</span>
-    <span class="card-desc">Synth&egrave;se ex&eacute;cutive du projet MIGC au format one-pager.</span>
-    <div class="card-meta"><span class="card-arrow">Ouvrir &rarr;</span><span class="card-version">v3</span></div>
+  </div>
+  <span class="card-title">MIGC &mdash; One Pager v3</span>
+  <span class="card-desc">Synth&egrave;se ex&eacute;cutive du projet MIGC au format one-pager.</span>
+  <div class="card-meta"><span class="card-arrow">Ouvrir <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg></span><span class="card-version">v3</span></div>
 </a>
 
 <a class="card" href="MIGC-Note-Fonctionnement-Global-v2.html" data-tag="operations">
+  <div class="card-header">
     <div class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div>
     <span class="card-tag">Op&eacute;rations</span>
-    <span class="card-title">Note de Fonctionnement Global</span>
-    <span class="card-desc">Documentation compl&egrave;te du fonctionnement op&eacute;rationnel &mdash; Confidentiel.</span>
-    <div class="card-meta"><span class="card-arrow">Ouvrir &rarr;</span><span class="card-version">v2</span></div>
+  </div>
+  <span class="card-title">Note de Fonctionnement Global</span>
+  <span class="card-desc">Documentation compl&egrave;te du fonctionnement op&eacute;rationnel &mdash; Confidentiel.</span>
+  <div class="card-meta"><span class="card-arrow">Ouvrir <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg></span><span class="card-version">v2</span></div>
 </a>
 
 <a class="card" href="MIGC-CoreBusiness-Schema.html" data-tag="business">
+  <div class="card-header">
     <div class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21"/></svg></div>
     <span class="card-tag">Business</span>
-    <span class="card-title">Core Business &mdash; MIGC / Sport7</span>
-    <span class="card-desc">Sch&eacute;ma du mod&egrave;le d'affaires et structure entre MIGC et Sport7.</span>
-    <div class="card-meta"><span class="card-arrow">Ouvrir &rarr;</span><span class="card-version">v1</span></div>
+  </div>
+  <span class="card-title">Core Business &mdash; MIGC / Sport7</span>
+  <span class="card-desc">Sch&eacute;ma du mod&egrave;le d&rsquo;affaires et structure entre MIGC et Sport7.</span>
+  <div class="card-meta"><span class="card-arrow">Ouvrir <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg></span><span class="card-version">v1</span></div>
 </a>
 
 <a class="card" href="MIGC-Brand-Guide-v1.html" data-tag="brand">
+  <div class="card-header">
     <div class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4 2.245 4.5 4.5 0 008.4-2.245c0-.399-.078-.78-.22-1.128zm0 0a15.998 15.998 0 003.388-1.62m-5.043-.025a15.994 15.994 0 011.622-3.395m3.42 3.42a15.995 15.995 0 004.764-4.648l3.876-5.814a1.151 1.151 0 00-1.597-1.597L14.146 6.32a15.996 15.996 0 00-4.649 4.763m3.42 3.42a6.776 6.776 0 00-3.42-3.42"/></svg></div>
     <span class="card-tag">Brand</span>
-    <span class="card-title">Charte Graphique &middot; Brand Guide 2026</span>
-    <span class="card-desc">Identit&eacute; visuelle, palette de couleurs et standards graphiques MIGC.</span>
-    <div class="card-meta"><span class="card-arrow">Ouvrir &rarr;</span><span class="card-version">v1</span></div>
+  </div>
+  <span class="card-title">Charte Graphique &middot; Brand Guide 2026</span>
+  <span class="card-desc">Identit&eacute; visuelle, palette de couleurs et standards graphiques MIGC.</span>
+  <div class="card-meta"><span class="card-arrow">Ouvrir <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg></span><span class="card-version">v1</span></div>
 </a>
 
 <a class="card" href="MIGC-Ecosysteme-Personnes-v6.html" data-tag="ecosysteme">
+  <div class="card-header">
     <div class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"/></svg></div>
     <span class="card-tag">&Eacute;cosyst&egrave;me</span>
-    <span class="card-title">&Eacute;cosyst&egrave;me Personnes &amp; Implication</span>
-    <span class="card-desc">Cartographie des personnes et niveaux d'implication dans le projet.</span>
-    <div class="card-meta"><span class="card-arrow">Ouvrir &rarr;</span><span class="card-version">v6</span></div>
+  </div>
+  <span class="card-title">&Eacute;cosyst&egrave;me Personnes &amp; Implication</span>
+  <span class="card-desc">Cartographie des personnes et niveaux d&rsquo;implication dans le projet.</span>
+  <div class="card-meta"><span class="card-arrow">Ouvrir <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg></span><span class="card-version">v6</span></div>
 </a>
 
 <a class="card" href="MIGC-Analyse-RH-Bertrand-v3.html" data-tag="rh">
+  <div class="card-header">
     <div class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg></div>
     <span class="card-tag">RH</span>
-    <span class="card-title">Analyse RH &mdash; Bertrand vs Yann</span>
-    <span class="card-desc">Analyse comparative des profils et indicateurs de performance.</span>
-    <div class="card-meta"><span class="card-arrow">Ouvrir &rarr;</span><span class="card-version">v3</span></div>
+  </div>
+  <span class="card-title">Analyse RH &mdash; Bertrand vs Yann</span>
+  <span class="card-desc">Analyse comparative des profils et indicateurs de performance.</span>
+  <div class="card-meta"><span class="card-arrow">Ouvrir <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg></span><span class="card-version">v3</span></div>
 </a>
 
 <a class="card" href="MIGC-Moteur-Calcul-v1.html" data-tag="finance">
+  <div class="card-header">
     <div class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 15.75V18m-7.5-6.75h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V13.5zm0 2.25h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V18zm2.498-6.75h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V13.5zm0 2.25h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V18zm2.504-6.75h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V13.5zm0 2.25h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V18zm2.498-6.75h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V13.5zM8.25 6h7.5v2.25h-7.5V6zM12 2.25c-1.892 0-3.758.11-5.593.322C5.307 2.7 4.5 3.65 4.5 4.757V19.5a2.25 2.25 0 002.25 2.25h10.5a2.25 2.25 0 002.25-2.25V4.757c0-1.108-.806-2.057-1.907-2.185A48.507 48.507 0 0012 2.25z"/></svg></div>
     <span class="card-tag">Finance</span>
-    <span class="card-title">Moteur de Calcul Actuariel &mdash; CFO Tool</span>
-    <span class="card-desc">Outil de mod&eacute;lisation financi&egrave;re et de projections actuarielles.</span>
-    <div class="card-meta"><span class="card-arrow">Ouvrir &rarr;</span><span class="card-version">v1</span></div>
+  </div>
+  <span class="card-title">Moteur de Calcul Actuariel &mdash; CFO Tool</span>
+  <span class="card-desc">Outil de mod&eacute;lisation financi&egrave;re et de projections actuarielles.</span>
+  <div class="card-meta"><span class="card-arrow">Ouvrir <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg></span><span class="card-version">v1</span></div>
 </a>
 
 <a class="card" href="BSD-MIGC-Simulation-v4.html" data-tag="simulation">
+  <div class="card-header">
     <div class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5"/></svg></div>
     <span class="card-tag">Simulation</span>
-    <span class="card-title">BSD &middot; Simulation Fonds Retraite v8</span>
-    <span class="card-desc">Simulateur de sc&eacute;narios pour le fonds de retraite MIGC.</span>
-    <div class="card-meta"><span class="card-arrow">Ouvrir &rarr;</span><span class="card-version">v8</span></div>
+  </div>
+  <span class="card-title">BSD &middot; Simulation Fonds Retraite v8</span>
+  <span class="card-desc">Simulateur de sc&eacute;narios pour le fonds de retraite MIGC.</span>
+  <div class="card-meta"><span class="card-arrow">Ouvrir <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg></span><span class="card-version">v8</span></div>
 </a>
 
 <a class="card" href="SIMULATION-RETRAITE-MIGC-v3.html" data-tag="simulation">
+  <div class="card-header">
     <div class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5"/></svg></div>
     <span class="card-tag">Simulation</span>
-    <span class="card-title">Simulation Retraite &mdash; Carri&egrave;res Longues</span>
-    <span class="card-desc">Calcul de retraite pour les carri&egrave;res longues de 35 &agrave; 45 ans.</span>
-    <div class="card-meta"><span class="card-arrow">Ouvrir &rarr;</span><span class="card-version">v3</span></div>
+  </div>
+  <span class="card-title">Simulation Retraite &mdash; Carri&egrave;res Longues</span>
+  <span class="card-desc">Calcul de retraite pour les carri&egrave;res longues de 35 &agrave; 45 ans.</span>
+  <div class="card-meta"><span class="card-arrow">Ouvrir <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg></span><span class="card-version">v3</span></div>
 </a>
 
 <a class="card" href="ETUDE-CARRIERE-COMBATTANTS-PRO-MMA-2026-v3.html" data-tag="etude">
+  <div class="card-header">
     <div class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5"/></svg></div>
     <span class="card-tag">&Eacute;tude</span>
-    <span class="card-title">Parcours des Combattants Pro MMA &mdash; 2026</span>
-    <span class="card-desc">&Eacute;tude compl&egrave;te des trajectoires de carri&egrave;re des combattants professionnels.</span>
-    <div class="card-meta"><span class="card-arrow">Ouvrir &rarr;</span><span class="card-version">v3</span></div>
+  </div>
+  <span class="card-title">Parcours des Combattants Pro MMA &mdash; 2026</span>
+  <span class="card-desc">&Eacute;tude compl&egrave;te des trajectoires de carri&egrave;re des combattants professionnels.</span>
+  <div class="card-meta"><span class="card-arrow">Ouvrir <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg></span><span class="card-version">v3</span></div>
 </a>
 
 </div>
 <div class="empty-state" id="emptyState">
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
-    <p>Aucun document trouv&eacute;</p>
-    <span class="empty-hint">Essayez un autre terme ou cat&eacute;gorie</span>
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
+  <p>Aucun document trouv&eacute;</p>
+  <span class="empty-hint">Essayez un autre terme ou cat&eacute;gorie</span>
 </div>
 </main>
 <button class="scroll-top" id="scrollTop" aria-label="Retour en haut">
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5"/></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5"/></svg>
 </button>
 <footer>
-    <div class="footer-brand">MIGC</div>
-    Mixed Martial Arts International Grading Council &middot; 2026 &mdash; Tous droits r&eacute;serv&eacute;s
+  <div class="footer-divider">
+    <span class="fd-line"></span>
+    <span class="fd-shield"><svg viewBox="0 0 100 122"><path d="M3,3 L97,3 L97,74 Q97,112 50,119 Q3,112 3,74 Z" fill="none" stroke="#B8890A" stroke-width="1.2"/><text x="50" y="72" font-family="'DM Serif Display',Georgia,serif" font-size="30" fill="#5A5A54" text-anchor="middle" letter-spacing="1">M</text></svg></span>
+    <span class="fd-line"></span>
+  </div>
+  <div class="footer-brand">MIGC</div>
+  <div class="footer-copy">Mixed Martial Arts International Grading Council &middot; 2026 &mdash; Tous droits r&eacute;serv&eacute;s</div>
 </footer>
 <script>
 (function(){
-    const searchInput=document.getElementById('searchInput'),searchKbd=document.getElementById('searchKbd'),searchClear=document.getElementById('searchClear'),grid=document.getElementById('grid'),cards=Array.from(grid.querySelectorAll('.card')),filterBtns=document.querySelectorAll('.filter-btn'),viewBtns=document.querySelectorAll('.view-btn'),resultCount=document.getElementById('resultCount'),emptyState=document.getElementById('emptyState'),scrollTopBtn=document.getElementById('scrollTop');
-    let activeFilter='all';
-    function applyFilters(){const q=searchInput.value.toLowerCase().trim();let v=0;cards.forEach(c=>{const t=c.dataset.tag,x=c.textContent.toLowerCase(),mf=activeFilter==='all'||t===activeFilter,ms=!q||x.includes(q),s=mf&&ms;c.classList.toggle('hidden',!s);if(s)v++;});resultCount.innerHTML='<span>'+v+'</span> document'+(v!==1?'s':'');emptyState.classList.toggle('visible',v===0);}
-    searchInput.addEventListener('input',()=>{const h=searchInput.value.length>0;searchClear.classList.toggle('visible',h);searchKbd.style.display=h?'none':'';applyFilters();});
-    searchClear.addEventListener('click',()=>{searchInput.value='';searchClear.classList.remove('visible');searchKbd.style.display='';searchInput.focus();applyFilters();});
-    document.addEventListener('keydown',e=>{if(e.key==='/'&&document.activeElement!==searchInput){e.preventDefault();searchInput.focus();}if(e.key==='Escape'&&document.activeElement===searchInput){searchInput.blur();}});
-    filterBtns.forEach(b=>b.addEventListener('click',()=>{filterBtns.forEach(x=>x.classList.remove('active'));b.classList.add('active');activeFilter=b.dataset.filter;applyFilters();}));
-    viewBtns.forEach(b=>b.addEventListener('click',()=>{viewBtns.forEach(x=>x.classList.remove('active'));b.classList.add('active');grid.classList.toggle('list-view',b.dataset.view==='list');}));
-    window.addEventListener('scroll',()=>{scrollTopBtn.classList.toggle('visible',window.scrollY>300);},{passive:true});
-    scrollTopBtn.addEventListener('click',()=>{window.scrollTo({top:0,behavior:'smooth'});});
+  const si=document.getElementById('searchInput'),sk=document.getElementById('searchKbd'),sc=document.getElementById('searchClear'),
+        grid=document.getElementById('grid'),cards=Array.from(grid.querySelectorAll('.card')),
+        fb=document.querySelectorAll('.filter-btn'),vb=document.querySelectorAll('.view-btn'),
+        rc=document.getElementById('resultCount'),es=document.getElementById('emptyState'),st=document.getElementById('scrollTop');
+  let af='all';
+  function run(){const q=si.value.toLowerCase().trim();let v=0;
+    cards.forEach(c=>{const ok=(af==='all'||c.dataset.tag===af)&&(!q||c.textContent.toLowerCase().includes(q));
+      c.classList.toggle('hidden',!ok);if(ok)v++});
+    rc.innerHTML='<span>'+v+'</span> document'+(v!==1?'s':'');es.classList.toggle('visible',v===0)}
+  si.addEventListener('input',()=>{const h=si.value.length>0;sc.classList.toggle('visible',h);sk.style.display=h?'none':'';run()});
+  sc.addEventListener('click',()=>{si.value='';sc.classList.remove('visible');sk.style.display='';si.focus();run()});
+  document.addEventListener('keydown',e=>{if(e.key==='/'&&document.activeElement!==si){e.preventDefault();si.focus()}if(e.key==='Escape'&&document.activeElement===si)si.blur()});
+  fb.forEach(b=>b.addEventListener('click',()=>{fb.forEach(x=>x.classList.remove('active'));b.classList.add('active');af=b.dataset.filter;run()}));
+  vb.forEach(b=>b.addEventListener('click',()=>{vb.forEach(x=>x.classList.remove('active'));b.classList.add('active');grid.classList.toggle('list-view',b.dataset.view==='list')}));
+  window.addEventListener('scroll',()=>st.classList.toggle('visible',window.scrollY>300),{passive:true});
+  st.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+
+  /* Intersection observer for scroll-reveal */
+  if('IntersectionObserver' in window){
+    const obs=new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting){e.target.style.animationPlayState='running';obs.unobserve(e.target)}})},{threshold:.1});
+    cards.forEach(c=>{c.style.animationPlayState='paused';obs.observe(c)})
+  }
 })();
 </script>
 </body>
