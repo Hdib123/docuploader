@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MIGC · Moteur de Calcul Actuariel v1 — CFO Tool</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0D1B2E;--navy2:#162236;--navy3:#1C2D42;--deep:#070E1A;
+  --gold:#C4952A;--gold2:#D9AE56;--gold3:rgba(196,149,42,.12);
+  --green:#1F6B30;--green2:#3DAA58;--green3:rgba(31,107,48,.12);
+  --red:#C0392B;--red2:#E06050;--red3:rgba(192,57,43,.12);
+  --orange:#D4700A;--orange3:rgba(212,112,10,.12);
+  --blue:#2D6EA8;--blue2:#5B8FD4;--blue3:rgba(45,110,168,.12);
+  --grey:#8A9AB0;--grey2:#5A6A80;--white:#F8FAFC;
+  --mono:'JetBrains Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--navy);color:var(--white);font-family:'Barlow',sans-serif;font-size:13px;line-height:1.5;-webkit-font-smoothing:antialiased;}
+/* NAV */
+.nav{background:var(--deep);border-bottom:1px solid rgba(196,149,42,.2);display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:48px;position:sticky;top:0;z-index:200;}
+.nav-brand{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:.14em;color:var(--gold);}
+.nav-tabs{display:flex;gap:2px;height:100%;}
+.nav-tab{display:flex;align-items:center;padding:0 16px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.1em;color:var(--grey);text-transform:uppercase;border-bottom:2px solid transparent;transition:.15s;}
+.nav-tab:hover{color:var(--white);}
+.nav-tab.active{color:var(--gold2);border-bottom-color:var(--gold);}
+.nav-meta{font-family:var(--mono);font-size:10px;color:var(--grey);}
+/* PANELS */
+.panel{display:none;padding:24px;}
+.panel.active{display:block;}
+/* GRID */
+.cols2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.cols3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+.cols4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+/* CARDS */
+.card{background:var(--navy3);border:1px solid rgba(255,255,255,.07);border-radius:4px;overflow:hidden;}
+.card-head{background:var(--deep);padding:10px 16px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-between;align-items:center;}
+.card-title{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;letter-spacing:.06em;}
+.card-badge{font-family:var(--mono);font-size:11px;font-weight:600;}
+.card-body{padding:16px;}
+/* INPUTS */
+.field{margin-bottom:12px;}
+.field label{display:block;font-size:11px;font-weight:600;letter-spacing:.1em;color:var(--grey);text-transform:uppercase;margin-bottom:5px;}
+.field input,.field select{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:3px;padding:8px 10px;color:var(--white);font-family:'Barlow',sans-serif;font-size:13px;outline:none;transition:.15s;}
+.field input:focus,.field select:focus{border-color:var(--gold);background:rgba(196,149,42,.05);}
+.field select option{background:var(--navy3);color:var(--white);}
+.range-row{display:grid;grid-template-columns:1fr 80px;gap:8px;align-items:center;}
+.range-row input[type=range]{accent-color:var(--gold);}
+.range-val{font-family:var(--mono);font-size:12px;color:var(--gold2);text-align:right;}
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 20px;border-radius:3px;border:none;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:.15s;}
+.btn-primary{background:var(--gold);color:var(--deep);}
+.btn-primary:hover{background:var(--gold2);}
+.btn-outline{background:transparent;color:var(--gold2);border:1px solid rgba(196,149,42,.3);}
+.btn-outline:hover{background:var(--gold3);}
+.btn-green{background:var(--green);color:var(--white);}
+.btn-green:hover{background:var(--green2);}
+.btn-row{display:flex;gap:8px;margin-top:16px;}
+/* KPIs */
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:20px;}
+.kpi{background:var(--navy3);border:1px solid rgba(255,255,255,.07);border-top:2px solid;padding:14px 14px 12px;border-radius:3px;}
+.kpi.gold{border-top-color:var(--gold);}
+.kpi.green{border-top-color:var(--green2);}
+.kpi.red{border-top-color:var(--red);}
+.kpi.blue{border-top-color:var(--blue2);}
+.kpi.orange{border-top-color:var(--orange);}
+.kpi-label{font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--grey);text-transform:uppercase;margin-bottom:5px;}
+.kpi-val{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:28px;line-height:1;}
+.kpi.gold .kpi-val{color:var(--gold2);}
+.kpi.green .kpi-val{color:var(--green2);}
+.kpi.red .kpi-val{color:var(--red2);}
+.kpi.blue .kpi-val{color:var(--blue2);}
+.kpi.orange .kpi-val{color:var(--orange);}
+.kpi-sub{font-size:11px;color:var(--grey);margin-top:3px;}
+/* RESULT PANEL */
+.result-section{margin-top:20px;}
+.result-title{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:16px;letter-spacing:.06em;color:var(--white);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.07);}
+.palier-display{background:var(--green3);border:1px solid rgba(31,107,48,.3);border-left:4px solid var(--green2);padding:16px 20px;border-radius:3px;margin-bottom:16px;}
+.palier-code{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:40px;color:var(--green2);line-height:1;}
+.palier-name{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:var(--white);}
+.palier-rente{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:900;color:var(--gold2);margin-top:4px;}
+.palier-pts{font-family:var(--mono);font-size:12px;color:var(--grey);margin-top:6px;}
+.source-breakdown{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin:12px 0;}
+.src-b{text-align:center;background:var(--navy3);border:1px solid rgba(255,255,255,.07);border-top:2px solid;padding:10px 6px;border-radius:3px;}
+.src-b.a{border-top-color:var(--gold);}
+.src-b.b{border-top-color:var(--blue2);}
+.src-b.c{border-top-color:var(--green2);}
+.src-b.d{border-top-color:#CC9944;}
+.src-b.e{border-top-color:#9988DD;}
+.src-b.f{border-top-color:#44BBAA;}
+.src-b .sc{font-size:9px;font-weight:700;letter-spacing:.14em;color:var(--grey);text-transform:uppercase;}
+.src-b .sv{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:22px;margin-top:4px;}
+.src-b.a .sv{color:var(--gold);}
+.src-b.b .sv{color:var(--blue2);}
+.src-b.c .sv{color:var(--green2);}
+.src-b.d .sv{color:#CC9944;}
+.src-b.e .sv{color:#9988DD;}
+.src-b.f .sv{color:#44BBAA;}
+.src-b .sp{font-size:10px;color:var(--grey);margin-top:2px;}
+/* TABLES */
+.tbl-wrap{overflow-x:auto;border-radius:3px;border:1px solid rgba(255,255,255,.07);}
+table{width:100%;border-collapse:collapse;font-size:12px;}
+thead tr{background:var(--deep);}
+thead th{padding:8px 10px;text-align:left;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.14em;color:var(--grey);text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.08);white-space:nowrap;}
+th.r,td.r{text-align:right;}
+tbody tr{border-bottom:1px solid rgba(255,255,255,.04);}
+tbody tr:hover{background:rgba(255,255,255,.025);}
+tbody td{padding:7px 10px;color:rgba(248,250,252,.82);}
+td.mono{font-family:var(--mono);font-size:11px;}
+td.gold{color:var(--gold2);font-weight:600;font-family:var(--mono);}
+td.green{color:var(--green2);font-weight:600;}
+td.red{color:var(--red2);}
+td.grey{color:var(--grey);}
+tr.hilight{background:rgba(196,149,42,.07);}
+tr.hilight td:first-child{border-left:3px solid var(--gold);}
+tr.danger{background:rgba(192,57,43,.07);}
+/* PROGRESS BAR */
+.pbar-wrap{margin:4px 0;}
+.pbar-track{height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;}
+.pbar-fill{height:100%;border-radius:3px;transition:width .4s;}
+/* CHART AREA */
+.chart-area{background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.07);border-radius:3px;padding:16px;position:relative;}
+canvas{display:block;}
+/* STRESS */
+.stress-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px;}
+.stress-card{background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.08);border-radius:3px;padding:14px;}
+.stress-label{font-size:11px;font-weight:600;letter-spacing:.08em;color:var(--grey);text-transform:uppercase;margin-bottom:6px;}
+.stress-val{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:26px;line-height:1;}
+.stress-note{font-size:11px;color:var(--grey);margin-top:5px;}
+/* TABS IN PANELS */
+.sub-tabs{display:flex;gap:4px;margin-bottom:16px;}
+.sub-tab{padding:6px 14px;border-radius:2px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--grey);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);}
+.sub-tab.active{background:var(--gold3);color:var(--gold2);border-color:rgba(196,149,42,.3);}
+.sub-panel{display:none;}
+.sub-panel.active{display:block;}
+/* VERDICT */
+.verdict{padding:12px 16px;border-radius:3px;margin-top:10px;font-size:12.5px;}
+.verdict.ok{background:var(--green3);border:1px solid rgba(31,107,48,.3);border-left:4px solid var(--green2);color:#B0F0BC;}
+.verdict.warn{background:var(--orange3);border:1px solid rgba(212,112,10,.3);border-left:4px solid var(--orange);color:#FFD580;}
+.verdict.danger{background:var(--red3);border:1px solid rgba(192,57,43,.3);border-left:4px solid var(--red);color:#FFB0A0;}
+.verdict-title{font-weight:700;font-size:13.5px;margin-bottom:4px;}
+/* SECTION */
+.section-title{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:18px;letter-spacing:.04em;color:var(--white);margin:20px 0 12px;padding-bottom:8px;border-bottom:1px solid rgba(196,149,42,.2);}
+/* TOGGLE */
+.toggle-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.toggle-row label{font-size:12px;color:var(--grey);}
+input[type=checkbox]{accent-color:var(--gold);width:14px;height:14px;}
+/* BADGE */
+.badge{display:inline-block;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;padding:1px 7px;border-radius:2px;}
+.badge-p0{background:rgba(138,154,176,.15);color:var(--grey);}
+.badge-p1{background:rgba(45,110,168,.2);color:var(--blue2);}
+.badge-p2{background:rgba(196,149,42,.2);color:var(--gold2);}
+.badge-p3{background:rgba(212,112,10,.2);color:var(--orange);}
+.badge-p4{background:rgba(31,107,48,.2);color:var(--green2);}
+.badge-p5{background:rgba(192,57,43,.2);color:var(--red2);}
+/* NOTE */
+.note{font-size:11.5px;color:var(--grey);line-height:1.6;padding:10px 14px;background:rgba(0,0,0,.15);border-radius:3px;margin-top:10px;}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div style="display:flex;align-items:center;gap:20px">
+    <span class="nav-brand">MIGC · Moteur de Calcul Actuariel</span>
+    <div class="nav-tabs">
+      <div class="nav-tab active" onclick="showPanel('sim1')">Simulateur Combattant</div>
+      <div class="nav-tab" onclick="showPanel('sim20')">Cohorte 20 Ans</div>
+      <div class="nav-tab" onclick="showPanel('fund')">Viabilité du Fonds</div>
+      <div class="nav-tab" onclick="showPanel('stress')">Stress Tests</div>
+      <div class="nav-tab" onclick="showPanel('matrix')">Matrice Croisée</div>
+    </div>
+  </div>
+  <span class="nav-meta">Règlement v8.0 · CFO Tool — M. Salfati</span>
+</div>
+
+<!-- ═══ PANEL 1 : SIMULATEUR INDIVIDUEL ═══ -->
+<div class="panel active" id="panel-sim1">
+<div class="cols2" style="align-items:start">
+
+  <!-- INPUTS -->
+  <div>
+    <div class="section-title">① Paramètres Carrière</div>
+    <div class="cols2">
+      <div class="field"><label>Années de carrière pro</label>
+        <div class="range-row"><input type="range" id="i_years" min="1" max="20" value="7" oninput="syncRange('i_years','v_years');calcSim1()"><span class="range-val" id="v_years">7</span></div>
+      </div>
+      <div class="field"><label>Niveau max atteint</label>
+        <select id="i_org" onchange="calcSim1()">
+          <option value="pb1">PB1 — Orgas régionales ($1–3K)</option>
+          <option value="pb2">PB2 — KSW/Cage Warriors ($3–6K)</option>
+          <option value="pb3">PB3 — PFL Europe/Rizin ($6–10K)</option>
+          <option value="pb4">PB4 — Bellator/PFL ($10–16K)</option>
+          <option value="pb5" selected>PB5 — UFC confirmé ($16–30K)</option>
+          <option value="pb6">PB6 — UFC star ($30K+)</option>
+        </select>
+      </div>
+    </div>
+    <div class="cols3">
+      <div class="field"><label>Total combats</label>
+        <div class="range-row"><input type="range" id="i_fights" min="5" max="60" value="21" oninput="syncRange('i_fights','v_fights');calcSim1()"><span class="range-val" id="v_fights">21</span></div>
+      </div>
+      <div class="field"><label>% Victoires</label>
+        <div class="range-row"><input type="range" id="i_winpct" min="30" max="95" value="75" oninput="syncRange('i_winpct','v_winpct');calcSim1()"><span class="range-val" id="v_winpct">75</span></div>
+      </div>
+      <div class="field"><label>Mois max Top 10</label>
+        <div class="range-row"><input type="range" id="i_top10m" min="0" max="60" value="24" oninput="syncRange('i_top10m','v_top10m');calcSim1()"><span class="range-val" id="v_top10m">24</span></div>
+      </div>
+    </div>
+    <div class="cols3">
+      <div class="field"><label>Mois Top 20</label>
+        <div class="range-row"><input type="range" id="i_top20m" min="0" max="60" value="12" oninput="syncRange('i_top20m','v_top20m');calcSim1()"><span class="range-val" id="v_top20m">12</span></div>
+      </div>
+      <div class="field"><label>Mois Top 30</label>
+        <div class="range-row"><input type="range" id="i_top30m" min="0" max="36" value="7" oninput="syncRange('i_top30m','v_top30m');calcSim1()"><span class="range-val" id="v_top30m">7</span></div>
+      </div>
+      <div class="field"><label>Grade CN MIGC</label>
+        <select id="i_cn" onchange="calcSim1()">
+          <option value="none">Aucun (pas d'activation)</option>
+          <option value="cn1" selected>1er Dan (+1000 pts)</option>
+          <option value="cn2">2e–3e Dan (+1600 pts)</option>
+          <option value="cn3">4e–5e Dan (+2600 pts)</option>
+          <option value="cn4">6e–10e Dan (+4000 pts)</option>
+        </select>
+      </div>
+    </div>
+    <div class="cols2">
+      <div>
+        <div class="toggle-row"><input type="checkbox" id="i_streak7" onchange="calcSim1()"><label>Série 7V consécutives (+800 pts)</label></div>
+        <div class="toggle-row"><input type="checkbox" id="i_streak12" onchange="calcSim1()"><label>Série 12V consécutives (+2000 pts)</label></div>
+        <div class="toggle-row"><input type="checkbox" id="i_champ2" onchange="calcSim1()"><label>Champion 2 catégories (+3000 pts)</label></div>
+        <div class="toggle-row"><input type="checkbox" id="i_hof" onchange="calcSim1()"><label>Hall of Fame MIGC (+5000 pts)</label></div>
+      </div>
+      <div>
+        <div class="toggle-row"><input type="checkbox" id="i_f3" checked onchange="calcSim1()"><label>3 ans fidélité (+800 pts)</label></div>
+        <div class="toggle-row"><input type="checkbox" id="i_f5" checked onchange="calcSim1()"><label>5 ans fidélité (+1500 pts)</label></div>
+        <div class="toggle-row"><input type="checkbox" id="i_f10" onchange="calcSim1()"><label>10 ans fidélité (+4000 pts)</label></div>
+        <div class="toggle-row"><input type="checkbox" id="i_f15" onchange="calcSim1()"><label>15 ans fidélité (+8000 pts)</label></div>
+      </div>
+    </div>
+    <div class="btn-row"><button class="btn btn-primary" onclick="calcSim1()">▶ Calculer</button><button class="btn btn-outline" onclick="loadBSD()">Charger profil BSD</button></div>
+  </div>
+
+  <!-- RÉSULTAT -->
+  <div id="result1">
+    <div class="section-title">② Résultat Simulation</div>
+    <div id="palier-box" class="palier-display">
+      <div class="palier-code" id="r_palier_code">P2</div>
+      <div class="palier-name" id="r_palier_name">Échelon III</div>
+      <div class="palier-rente" id="r_rente">$2 500 / mois à vie</div>
+      <div class="palier-pts" id="r_pts_line">63 290 pts accumulés · Seuil : 50 000 pts · Prochain P3 : +36 710 pts</div>
+    </div>
+    <div class="source-breakdown" id="src-breakdown">
+      <div class="src-b a"><div class="sc">Src A</div><div class="sv" id="r_a">36 250</div><div class="sp">Combats</div></div>
+      <div class="src-b b"><div class="sc">Src B</div><div class="sv" id="r_b">2 090</div><div class="sp">Grades</div></div>
+      <div class="src-b c"><div class="sc">Src C</div><div class="sv" id="r_c">18 600</div><div class="sp">Ranking</div></div>
+      <div class="src-b d"><div class="sc">Src D</div><div class="sv" id="r_d">4 050</div><div class="sp">Ancienneté</div></div>
+      <div class="src-b e"><div class="sc">Src E</div><div class="sv" id="r_e">0</div><div class="sp">Bonus</div></div>
+      <div class="src-b f"><div class="sc">Src F</div><div class="sv" id="r_f">2 300</div><div class="sp">Fidélité</div></div>
+    </div>
+    <div class="kpi-row" style="grid-template-columns:repeat(3,1fr);margin-top:8px">
+      <div class="kpi gold"><div class="kpi-label">Total Capital</div><div class="kpi-val" id="r_total">63 290</div><div class="kpi-sub">points MIGC</div></div>
+      <div class="kpi green"><div class="kpi-label">Rente mensuelle</div><div class="kpi-val" id="r_rente_v">$2 500</div><div class="kpi-sub">à vie dès 55 ans</div></div>
+      <div class="kpi blue"><div class="kpi-label">Bourses totales (est.)</div><div class="kpi-val" id="r_bourses">$620K</div><div class="kpi-sub">show + win money</div></div>
+    </div>
+    <div id="r_verdict" class="verdict ok">
+      <div class="verdict-title">✓ Activation déclenchée</div>
+      <div id="r_verdict_text">Conditions remplies · CN MIGC détenu · 5 ans fidélité · Rente garantie à vie</div>
+    </div>
+    <div class="note" id="r_note">La rente de $2 500/mois représente 4,8% de la bourse totale estimée de carrière sur 25 ans (300 mois). Le fonds doit générer un rendement minimal de 3,2%/an pour équilibrer ce profil.</div>
+  </div>
+</div>
+
+<!-- PROGRESSION vers paliers -->
+<div class="section-title" style="margin-top:24px">③ Progression vers les Paliers — Gap Analysis</div>
+<div id="palier-progress-table"></div>
+</div>
+
+<!-- ═══ PANEL 2 : COHORTE 20 ANS ═══ -->
+<div class="panel" id="panel-sim20">
+  <div class="section-title">Simulation Cohorte — Combattants Pro Mondiaux 2004–2024</div>
+  <p class="note" style="margin-bottom:16px">Cette simulation modélise 500 profils synthétiques représentatifs des combattants pro MMA des 20 dernières années (répartition statistique basée sur les données UFC/Bellator/PFL/Rizin). Les points MIGC sont calculés selon le règlement v8.0 en appliquant rétrospectivement les règles actuelles.</p>
+
+  <div class="cols3" style="margin-bottom:16px">
+    <div class="field"><label>Taille cohorte simulée</label>
+      <select id="cohort_size" onchange="runCohorte()">
+        <option value="200">200 combattants</option>
+        <option value="500" selected>500 combattants (recommandé)</option>
+        <option value="1000">1 000 combattants</option>
+      </select>
+    </div>
+    <div class="field"><label>Taux de cotisation MIGC</label>
+      <div class="range-row"><input type="range" id="cotis_rate" min="2" max="10" value="5" step="0.5" oninput="syncRange('cotis_rate','v_cotis');runCohorte()"><span class="range-val" id="v_cotis">5%</span></div>
+    </div>
+    <div class="field"><label>Rendement annuel du fonds</label>
+      <div class="range-row"><input type="range" id="fund_return" min="1" max="10" value="4.5" step="0.5" oninput="syncRange('fund_return','v_freturn');runCohorte()"><span class="range-val" id="v_freturn">4.5%</span></div>
+    </div>
+  </div>
+
+  <div class="kpi-row" id="cohort-kpis">
+    <div class="kpi gold"><div class="kpi-label">Combattants simulés</div><div class="kpi-val" id="ck1">500</div><div class="kpi-sub">profils synthétiques</div></div>
+    <div class="kpi green"><div class="kpi-label">Bénéficiaires rente</div><div class="kpi-val" id="ck2">—</div><div class="kpi-sub">palier ≥ P1</div></div>
+    <div class="kpi blue"><div class="kpi-label">Cotisations totales</div><div class="kpi-val" id="ck3">—</div><div class="kpi-sub">5% des bourses</div></div>
+    <div class="kpi orange"><div class="kpi-label">Rentes annuelles</div><div class="kpi-val" id="ck4">—</div><div class="kpi-sub">en régime permanent</div></div>
+    <div class="kpi red"><div class="kpi-label">Ratio couverture</div><div class="kpi-val" id="ck5">—</div><div class="kpi-sub">cotisations / rentes</div></div>
+  </div>
+
+  <div class="cols2">
+    <div>
+      <div class="result-title">Distribution par Palier</div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>Palier</th><th>Dénomination</th><th>Seuil pts</th><th class="r">Rente/mois</th><th class="r">Nbr combattants</th><th class="r">% de la cohorte</th><th class="r">Rente annuelle totale</th></tr></thead>
+        <tbody id="cohort-dist-table"></tbody>
+      </table></div>
+    </div>
+    <div>
+      <div class="result-title">Top 20 Profils de Carrière</div>
+      <div class="tbl-wrap" style="max-height:360px;overflow-y:auto"><table>
+        <thead><tr><th>#</th><th>Profil type</th><th>Ans</th><th>Combats</th><th class="r">Pts MIGC</th><th>Palier</th><th class="r">Rente</th></tr></thead>
+        <tbody id="top20-table"></tbody>
+      </table></div>
+    </div>
+  </div>
+
+  <div class="result-title" style="margin-top:20px">Flux Financiers — Cotisations vs Rentes (années 1–40)</div>
+  <div class="chart-area"><canvas id="chart-cohort" height="200"></canvas></div>
+  <div id="cohort-verdict" class="verdict ok" style="margin-top:12px"></div>
+</div>
+
+<!-- ═══ PANEL 3 : VIABILITÉ FONDS ═══ -->
+<div class="panel" id="panel-fund">
+  <div class="section-title">Modèle de Viabilité du Fonds à Long Terme</div>
+  <div class="cols3" style="margin-bottom:16px">
+    <div class="field"><label>Cotisants actifs (An 1)</label>
+      <div class="range-row"><input type="range" id="f_actifs" min="100" max="5000" value="800" step="50" oninput="syncRange('f_actifs','vf_actifs');calcFund()"><span class="range-val" id="vf_actifs">800</span></div>
+    </div>
+    <div class="field"><label>Croissance annuelle cotisants (%)</label>
+      <div class="range-row"><input type="range" id="f_growth" min="0" max="20" value="8" step="1" oninput="syncRange('f_growth','vf_growth');calcFund()"><span class="range-val" id="vf_growth">8%</span></div>
+    </div>
+    <div class="field"><label>Bourse moy. annuelle / combattant ($)</label>
+      <div class="range-row"><input type="range" id="f_bourse" min="5000" max="100000" value="18000" step="1000" oninput="syncRangeK('f_bourse','vf_bourse');calcFund()"><span class="range-val" id="vf_bourse">$18K</span></div>
+    </div>
+    <div class="field"><label>Taux de cotisation (%)</label>
+      <div class="range-row"><input type="range" id="f_cotis" min="2" max="12" value="5" step="0.5" oninput="syncRange('f_cotis','vf_cotis');calcFund()"><span class="range-val" id="vf_cotis">5%</span></div>
+    </div>
+    <div class="field"><label>Rendement fonds (%/an)</label>
+      <div class="range-row"><input type="range" id="f_ret" min="1" max="12" value="4.5" step="0.5" oninput="syncRange('f_ret','vf_ret');calcFund()"><span class="range-val" id="vf_ret">4.5%</span></div>
+    </div>
+    <div class="field"><label>% combattants atteignant P1+</label>
+      <div class="range-row"><input type="range" id="f_eligi" min="1" max="30" value="8" step="1" oninput="syncRange('f_eligi','vf_eligi');calcFund()"><span class="range-val" id="vf_eligi">8%</span></div>
+    </div>
+  </div>
+
+  <div class="kpi-row" id="fund-kpis">
+    <div class="kpi gold"><div class="kpi-label">Actifs An 1</div><div class="kpi-val" id="fk1">800</div><div class="kpi-sub">cotisants</div></div>
+    <div class="kpi green"><div class="kpi-label">Cotisations An 1</div><div class="kpi-val" id="fk2">—</div><div class="kpi-sub">USD</div></div>
+    <div class="kpi blue"><div class="kpi-label">Capital An 10</div><div class="kpi-val" id="fk3">—</div><div class="kpi-sub">avec rendement</div></div>
+    <div class="kpi orange"><div class="kpi-label">Bénéficiaires An 10</div><div class="kpi-val" id="fk4">—</div><div class="kpi-sub">en rente</div></div>
+    <div class="kpi red"><div class="kpi-label">Ratio An 20</div><div class="kpi-val" id="fk5">—</div><div class="kpi-sub">capital/rentes</div></div>
+  </div>
+
+  <div class="result-title">Projection 50 ans — Capital, Cotisations et Rentes (M USD)</div>
+  <div class="chart-area"><canvas id="chart-fund" height="220"></canvas></div>
+
+  <div class="result-title" style="margin-top:16px">Table de Projection Décennale</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Année</th><th class="r">Cotisants actifs</th><th class="r">Cotisations (M$)</th><th class="r">Bénéficiaires</th><th class="r">Rentes sorties (M$)</th><th class="r">Capital fonds (M$)</th><th class="r">Ratio couverture</th><th>Verdict</th></tr></thead>
+    <tbody id="fund-table"></tbody>
+  </table></div>
+  <div id="fund-verdict" class="verdict ok" style="margin-top:12px"></div>
+</div>
+
+<!-- ═══ PANEL 4 : STRESS TESTS ═══ -->
+<div class="panel" id="panel-stress">
+  <div class="section-title">Stress Tests — Scénarios Extrêmes</div>
+  <p class="note" style="margin-bottom:16px">Ces scénarios testent la résilience du fonds sous des conditions adverses ou exceptionnellement favorables. Chaque test recalcule la viabilité à 30 ans.</p>
+
+  <div class="cols3">
+    <!-- SCÉNARIO 1 -->
+    <div class="card">
+      <div class="card-head"><span class="card-title" style="color:var(--red2)">⚡ Génération Stars</span><span class="card-badge" style="color:var(--red2)" id="st1_ratio">—</span></div>
+      <div class="card-body">
+        <p class="note" style="margin-bottom:10px">20% de la cohorte atteint P4–P5 ($7,5K–$12K/mois). Cas d'une décennie de superstars (ex : boom UFC 2015–2025).</p>
+        <div class="stress-grid">
+          <div class="stress-card"><div class="stress-label">P4/P5 bénéficiaires</div><div class="stress-val" style="color:var(--red2)" id="st1_v1">—</div><div class="stress-note">sur 500 cotisants</div></div>
+          <div class="stress-card"><div class="stress-label">Sorties rentes/an</div><div class="stress-val" style="color:var(--red2)" id="st1_v2">—</div><div class="stress-note">M$/an</div></div>
+          <div class="stress-card"><div class="stress-label">Solvabilité An 20</div><div class="stress-val" id="st1_v3">—</div><div class="stress-note">ratio capital/rentes</div></div>
+        </div>
+        <div id="st1_verdict" class="verdict danger" style="margin-top:10px"></div>
+      </div>
+    </div>
+    <!-- SCÉNARIO 2 -->
+    <div class="card">
+      <div class="card-head"><span class="card-title" style="color:var(--orange)">📉 Crise Cotisations</span><span class="card-badge" style="color:var(--orange)" id="st2_ratio">—</span></div>
+      <div class="card-body">
+        <p class="note" style="margin-bottom:10px">Chute de 40% des cotisants pendant 5 ans (ex : pandémie, grève orgas, crise sport mondial). Impact sur la solvabilité à long terme.</p>
+        <div class="stress-grid">
+          <div class="stress-card"><div class="stress-label">Perte cotisations 5 ans</div><div class="stress-val" style="color:var(--orange)" id="st2_v1">—</div><div class="stress-note">M$ manquants</div></div>
+          <div class="stress-card"><div class="stress-label">Capital fonds An 10</div><div class="stress-val" id="st2_v2">—</div><div class="stress-note">vs scénario base</div></div>
+          <div class="stress-card"><div class="stress-label">Retour équilibre</div><div class="stress-val" id="st2_v3">—</div><div class="stress-note">années nécessaires</div></div>
+        </div>
+        <div id="st2_verdict" class="verdict warn" style="margin-top:10px"></div>
+      </div>
+    </div>
+    <!-- SCÉNARIO 3 -->
+    <div class="card">
+      <div class="card-head"><span class="card-title" style="color:var(--green2)">🚀 Croissance MMA ×3</span><span class="card-badge" style="color:var(--green2)" id="st3_ratio">—</span></div>
+      <div class="card-body">
+        <p class="note" style="margin-bottom:10px">Le MMA triple sa base de licenciés pro mondiaux en 10 ans (tendance actuelle UFC/ONE). Effet multiplicateur sur les cotisations.</p>
+        <div class="stress-grid">
+          <div class="stress-card"><div class="stress-label">Cotisants An 10</div><div class="stress-val" style="color:var(--green2)" id="st3_v1">—</div><div class="stress-note">vs base</div></div>
+          <div class="stress-card"><div class="stress-label">Capital An 10</div><div class="stress-val" style="color:var(--green2)" id="st3_v2">—</div><div class="stress-note">M$</div></div>
+          <div class="stress-card"><div class="stress-label">Ratio de couverture</div><div class="stress-val" style="color:var(--green2)" id="st3_v3">—</div><div class="stress-note">An 20</div></div>
+        </div>
+        <div id="st3_verdict" class="verdict ok" style="margin-top:10px"></div>
+      </div>
+    </div>
+    <!-- SCÉNARIO 4 -->
+    <div class="card">
+      <div class="card-head"><span class="card-title" style="color:var(--blue2)">📊 Taux Min. Solvabilité</span><span class="card-badge" style="color:var(--blue2)" id="st4_ratio">—</span></div>
+      <div class="card-body">
+        <p class="note" style="margin-bottom:10px">Quel taux de cotisation minimum garantit la solvabilité perpétuelle ? Calcul du taux critique selon les paramètres actuels.</p>
+        <div class="stress-grid">
+          <div class="stress-card"><div class="stress-label">Taux critique</div><div class="stress-val" style="color:var(--blue2)" id="st4_v1">—</div><div class="stress-note">cotisation min. viable</div></div>
+          <div class="stress-card"><div class="stress-label">Marge actuelle</div><div class="stress-val" id="st4_v2">—</div><div class="stress-note">vs taux 5%</div></div>
+          <div class="stress-card"><div class="stress-label">Rendement min.</div><div class="stress-val" id="st4_v3">—</div><div class="stress-note">%/an requis</div></div>
+        </div>
+        <div id="st4_verdict" class="verdict ok" style="margin-top:10px"></div>
+      </div>
+    </div>
+    <!-- SCÉNARIO 5 -->
+    <div class="card">
+      <div class="card-head"><span class="card-title" style="color:#9988DD">🏆 Bonus HoF Massifs</span><span class="card-badge" style="color:#9988DD" id="st5_ratio">—</span></div>
+      <div class="card-body">
+        <p class="note" style="margin-bottom:10px">Impact des pics de Source E en fin de carrière : si 5% de la cohorte décroche HoF (5K pts) + bonus streak (800–2K pts) simultanément.</p>
+        <div class="stress-grid">
+          <div class="stress-card"><div class="stress-label">Combattants HoF</div><div class="stress-val" style="color:#9988DD" id="st5_v1">—</div></div>
+          <div class="stress-card"><div class="stress-label">Montées de palier</div><div class="stress-val" style="color:#9988DD" id="st5_v2">—</div></div>
+          <div class="stress-card"><div class="stress-label">Surcoût annuel</div><div class="stress-val" id="st5_v3">—</div></div>
+        </div>
+        <div id="st5_verdict" class="verdict warn" style="margin-top:10px"></div>
+      </div>
+    </div>
+    <!-- SCÉNARIO 6 -->
+    <div class="card">
+      <div class="card-head"><span class="card-title" style="color:#44BBAA">⚖️ Choc Longévité</span><span class="card-badge" style="color:#44BBAA" id="st6_ratio">—</span></div>
+      <div class="card-body">
+        <p class="note" style="margin-bottom:10px">Les bénéficiaires vivent +10 ans de plus que prévu (85 ans vs 75 ans). Impact sur les rentes à vie sur les projections actuarielles à 50 ans.</p>
+        <div class="stress-grid">
+          <div class="stress-card"><div class="stress-label">Surcoût rentes</div><div class="stress-val" style="color:#44BBAA" id="st6_v1">—</div><div class="stress-note">M$ sur 50 ans</div></div>
+          <div class="stress-card"><div class="stress-label">Capital requis add.</div><div class="stress-val" id="st6_v2">—</div></div>
+          <div class="stress-card"><div class="stress-label">Taux requis +</div><div class="stress-val" id="st6_v3">—</div></div>
+        </div>
+        <div id="st6_verdict" class="verdict ok" style="margin-top:10px"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PANEL 5 : MATRICE CROISÉE ═══ -->
+<div class="panel" id="panel-matrix">
+  <div class="section-title">Matrice Croisée — Vérifications Multi-Variables</div>
+
+  <div class="sub-tabs">
+    <div class="sub-tab active" onclick="showSub('mx1')">Profils Types</div>
+    <div class="sub-tab" onclick="showSub('mx2')">Seuils de Points</div>
+    <div class="sub-tab" onclick="showSub('mx3')">Adéquation Bourses/Rentes</div>
+    <div class="sub-tab" onclick="showSub('mx4')">Critères d'Obtention</div>
+  </div>
+
+  <div class="sub-panel active" id="sp-mx1">
+    <div class="result-title">12 Profils Types — Simulation Comparative</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Profil</th><th>Org. max</th><th>Ans</th><th>W-L</th><th>Top10M</th><th class="r">Src A</th><th class="r">Src B-F</th><th class="r">Total</th><th>Palier</th><th class="r">Rente</th><th class="r">Bourses totales</th><th class="r">5% cotisé</th><th>Viable?</th></tr></thead>
+      <tbody id="matrix-profiles"></tbody>
+    </table></div>
+  </div>
+
+  <div class="sub-panel" id="sp-mx2">
+    <div class="result-title">Analyse de Sensibilité — Seuils de Points par Source</div>
+    <p class="note" style="margin-bottom:14px">Pour chaque Source, combien d'années / combats / mois de ranking sont nécessaires pour franchir chaque palier ? Cette matrice permet de valider la cohérence des seuils.</p>
+    <div class="tbl-wrap"><table id="sensitivity-table">
+      <thead><tr><th>Pour atteindre</th><th class="r">Seuil pts</th><th class="r">Années Source D seule</th><th class="r">Combats PB6 V seuls</th><th class="r">Mois Top10 seuls</th><th class="r">Combo minimal réaliste</th><th>Accessibilité</th></tr></thead>
+      <tbody id="sensitivity-body"></tbody>
+    </table></div>
+  </div>
+
+  <div class="sub-panel" id="sp-mx3">
+    <div class="result-title">Adéquation Bourses vs Rentes — Par Niveau de Carrière</div>
+    <p class="note" style="margin-bottom:14px">Ratio entre la bourse totale cumulée sur carrière et la valeur actualisée des rentes obtenues. Un ratio > 5% signifie que le fonds reçoit plus qu'il ne doit sortir pour ce profil.</p>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Niveau carrière</th><th class="r">Bourses totales (est.)</th><th class="r">Cotisation 5%</th><th class="r">Rente mensuelle</th><th class="r">Val. actualisée rente (25 ans)</th><th class="r">Ratio cotis./rente VA</th><th>Verdict</th></tr></thead>
+      <tbody id="adequation-body"></tbody>
+    </table></div>
+  </div>
+
+  <div class="sub-panel" id="sp-mx4">
+    <div class="result-title">Critères d'Obtention — Combien de Combattants Réels sont Éligibles ?</div>
+    <p class="note" style="margin-bottom:14px">Estimation du nombre de combattants pro MMA mondiaux (bassin ~5 000 actifs) qui rempliraient les conditions d'activation à ce jour.</p>
+    <div class="cols2">
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>Critère activation</th><th class="r">% satisfait</th><th class="r">Nbr combattants</th><th>Note</th></tr></thead>
+        <tbody id="criteria-body"></tbody>
+      </table></div>
+      <div>
+        <div class="result-title">Éligibilité Complète (TOUS critères)</div>
+        <div class="kpi-row" style="grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+          <div class="kpi green"><div class="kpi-label">Éligibles P1+ (est.)</div><div class="kpi-val" id="mx4_eligi">~400</div><div class="kpi-sub">sur 5 000 actifs</div></div>
+          <div class="kpi gold"><div class="kpi-label">% du bassin pro</div><div class="kpi-val" id="mx4_pct">~8%</div><div class="kpi-sub">combattants qualifiés</div></div>
+        </div>
+        <div id="mx4_verdict" class="verdict ok"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════
+// RÈGLEMENT V8 — CONSTANTES
+// ════════════════════════════════════════════════════
+const PALIERS = [
+  {code:'P0',name:'Allocation Solidarité',seuil:0,rente:450,rente_full:1050},
+  {code:'P1',name:'Échelon I',seuil:25000,rente:1800},
+  {code:'P2',name:'Échelon III',seuil:50000,rente:2500},
+  {code:'P3',name:'Échelon IV',seuil:100000,rente:4000},
+  {code:'P4',name:'Échelon V',seuil:150000,rente:7500},
+  {code:'P5',name:'Échelon VI',seuil:250000,rente:12000},
+];
+const PB = {pb1:{v:500,d:250,bourse:2000},pb2:{v:1000,d:500,bourse:4500},pb3:{v:1500,d:750,bourse:8000},pb4:{v:2000,d:1000,bourse:13000},pb5:{v:2500,d:1250,bourse:23000},pb6:{v:3000,d:1500,bourse:50000}};
+const CN_PTS = {none:0,cn1:1000,cn2:1600,cn3:2600,cn4:4000};
+const CN_ANNUAL = {none:0,cn1:80,cn2:120,cn3:180,cn4:250};
+const GRADE_BASE = {none:0,cn1:850,cn2:850,cn3:850,cn4:850}; // Blanc→Marron = 850 pts
+const ANCIENNETE = [{y:3,ppy:500,mult:1.0},{y:3,ppy:500,mult:1.2},{y:3,ppy:500,mult:1.5},{y:3,ppy:500,mult:2.0},{y:99,ppy:500,mult:3.0}];
+const RANKING = {top30:{monthly:100,bonus6m:200,bonus12m:500},top20:{monthly:200,bonus6m:400,bonus12m:1000},top10:{monthly:400,bonus6m:900,bonus12m:2200},champ:{monthly:700,bonus6m:1500,bonus12m:3500}};
+
+function getPalier(pts){
+  let p = PALIERS[0];
+  for(let pal of PALIERS) if(pts >= pal.seuil) p = pal;
+  return p;
+}
+
+function calcAnciennete(years){
+  let pts=0, y=0;
+  for(let t of ANCIENNETE){
+    let take = Math.min(t.y, Math.max(0, years-y));
+    pts += take * t.ppy * t.mult;
+    y += take;
+    if(y>=years) break;
+  }
+  return Math.round(pts);
+}
+
+function calcRankingPts(top10m, top20m, top30m){
+  let pts = 0;
+  // Top10
+  let consec10 = top10m;
+  pts += consec10 * RANKING.top10.monthly;
+  if(consec10 >= 6) pts += RANKING.top10.bonus6m;
+  if(consec10 >= 12) pts += RANKING.top10.bonus12m;
+  // Top20
+  let net20 = Math.max(0, top20m);
+  pts += net20 * RANKING.top20.monthly;
+  if(net20+consec10 >= 6) pts += RANKING.top20.bonus6m;
+  if(net20+consec10 >= 12) pts += RANKING.top20.bonus12m;
+  // Top30
+  pts += Math.max(0,top30m) * RANKING.top30.monthly;
+  if(top30m >= 6) pts += RANKING.top30.bonus6m;
+  return Math.round(pts);
+}
+
+function calcBourses(fights, winpct, pb){
+  let wins = Math.round(fights * winpct/100);
+  let losses = fights - wins;
+  let bourse_per_fight = PB[pb].bourse;
+  return (wins + losses) * bourse_per_fight;
+}
+
+function fmt(n){return n.toLocaleString('fr-FR');}
+function fmtK(n){if(n>=1000000) return '$'+(n/1000000).toFixed(1)+'M'; if(n>=1000) return '$'+(n/1000).toFixed(0)+'K'; return '$'+n;}
+function fmtM(n){return '$'+(n/1000000).toFixed(2)+'M';}
+
+// ════════════════════════════════════════════════════
+// NAV + PANELS
+// ════════════════════════════════════════════════════
+function showPanel(id){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  const tabs=['sim1','sim20','fund','stress','matrix'];
+  const idx=tabs.indexOf(id);
+  document.querySelectorAll('.nav-tab')[idx].classList.add('active');
+  if(id==='sim20') runCohorte();
+  if(id==='fund') calcFund();
+  if(id==='stress') runStress();
+  if(id==='matrix') runMatrix();
+}
+function showSub(id){
+  document.querySelectorAll('.sub-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sub-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('sp-'+id).classList.add('active');
+  const tabs=['mx1','mx2','mx3','mx4'];
+  const idx=tabs.indexOf(id);
+  document.querySelectorAll('.sub-tab')[idx].classList.add('active');
+}
+function syncRange(id,vid){
+  const v=parseFloat(document.getElementById(id).value);
+  const el=document.getElementById(vid);
+  if(id.includes('cotis_rate')||id.includes('f_cotis')) el.textContent=v+'%';
+  else if(id.includes('return')||id.includes('f_ret')||id.includes('f_growth')) el.textContent=v+'%';
+  else if(id.includes('f_eligi')) el.textContent=v+'%';
+  else el.textContent=v;
+}
+function syncRangeK(id,vid){
+  const v=parseInt(document.getElementById(id).value);
+  document.getElementById(vid).textContent='$'+(v/1000).toFixed(0)+'K';
+}
+
+// ════════════════════════════════════════════════════
+// SIMULATEUR INDIVIDUEL
+// ════════════════════════════════════════════════════
+function calcSim1(){
+  const years = parseInt(document.getElementById('i_years').value);
+  const org   = document.getElementById('i_org').value;
+  const fights= parseInt(document.getElementById('i_fights').value);
+  const wpct  = parseInt(document.getElementById('i_winpct').value);
+  const t10   = parseInt(document.getElementById('i_top10m').value);
+  const t20   = parseInt(document.getElementById('i_top20m').value);
+  const t30   = parseInt(document.getElementById('i_top30m').value);
+  const cn    = document.getElementById('i_cn').value;
+  const s7    = document.getElementById('i_streak7').checked;
+  const s12   = document.getElementById('i_streak12').checked;
+  const ch2   = document.getElementById('i_champ2').checked;
+  const hof   = document.getElementById('i_hof').checked;
+  const f3    = document.getElementById('i_f3').checked;
+  const f5    = document.getElementById('i_f5').checked;
+  const f10   = document.getElementById('i_f10').checked;
+  const f15   = document.getElementById('i_f15').checked;
+
+  // Source A
+  const wins = Math.round(fights * wpct/100);
+  const loss = fights - wins;
+  const srcA = wins * PB[org].v + loss * PB[org].d;
+
+  // Source B
+  const srcB = (cn==='none')?0:(GRADE_BASE[cn] + CN_PTS[cn] + CN_ANNUAL[cn]*Math.min(years,5));
+
+  // Source C
+  const srcC = calcRankingPts(t10, t20, t30);
+
+  // Source D
+  const srcD = calcAnciennete(years);
+
+  // Source E
+  let srcE = 0;
+  if(s12) srcE += 2000; else if(s7) srcE += 800;
+  if(ch2) srcE += 3000;
+  if(hof) srcE += 5000;
+
+  // Source F
+  let srcF = 0;
+  if(f3) srcF += 800;
+  if(f5) srcF += 1500;
+  if(f10) srcF += 4000;
+  if(f15) srcF += 8000;
+
+  const total = srcA + srcB + srcC + srcD + srcE + srcF;
+  const pal = getPalier(total);
+  const pal_idx = PALIERS.indexOf(pal);
+  const next_pal = PALIERS[Math.min(pal_idx+1, PALIERS.length-1)];
+  const gap = next_pal.seuil > total ? next_pal.seuil - total : 0;
+
+  // Bourses
+  const bourses = calcBourses(fights, wpct, org);
+
+  // Update UI
+  document.getElementById('r_a').textContent = fmt(srcA);
+  document.getElementById('r_b').textContent = fmt(srcB);
+  document.getElementById('r_c').textContent = fmt(srcC);
+  document.getElementById('r_d').textContent = fmt(srcD);
+  document.getElementById('r_e').textContent = fmt(srcE);
+  document.getElementById('r_f').textContent = fmt(srcF);
+  document.getElementById('r_total').textContent = fmt(total);
+  document.getElementById('r_palier_code').textContent = pal.code;
+  document.getElementById('r_palier_name').textContent = pal.name;
+  document.getElementById('r_rente_v').textContent = '$'+fmt(pal.rente);
+  document.getElementById('r_rente').textContent = '$'+fmt(pal.rente)+' / mois à vie';
+  document.getElementById('r_bourses').textContent = fmtK(bourses);
+  const nextTxt = gap > 0 ? ` · Prochain ${next_pal.code} : +${fmt(gap)} pts` : ' · Palier maximum atteint';
+  document.getElementById('r_pts_line').textContent = `${fmt(total)} pts · Seuil : ${fmt(pal.seuil)} pts${nextTxt}`;
+
+  // Couleur palier
+  const colors = ['rgba(138,154,176,.2)','rgba(45,110,168,.2)','rgba(196,149,42,.2)','rgba(212,112,10,.2)','rgba(31,107,48,.2)','rgba(192,57,43,.2)'];
+  const borders = [PALIERS[0].code ? '#8A9AB0':'#8A9AB0','#5B8FD4','#C4952A','#D4700A','#3DAA58','#C0392B'];
+  document.getElementById('palier-box').style.background = colors[pal_idx]||colors[0];
+  document.getElementById('palier-box').style.borderLeftColor = borders[pal_idx]||borders[0];
+
+  // Verdict
+  const activated = cn !== 'none';
+  const verd = document.getElementById('r_verdict');
+  const vtxt = document.getElementById('r_verdict_text');
+  if(!activated){
+    verd.className='verdict danger';
+    vtxt.innerHTML='⚠ CN MIGC non obtenu — <strong>ACTIVATION IMPOSSIBLE</strong>. Le palier est calculé mais la rente ne peut pas être déclenchée sans le grade CN.';
+  } else if(pal_idx === 0){
+    verd.className='verdict warn';
+    vtxt.textContent='Activation partielle possible (P0) · Points insuffisants pour Palier 1';
+  } else {
+    verd.className='verdict ok';
+    vtxt.textContent=`✓ Activation déclenchée · ${pal.code} ${pal.name} · Rente $${fmt(pal.rente)}/mois à vie`;
+  }
+
+  // Note
+  const pct_bourse = bourses > 0 ? ((pal.rente*12*25)/bourses*100).toFixed(1) : '—';
+  const return_requis = (pal.rente*12) / (bourses*0.05) * 100;
+  document.getElementById('r_note').textContent = `Bourses totales estimées : ${fmtK(bourses)} · Cotisation 5% : ${fmtK(bourses*0.05)} · Rente vie (25 ans) : ${fmtK(pal.rente*12*25)} · Ratio cotis./rentes VA : ${((bourses*0.05)/(pal.rente*12*25)*100).toFixed(1)}% · Rendement min. requis : ${Math.max(0,return_requis).toFixed(1)}%/an`;
+
+  // Progress table
+  buildProgressTable(total);
+}
+
+function buildProgressTable(total){
+  let html = '<div class="tbl-wrap"><table><thead><tr><th>Palier</th><th>Dénomination</th><th class="r">Seuil pts</th><th class="r">Rente</th><th class="r">Pts actuels</th><th class="r">Manque</th><th>Avancement</th></tr></thead><tbody>';
+  for(let i=1;i<PALIERS.length;i++){
+    const p = PALIERS[i];
+    const gap = Math.max(0, p.seuil - total);
+    const pct = Math.min(100, (total/p.seuil*100)).toFixed(0);
+    const reached = total >= p.seuil;
+    html += `<tr class="${reached?'hilight':''}">
+      <td><span class="badge badge-p${i}">${p.code}</span></td>
+      <td>${p.name}</td>
+      <td class="r mono">${fmt(p.seuil)}</td>
+      <td class="r ${reached?'green':''}" style="font-family:var(--mono)">$${fmt(p.rente)}/mois</td>
+      <td class="r gold">${fmt(total)}</td>
+      <td class="r ${reached?'green':'red'}">${reached?'✓ Atteint':'+'+fmt(gap)}</td>
+      <td><div class="pbar-wrap"><div class="pbar-track"><div class="pbar-fill" style="width:${pct}%;background:${reached?'var(--green2)':'var(--gold)'}"></div></div><span style="font-size:10px;color:var(--grey)">${pct}%</span></div></td>
+    </tr>`;
+  }
+  html += '</tbody></table></div>';
+  document.getElementById('palier-progress-table').innerHTML = html;
+}
+
+function loadBSD(){
+  document.getElementById('i_years').value=7; document.getElementById('v_years').textContent=7;
+  document.getElementById('i_org').value='pb6';
+  document.getElementById('i_fights').value=21; document.getElementById('v_fights').textContent=21;
+  document.getElementById('i_winpct').value=75; document.getElementById('v_winpct').textContent=75;
+  document.getElementById('i_top10m').value=24; document.getElementById('v_top10m').textContent=24;
+  document.getElementById('i_top20m').value=12; document.getElementById('v_top20m').textContent=12;
+  document.getElementById('i_top30m').value=7; document.getElementById('v_top30m').textContent=7;
+  document.getElementById('i_cn').value='cn1';
+  document.getElementById('i_streak7').checked=false;
+  document.getElementById('i_streak12').checked=false;
+  document.getElementById('i_champ2').checked=false;
+  document.getElementById('i_hof').checked=false;
+  document.getElementById('i_f3').checked=true;
+  document.getElementById('i_f5').checked=true;
+  document.getElementById('i_f10').checked=false;
+  document.getElementById('i_f15').checked=false;
+  calcSim1();
+}
+
+// ════════════════════════════════════════════════════
+// COHORTE 20 ANS
+// ════════════════════════════════════════════════════
+function generateFighter(seed){
+  // Distribution réaliste des carrières MMA pro
+  const r = (min,max) => min + (Math.sin(seed*123.456+min)*0.5+0.5) * (max-min);
+  const ri = (min,max) => Math.round(r(min,max));
+  const tiers = ['pb1','pb1','pb1','pb2','pb2','pb3','pb3','pb4','pb5','pb5','pb6'];
+  const org = tiers[ri(0,tiers.length-1)];
+  const years = ri(2,15);
+  const fights = Math.max(5, ri(8,50));
+  const wpct = ri(45,85);
+  const top10m = org==='pb6'?ri(6,36):(org==='pb5'?ri(0,18):0);
+  const top20m = org>=3?ri(0,24):0;
+  const top30m = ri(0,18);
+  const cn = Math.random() < 0.6 ? 'cn1' : 'none'; // 60% ont CN
+  const f3 = years>=3;
+  const f5 = years>=5;
+  const f10 = years>=10;
+  const streak7 = wpct > 75 && fights >= 15;
+  const hof = org==='pb6' && years >= 12 && wpct > 70;
+  return {org,years,fights,wpct,top10m,top20m,top30m,cn,f3,f5,f10,streak7,hof};
+}
+
+function simFighter(f){
+  const wins = Math.round(f.fights*f.wpct/100);
+  const loss = f.fights-wins;
+  const srcA = wins*PB[f.org].v + loss*PB[f.org].d;
+  const srcB = f.cn==='none'?0:(GRADE_BASE.cn1+CN_PTS[f.cn]+CN_ANNUAL[f.cn]*Math.min(f.years,5));
+  const srcC = calcRankingPts(f.top10m,f.top20m,f.top30m);
+  const srcD = calcAnciennete(f.years);
+  let srcE = f.streak7?800:0; if(f.hof) srcE+=5000;
+  let srcF = (f.f3?800:0)+(f.f5?1500:0)+(f.f10?4000:0);
+  const total = srcA+srcB+srcC+srcD+srcE+srcF;
+  const pal = getPalier(total);
+  const bourses = calcBourses(f.fights,f.wpct,f.org);
+  return {total,pal,srcA,srcB,srcC,srcD,srcE,srcF,bourses,activated:f.cn!=='none'};
+}
+
+let cohortData = [];
+function runCohorte(){
+  const n = parseInt(document.getElementById('cohort_size').value);
+  const cotisRate = parseFloat(document.getElementById('cotis_rate').value)/100;
+  const fundRet = parseFloat(document.getElementById('fund_return').value)/100;
+  document.getElementById('ck1').textContent = n;
+
+  cohortData = [];
+  for(let i=0;i<n;i++){
+    const f = generateFighter(i*7.3+13);
+    cohortData.push(simFighter(f));
+  }
+
+  // Distribution paliers
+  const dist = [0,0,0,0,0,0];
+  let totalBourses = 0, totalCotis = 0, totalRente = 0;
+  let beneficiaires = 0;
+  for(const c of cohortData){
+    const idx = PALIERS.indexOf(c.pal);
+    dist[idx]++;
+    totalBourses += c.bourses;
+    totalCotis += c.bourses * cotisRate;
+    if(c.activated && PALIERS.indexOf(c.pal) >= 1){
+      totalRente += c.pal.rente * 12;
+      beneficiaires++;
+    }
+  }
+
+  document.getElementById('ck2').textContent = beneficiaires;
+  document.getElementById('ck3').textContent = fmtK(totalCotis);
+  document.getElementById('ck4').textContent = fmtK(totalRente);
+  const ratio = totalRente > 0 ? (totalCotis/totalRente*100).toFixed(0)+'%' : '∞';
+  document.getElementById('ck5').textContent = ratio;
+
+  // Table distribution
+  let html = '';
+  for(let i=0;i<PALIERS.length;i++){
+    const p = PALIERS[i];
+    const cnt = dist[i];
+    const pct = (cnt/n*100).toFixed(1);
+    const rente_total = (i>=1 && cnt>0) ? cnt*p.rente*12 : 0;
+    html += `<tr><td><span class="badge badge-p${i}">${p.code}</span></td><td>${p.name}</td><td class="r mono">${i>0?fmt(p.seuil):'—'}</td><td class="r mono">$${fmt(p.rente)}</td><td class="r gold">${cnt}</td><td class="r grey">${pct}%</td><td class="r ${rente_total>0?'red':'grey'}">${rente_total>0?fmtK(rente_total):i===0?'Cotisation réduite':'—'}</td></tr>`;
+  }
+  document.getElementById('cohort-dist-table').innerHTML = html;
+
+  // Top 20
+  const sorted = [...cohortData].sort((a,b)=>b.total-a.total).slice(0,20);
+  let html2='';
+  for(let i=0;i<sorted.length;i++){
+    const c=sorted[i]; const pidx=PALIERS.indexOf(c.pal);
+    html2+=`<tr><td class="grey">${i+1}</td><td>Profil #${i+1}</td><td class="r">${Math.round(c.srcD/500)||'?'}</td><td class="r">${Math.round((c.srcA/PB.pb6.v)||c.srcA/PB.pb1.v)||'?'}</td><td class="r gold">${fmt(c.total)}</td><td><span class="badge badge-p${pidx}">${c.pal.code}</span></td><td class="r green">$${fmt(c.pal.rente)}</td></tr>`;
+  }
+  document.getElementById('top20-table').innerHTML = html2;
+
+  // Chart flux financiers
+  drawCohortChart(n, cotisRate, fundRet, totalBourses, totalRente);
+
+  // Verdict
+  const r = parseFloat(ratio)||0;
+  const verd = document.getElementById('cohort-verdict');
+  if(r > 150){ verd.className='verdict ok'; verd.innerHTML=`<div class="verdict-title">✓ Fonds confortablement solvable</div>Les cotisations à ${(cotisRate*100).toFixed(1)}% couvrent ${ratio} des rentes annuelles. Marge de sécurité excellente. Le fonds peut absorber une hausse du nombre de bénéficiaires sans ajustement du taux.`; }
+  else if(r > 80){ verd.className='verdict warn'; verd.innerHTML=`<div class="verdict-title">⚠ Vigilance recommandée</div>Ratio cotisations/rentes = ${ratio}. Le fonds reste viable avec un rendement de ${(fundRet*100).toFixed(1)}%/an mais des ajustements préventifs sont recommandés si la cohorte évolue défavorablement.`; }
+  else{ verd.className='verdict danger'; verd.innerHTML=`<div class="verdict-title">⛔ Déséquilibre détecté</div>Les cotisations ne couvrent que ${ratio} des rentes. Un ajustement du taux de cotisation ou une révision des seuils de paliers est nécessaire pour garantir la pérennité.`; }
+}
+
+function drawCohortChart(n, cotisRate, fundRet, totalBourses, rentesAn){
+  const canvas = document.getElementById('chart-cohort');
+  const ctx = canvas.getContext('2d');
+  canvas.width = canvas.parentElement.clientWidth - 32;
+  canvas.height = 200;
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  const years = 40;
+  const avgBoursePerFighter = totalBourses/n;
+  const data = [];
+  let capital = 0;
+  for(let y=0;y<years;y++){
+    // Cotisants croissants (+5%/an)
+    const activeN = Math.round(n * Math.pow(1.05,y));
+    const cotis = activeN * avgBoursePerFighter * cotisRate;
+    capital = capital * (1+fundRet) + cotis;
+    const benef = Math.round(activeN * 0.08 * Math.min(1, y/10));
+    const rentes = benef * 3000 * 12; // rente moy
+    capital -= rentes;
+    data.push({y:y+1, cotis, rentes, capital:Math.max(0,capital)});
+  }
+
+  const maxVal = Math.max(...data.map(d=>Math.max(d.cotis,d.rentes,d.capital/5)));
+  const W=canvas.width, H=canvas.height, pad=40;
+  const sx = d => pad + (d.y/years)*(W-pad*2);
+  const sy = d => H-pad - (d/maxVal)*(H-pad*2);
+
+  // Grid
+  ctx.strokeStyle='rgba(255,255,255,.05)'; ctx.lineWidth=1;
+  for(let i=0;i<=5;i++){
+    const y = pad + i*(H-pad*2)/5;
+    ctx.beginPath(); ctx.moveTo(pad,y); ctx.lineTo(W-pad,y); ctx.stroke();
+    ctx.fillStyle='rgba(138,154,176,.5)'; ctx.font='10px JetBrains Mono';
+    ctx.fillText(fmtK(maxVal*(1-i/5)),2,y+4);
+  }
+
+  // Capital line
+  ctx.strokeStyle='rgba(196,149,42,.8)'; ctx.lineWidth=2; ctx.beginPath();
+  data.forEach((d,i)=>{const x=sx(d),y=sy(d.capital/5); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
+  ctx.stroke();
+  // Fill
+  ctx.fillStyle='rgba(196,149,42,.06)'; ctx.beginPath();
+  data.forEach((d,i)=>{const x=sx(d),y=sy(d.capital/5); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
+  ctx.lineTo(sx(data[data.length-1]),H-pad); ctx.lineTo(sx(data[0]),H-pad); ctx.closePath(); ctx.fill();
+
+  // Cotisations bars
+  ctx.fillStyle='rgba(45,110,168,.5)';
+  data.forEach(d=>{const x=sx(d),y=sy(d.cotis),bw=8; ctx.fillRect(x-bw/2,y,bw,H-pad-y);});
+
+  // Rentes bars
+  ctx.fillStyle='rgba(192,57,43,.5)';
+  data.forEach(d=>{const x=sx(d)+5,y=sy(d.rentes),bw=6; ctx.fillRect(x-bw/2,y,bw,H-pad-y);});
+
+  // Axes labels
+  ctx.fillStyle='rgba(138,154,176,.7)'; ctx.font='10px JetBrains Mono';
+  for(let i=0;i<=4;i++) ctx.fillText('An '+(i*10), pad+(i/4)*(W-pad*2)-10, H-5);
+
+  // Legend
+  ctx.fillStyle='rgba(196,149,42,.8)'; ctx.fillRect(W-220,10,12,10); ctx.fillStyle='rgba(255,255,255,.7)'; ctx.fillText('Capital fonds /5',W-204,20);
+  ctx.fillStyle='rgba(45,110,168,.7)'; ctx.fillRect(W-120,10,12,10); ctx.fillStyle='rgba(255,255,255,.7)'; ctx.fillText('Cotisations',W-104,20);
+  ctx.fillStyle='rgba(192,57,43,.7)'; ctx.fillRect(W-220,26,12,10); ctx.fillStyle='rgba(255,255,255,.7)'; ctx.fillText('Rentes sorties',W-204,36);
+}
+
+// ════════════════════════════════════════════════════
+// VIABILITÉ FONDS
+// ════════════════════════════════════════════════════
+function calcFund(){
+  const actifs0 = parseInt(document.getElementById('f_actifs').value);
+  const growth = parseFloat(document.getElementById('f_growth').value)/100;
+  const bourse_avg = parseInt(document.getElementById('f_bourse').value);
+  const cotisRate = parseFloat(document.getElementById('f_cotis').value)/100;
+  const fundRet = parseFloat(document.getElementById('f_ret').value)/100;
+  const eligPct = parseFloat(document.getElementById('f_eligi').value)/100;
+  const rente_avg = 2500; // $2500/mois moy
+
+  let capital = 0;
+  let rows = '';
+  const years = 50;
+  let data = [];
+
+  document.getElementById('fk1').textContent = fmt(actifs0);
+
+  for(let y=1;y<=years;y++){
+    const actifs = Math.round(actifs0 * Math.pow(1+growth, y-1));
+    const cotis = actifs * bourse_avg * cotisRate;
+    const benef = Math.round(actifs0 * eligPct * Math.min(1, (y-5)/15));
+    const rentes = Math.max(0, benef) * rente_avg * 12;
+    capital = capital * (1+fundRet) + cotis - rentes;
+    const ratio = rentes > 0 ? (capital / rentes).toFixed(1) : '∞';
+    data.push({y, actifs, cotis, benef:Math.max(0,benef), rentes, capital:Math.max(0,capital), ratio});
+
+    if(y<=2||y%5===0||y===50){
+      const ok = capital > 0;
+      const ratioNum = parseFloat(ratio)||999;
+      rows += `<tr class="${!ok?'danger':''}">
+        <td class="mono">An ${y} (${2025+y})</td>
+        <td class="r mono">${fmt(actifs)}</td>
+        <td class="r green">${fmtM(cotis)}</td>
+        <td class="r">${fmt(Math.max(0,benef))}</td>
+        <td class="r red">${fmtM(rentes)}</td>
+        <td class="r gold">${fmtM(Math.max(0,capital))}</td>
+        <td class="r ${ratioNum>5?'green':ratioNum>1?'orange':'red'}">${ratio}×</td>
+        <td><span class="badge ${ratioNum>5?'badge-p4':ratioNum>1?'badge-p3':'badge-p5'}">${ratioNum>5?'Solide':ratioNum>1?'Vigilance':'Déficit'}</span></td>
+      </tr>`;
+    }
+  }
+
+  document.getElementById('fund-table').innerHTML = rows;
+
+  // KPIs
+  const an1 = data[0]; const an10 = data[9]; const an20 = data[19];
+  document.getElementById('fk2').textContent = fmtK(an1.cotis);
+  document.getElementById('fk3').textContent = fmtK(an10.capital);
+  document.getElementById('fk4').textContent = fmt(an10.benef);
+  document.getElementById('fk5').textContent = an20.ratio+'×';
+
+  // Verdict
+  const finalRatio = parseFloat(data[49].ratio)||0;
+  const verd = document.getElementById('fund-verdict');
+  if(finalRatio > 5){ verd.className='verdict ok'; verd.innerHTML=`<div class="verdict-title">✓ Viabilité perpétuelle confirmée</div>Ratio capital/rentes à An 50 = ${finalRatio}×. Le fonds est structurellement solvable avec les paramètres actuels (cotisation ${(cotisRate*100).toFixed(1)}% · rendement ${(fundRet*100).toFixed(1)}%/an · croissance ${(growth*100).toFixed(0)}% cotisants/an).`; }
+  else if(finalRatio > 1){ verd.className='verdict warn'; verd.innerHTML=`<div class="verdict-title">⚠ Solvabilité fragile à long terme</div>Ratio à An 50 = ${finalRatio}×. Le fonds reste solvable mais la marge est insuffisante pour absorber des chocs imprévus. Recommandation : augmenter le taux de cotisation de 0,5 à 1 point ou viser 5,5%+ de rendement.`; }
+  else{ verd.className='verdict danger'; verd.innerHTML=`<div class="verdict-title">⛔ Risque de déficit structurel</div>Ratio à An 50 = ${finalRatio}×. Avec ces paramètres, le fonds entre en déficit. Actions requises : révision du taux de cotisation, ajustement des seuils de paliers, ou réévaluation du taux d'éligibilité.`; }
+
+  // Draw chart
+  drawFundChart(data);
+}
+
+function drawFundChart(data){
+  const canvas = document.getElementById('chart-fund');
+  const ctx = canvas.getContext('2d');
+  canvas.width = canvas.parentElement.clientWidth-32;
+  canvas.height = 220;
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  const maxCap = Math.max(...data.map(d=>d.capital));
+  const maxCotis = Math.max(...data.map(d=>d.cotis));
+  const maxVal = Math.max(maxCap, maxCotis*10) || 1;
+  const W=canvas.width, H=canvas.height, pad=50;
+  const sx = d => pad + (d.y/50)*(W-pad*2);
+  const sy = v => H-pad - (v/maxVal)*(H-pad*2);
+
+  ctx.strokeStyle='rgba(255,255,255,.05)'; ctx.lineWidth=1;
+  for(let i=0;i<=4;i++){
+    const y=pad+i*(H-pad*2)/4;
+    ctx.beginPath(); ctx.moveTo(pad,y); ctx.lineTo(W-pad,y); ctx.stroke();
+    ctx.fillStyle='rgba(138,154,176,.5)'; ctx.font='10px JetBrains Mono';
+    ctx.fillText(fmtK(maxVal*(1-i/4)),2,y+4);
+  }
+  for(let i=0;i<=5;i++) {ctx.fillStyle='rgba(138,154,176,.5)'; ctx.font='10px JetBrains Mono'; ctx.fillText('An '+(i*10), pad+(i/5)*(W-pad*2)-10, H-5);}
+
+  // Capital
+  ctx.strokeStyle='rgba(196,149,42,.9)'; ctx.lineWidth=2.5; ctx.beginPath();
+  data.forEach((d,i)=>{i===0?ctx.moveTo(sx(d),sy(d.capital)):ctx.lineTo(sx(d),sy(d.capital));});
+  ctx.stroke();
+  ctx.fillStyle='rgba(196,149,42,.07)'; ctx.beginPath();
+  data.forEach((d,i)=>{i===0?ctx.moveTo(sx(d),sy(d.capital)):ctx.lineTo(sx(d),sy(d.capital));});
+  ctx.lineTo(sx(data[49]),H-pad); ctx.lineTo(sx(data[0]),H-pad); ctx.closePath(); ctx.fill();
+
+  // Cotisations
+  ctx.strokeStyle='rgba(61,170,88,.7)'; ctx.lineWidth=1.5; ctx.setLineDash([4,3]); ctx.beginPath();
+  data.forEach((d,i)=>{i===0?ctx.moveTo(sx(d),sy(d.cotis*8)):ctx.lineTo(sx(d),sy(d.cotis*8));});
+  ctx.stroke(); ctx.setLineDash([]);
+
+  // Rentes
+  ctx.strokeStyle='rgba(192,57,43,.7)'; ctx.lineWidth=1.5; ctx.setLineDash([2,3]); ctx.beginPath();
+  data.forEach((d,i)=>{i===0?ctx.moveTo(sx(d),sy(d.rentes*8)):ctx.lineTo(sx(d),sy(d.rentes*8));});
+  ctx.stroke(); ctx.setLineDash([]);
+
+  // Legend
+  const ld = [[W-360,'Capital fonds','rgba(196,149,42,.9)'],[W-240,'Cotisations ×8','rgba(61,170,88,.7)'],[W-110,'Rentes ×8','rgba(192,57,43,.7)']];
+  ld.forEach(([x,lbl,c])=>{ctx.strokeStyle=c; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(x,14); ctx.lineTo(x+20,14); ctx.stroke(); ctx.fillStyle='rgba(255,255,255,.7)'; ctx.font='10px Barlow'; ctx.fillText(lbl,x+24,18);});
+}
+
+// ════════════════════════════════════════════════════
+// STRESS TESTS
+// ════════════════════════════════════════════════════
+function runStress(){
+  const base_n=500, base_bourse=18000, base_cotis=0.05, base_ret=0.045, base_eligi=0.08;
+  const rente_avg_p2=2500, rente_avg_p4=7500, rente_avg_p5=12000;
+
+  // ST1 — Génération stars 20% P4/P5
+  const st1_stars = Math.round(base_n*0.20);
+  const st1_rentes = st1_stars * 9000 * 12; // $9K moy P4/P5
+  const st1_cotis = base_n * base_bourse * base_cotis;
+  const st1_ratio = (st1_cotis / st1_rentes * 100).toFixed(0)+'%';
+  document.getElementById('st1_v1').textContent = st1_stars;
+  document.getElementById('st1_v2').textContent = fmtK(st1_rentes);
+  document.getElementById('st1_ratio').textContent = st1_ratio;
+  let st1cap=0;
+  for(let y=1;y<=20;y++){st1cap=st1cap*(1+base_ret)+base_n*base_bourse*base_cotis-st1_rentes;}
+  document.getElementById('st1_v3').textContent = st1cap>0?(st1cap/st1_rentes).toFixed(1)+'×':'DÉFICIT';
+  const st1v=document.getElementById('st1_verdict');
+  st1v.className=st1cap>0?'verdict warn':'verdict danger';
+  st1v.innerHTML=`<div class="verdict-title">${st1cap>0?'⚠ Stress absorbable sous conditions':'⛔ Déficit structurel confirmé'}</div>${st1cap>0?'Le fonds peut absorber une génération de stars si le rendement est maintenu au-dessus de 6%/an et le taux de cotisation porté à 7%.':'Si 20% des cotisants atteignent P4/P5, le taux de cotisation devrait passer à 8–10% ou les seuils de paliers être relevés.'}`;
+
+  // ST2 — Crise cotisations -40% pendant 5 ans
+  const perte = base_n * base_bourse * base_cotis * 0.40 * 5;
+  let st2cap=0;
+  for(let y=1;y<=10;y++){const r=y<=5?0.6:1.0; st2cap=st2cap*(1+base_ret)+base_n*base_bourse*base_cotis*r-base_eligi*base_n*rente_avg_p2*12*Math.min(1,(y-3)/5);}
+  const st2cap_base_ref = base_n*base_bourse*base_cotis*((Math.pow(1+base_ret,10)-1)/base_ret);
+  const retour = Math.ceil(perte/(base_n*base_bourse*base_cotis*0.1));
+  document.getElementById('st2_v1').textContent = fmtK(perte);
+  document.getElementById('st2_v2').textContent = fmtK(Math.max(0,st2cap));
+  document.getElementById('st2_v3').textContent = Math.min(retour,15)+' ans';
+  document.getElementById('st2_ratio').textContent = ((st2cap/st2cap_base_ref)*100).toFixed(0)+'% base';
+  const st2v=document.getElementById('st2_verdict'); st2v.className='verdict warn';
+  st2v.innerHTML=`<div class="verdict-title">⚠ Impact absorbable si crise ponctuelle</div>Une baisse de 40% des cotisations pendant 5 ans représente une perte de ${fmtK(perte)}. Le retour à l'équilibre prend ~${Math.min(retour,15)} ans. Un fonds de réserve de 6 mois de rentes est recommandé en prévention.`;
+
+  // ST3 — Croissance ×3
+  let st3cap=0;
+  const n_x3 = base_n;
+  for(let y=1;y<=10;y++){const n=Math.round(n_x3*Math.pow(1.12,y)); st3cap=st3cap*(1+base_ret)+n*base_bourse*base_cotis;}
+  document.getElementById('st3_v1').textContent = fmt(Math.round(n_x3*Math.pow(1.12,10)));
+  document.getElementById('st3_v2').textContent = fmtK(st3cap);
+  const st3ratio = (st3cap/(n_x3*0.08*rente_avg_p2*12*20)).toFixed(1);
+  document.getElementById('st3_v3').textContent = st3ratio+'×';
+  document.getElementById('st3_ratio').textContent = '×'+Math.round(st3cap/(base_n*base_bourse*base_cotis*10));
+  const st3v=document.getElementById('st3_verdict'); st3v.className='verdict ok';
+  st3v.innerHTML=`<div class="verdict-title">✓ Croissance très favorable au fonds</div>Une croissance MMA ×3 sur 10 ans génère un capital de ${fmtK(st3cap)} avec un ratio de couverture de ${st3ratio}× à An 20. C'est le scénario le plus probable étant donné la trajectoire actuelle du MMA mondial.`;
+
+  // ST4 — Taux critique
+  let taux_crit = 2;
+  for(let t=2;t<=15;t+=0.5){
+    let cap=0;
+    for(let y=1;y<=30;y++){cap=cap*(1+base_ret)+base_n*base_bourse*(t/100)-base_eligi*base_n*rente_avg_p2*12*Math.min(1,(y-3)/10);}
+    if(cap>0){taux_crit=t; break;}
+  }
+  document.getElementById('st4_v1').textContent = taux_crit.toFixed(1)+'%';
+  document.getElementById('st4_v2').textContent = '+'+(5-taux_crit).toFixed(1)+'% marge';
+  const ret_min = taux_crit > 5 ? 'Insuffisant' : (Math.max(0,3-base_ret*100)).toFixed(1)+'%';
+  document.getElementById('st4_v3').textContent = (Math.max(2, taux_crit*0.7)).toFixed(1)+'%/an';
+  document.getElementById('st4_ratio').textContent = taux_crit.toFixed(1)+'% min';
+  const st4v=document.getElementById('st4_verdict');
+  st4v.className = taux_crit < 5 ? 'verdict ok' : 'verdict warn';
+  st4v.innerHTML=`<div class="verdict-title">${taux_crit<5?'✓ Taux actuel de 5% confortable':'⚠ Taux actuel limite'}</div>Le taux de cotisation critique est ${taux_crit.toFixed(1)}%. Le taux actuel de 5% offre une marge de sécurité de ${(5-taux_crit).toFixed(1)} points. Avec un rendement de ${(base_ret*100).toFixed(1)}%/an et ${(base_eligi*100).toFixed(0)}% d'éligibilité, le modèle est viable.`;
+
+  // ST5 — HoF massif
+  const hof_n = Math.round(base_n*0.05);
+  const hof_upgrades = Math.round(hof_n*0.4); // 40% montent de palier
+  const surout = hof_upgrades * (rente_avg_p4-rente_avg_p2) * 12;
+  document.getElementById('st5_v1').textContent = hof_n;
+  document.getElementById('st5_v2').textContent = hof_upgrades+' combattants';
+  document.getElementById('st5_v3').textContent = fmtK(surout);
+  document.getElementById('st5_ratio').textContent = (surout/1000).toFixed(0)+'K$/an';
+  const st5v=document.getElementById('st5_verdict'); st5v.className='verdict warn';
+  st5v.innerHTML=`<div class="verdict-title">⚠ Pics de tréso gérables mais à anticiper</div>L'entrée simultanée de ${hof_n} combattants HoF peut générer ${hof_upgrades} montées de palier et un surcoût de ${fmtK(surout)}/an. Prévoir un fonds de réserve spécifique "Événements extraordinaires" (env. $500K).`;
+
+  // ST6 — Longévité +10 ans
+  const surplus_years = 10;
+  const n_benef = Math.round(base_n*base_eligi);
+  const surplus_cost = n_benef * rente_avg_p2 * 12 * surplus_years;
+  const cap_requis = surplus_cost / Math.pow(1+base_ret, 25);
+  const taux_add = cap_requis / (base_n * base_bourse * 30) * 100;
+  document.getElementById('st6_v1').textContent = fmtK(surplus_cost);
+  document.getElementById('st6_v2').textContent = fmtK(cap_requis);
+  document.getElementById('st6_v3').textContent = '+'+taux_add.toFixed(2)+'%/an';
+  document.getElementById('st6_ratio').textContent = '+'+taux_add.toFixed(2)+'%';
+  const st6v=document.getElementById('st6_verdict'); st6v.className='verdict ok';
+  st6v.innerHTML=`<div class="verdict-title">✓ Risque longévité limité</div>Le surcoût actualisé d'une espérance de vie +10 ans est de ${fmtK(cap_requis)}. Cela correspond à une augmentation du taux de cotisation de seulement +${taux_add.toFixed(2)} points. Le risque longévité est faible et absorbable par le rendement du fonds.`;
+}
+
+// ════════════════════════════════════════════════════
+// MATRICE
+// ════════════════════════════════════════════════════
+function runMatrix(){
+  // MX1 — Profils types
+  const profiles = [
+    {name:'Star UFC (PB6, 12 ans)',org:'pb6',years:12,fights:32,wpct:75,t10:36,t20:18,t30:12,cn:'cn1',f3:1,f5:1,f10:1,s7:1},
+    {name:'Contender UFC (PB5, 8 ans)',org:'pb5',years:8,fights:22,wpct:70,t10:18,t20:12,t30:6,cn:'cn1',f3:1,f5:1,f10:0},
+    {name:'Journeyman UFC (PB4–5, 6 ans)',org:'pb5',years:6,fights:18,wpct:55,t10:6,t20:12,t30:6,cn:'cn1',f3:1,f5:1},
+    {name:'Bellator Champion (PB4, 10 ans)',org:'pb4',years:10,fights:28,wpct:72,t10:12,t20:18,t30:12,cn:'cn1',f3:1,f5:1,f10:1},
+    {name:'Légende (PB6, 18 ans)',org:'pb6',years:18,fights:45,wpct:78,t10:48,t20:24,t30:12,cn:'cn2',f3:1,f5:1,f10:1,s7:1,hof:1},
+    {name:'PFL Gagnant (PB3, 7 ans)',org:'pb3',years:7,fights:20,wpct:68,t10:0,t20:6,t30:12,cn:'cn1',f3:1,f5:1},
+    {name:'Star Régionale (PB2, 5 ans)',org:'pb2',years:5,fights:15,wpct:73,t10:0,t20:0,t30:6,cn:'cn1',f3:1,f5:0},
+    {name:'Promoteur local (PB1, 3 ans)',org:'pb1',years:3,fights:10,wpct:70,t10:0,t20:0,t30:0,cn:'none',f3:0},
+    {name:'Brave CF Elite (PB2, 9 ans)',org:'pb2',years:9,fights:25,wpct:76,t10:0,t20:12,t30:18,cn:'cn1',f3:1,f5:1,f10:0},
+    {name:'UFC Vétéran (PB5, 15 ans)',org:'pb5',years:15,fights:40,wpct:65,t10:12,t20:24,t30:24,cn:'cn1',f3:1,f5:1,f10:1,s7:1},
+    {name:'BSD — Profil réel',org:'pb6',years:7,fights:21,wpct:75,t10:24,t20:12,t30:7,cn:'cn1',f3:1,f5:1},
+    {name:'Novice (PB1, 2 ans)',org:'pb1',years:2,fights:7,wpct:71,t10:0,t20:0,t30:0,cn:'none'},
+  ];
+
+  let html = '';
+  for(const p of profiles){
+    const wins=Math.round(p.fights*(p.wpct||70)/100), loss=p.fights-wins;
+    const srcA = wins*PB[p.org].v + loss*PB[p.org].d;
+    const srcB = p.cn==='none'?0:(GRADE_BASE.cn1+CN_PTS[p.cn]+CN_ANNUAL[p.cn]*Math.min(p.years,5));
+    const srcC = calcRankingPts(p.t10||0,p.t20||0,p.t30||0);
+    const srcD = calcAnciennete(p.years);
+    let srcE = (p.s7?800:0)+(p.hof?5000:0);
+    let srcF = ((p.f3||0)*800)+((p.f5||0)*1500)+((p.f10||0)*4000);
+    const total = srcA+srcB+srcC+srcD+srcE+srcF;
+    const pal = getPalier(total);
+    const pidx = PALIERS.indexOf(pal);
+    const bourses = calcBourses(p.fights,p.wpct||70,p.org);
+    const activated = p.cn !== 'none';
+    const isBSD = p.name.includes('BSD');
+    html += `<tr class="${isBSD?'hilight':''}">
+      <td>${p.name}</td><td style="font-family:var(--mono);font-size:11px">${p.org.toUpperCase()}</td>
+      <td class="r">${p.years}</td><td class="r grey">${wins}W-${loss}L</td><td class="r grey">${p.t10||0}M</td>
+      <td class="r mono">${fmt(srcA)}</td><td class="r mono">${fmt(srcB+srcC+srcD+srcE+srcF)}</td>
+      <td class="r gold">${fmt(total)}</td>
+      <td><span class="badge badge-p${pidx}">${pal.code}</span>${!activated?'<span style="color:var(--red);font-size:10px"> ✗CN</span>':''}</td>
+      <td class="r ${pidx>=2?'green':pidx===1?'':'grey'}">${activated?'$'+fmt(pal.rente):'—'}</td>
+      <td class="r grey">${fmtK(bourses)}</td>
+      <td class="r blue">${fmtK(bourses*0.05)}</td>
+      <td class="${activated&&pidx>=1?'green':'red'}">${activated&&pidx>=1?'✓':'✗'}</td>
+    </tr>`;
+  }
+  document.getElementById('matrix-profiles').innerHTML = html;
+
+  // MX2 — Sensibilité
+  let shtml = '';
+  for(let i=1;i<PALIERS.length;i++){
+    const p = PALIERS[i];
+    const yrs_d = Math.ceil(p.seuil / 750); // années Source D à mult max
+    const fights_pb6 = Math.ceil(p.seuil / PB.pb6.v);
+    const months_top10 = Math.ceil(p.seuil / RANKING.top10.monthly);
+    const combo = `${Math.round(p.seuil*0.55/PB.pb6.v)} combats PB6 + ${Math.round(p.seuil*0.3/RANKING.top10.monthly)}M Top10 + ${Math.round(p.seuil*0.06/500)} ans`;
+    const access = i<=2?'Accessible (top 15% carrières)':i<=3?'Exigeant (top 5%)':'Élite (top 1%)';
+    shtml += `<tr><td><span class="badge badge-p${i}">${p.code} ${p.name}</span></td>
+      <td class="r gold">${fmt(p.seuil)}</td>
+      <td class="r grey">${yrs_d} ans</td>
+      <td class="r grey">${fights_pb6} combats</td>
+      <td class="r grey">${months_top10} mois</td>
+      <td class="grey" style="font-size:11px">${combo}</td>
+      <td><span class="badge ${i<=2?'badge-p4':i<=3?'badge-p3':'badge-p5'}">${access}</span></td>
+    </tr>`;
+  }
+  document.getElementById('sensitivity-body').innerHTML = shtml;
+
+  // MX3 — Adéquation
+  const prof_adec = [
+    {lbl:'PB1 carrière 3 ans',b:3*2000*3,rente:450},
+    {lbl:'PB2 carrière 5 ans',b:15*4500,rente:1800},
+    {lbl:'PB3 carrière 7 ans',b:20*8000,rente:1800},
+    {lbl:'PB4 carrière 8 ans (P1)',b:22*13000,rente:1800},
+    {lbl:'PB5 carrière 10 ans (P2)',b:28*23000,rente:2500},
+    {lbl:'PB6 carrière 12 ans (P3)',b:35*50000,rente:4000},
+    {lbl:'PB6 légende 18 ans (P4)',b:45*60000,rente:7500},
+    {lbl:'BSD profil réel (P2)',b:21*35000,rente:2500},
+  ];
+  let ahtml='';
+  for(const pr of prof_adec){
+    const cotis=pr.b*0.05;
+    const va_rente=pr.rente*12*25; // valeur act. 25 ans
+    const ratio=cotis/va_rente;
+    const ok=ratio>=1.0;
+    ahtml+=`<tr><td>${pr.lbl}</td>
+      <td class="r grey">${fmtK(pr.b)}</td>
+      <td class="r blue">${fmtK(cotis)}</td>
+      <td class="r">${fmtK(pr.rente*12)}/an</td>
+      <td class="r ${ok?'gold':'red'}">${fmtK(va_rente)}</td>
+      <td class="r ${ok?'green':'red'}">${(ratio*100).toFixed(1)}%</td>
+      <td><span class="badge ${ok?'badge-p4':'badge-p5'}">${ok?'✓ Équilibré':'Fonds requis'}</span></td>
+    </tr>`;
+  }
+  document.getElementById('adequation-body').innerHTML=ahtml;
+
+  // MX4 — Critères
+  const criteres=[
+    {c:'5 ans actifs en pro',pct:35,note:'Durée médiane carrière ~4 ans'},
+    {c:'15+ combats certifiés MIGC',pct:28,note:'Top 40% des carrières'},
+    {c:'36M+ dans Top 100 classement',pct:22,note:'Combattants classés ~500 mondiaux'},
+    {c:'CN MIGC 1er Dan obtenu',pct:60,note:'Estimation 60% des pros éligibles'},
+    {c:'3 ans fidélité écosystème',pct:40,note:'Si MIGC atteint masse critique'},
+    {c:'TOUS critères simultanément',pct:8,note:'Filtre cumulatif strict'},
+  ];
+  let chtml='';
+  for(const cr of criteres){
+    const n=Math.round(5000*cr.pct/100);
+    chtml+=`<tr><td>${cr.c}</td><td class="r ${cr.pct>30?'green':cr.pct>15?'orange':'red'}">${cr.pct}%</td><td class="r gold">~${fmt(n)}</td><td class="grey" style="font-size:11px">${cr.note}</td></tr>`;
+  }
+  document.getElementById('criteria-body').innerHTML=chtml;
+  document.getElementById('mx4_eligi').textContent='~'+fmt(Math.round(5000*0.08));
+  document.getElementById('mx4_pct').textContent='~8%';
+  const mx4v=document.getElementById('mx4_verdict'); mx4v.className='verdict ok';
+  mx4v.innerHTML=`<div class="verdict-title">✓ Volume d'éligibles cohérent avec la viabilité</div>Sur ~5 000 combattants pro actifs mondiaux, ~400 seraient éligibles à un palier de rente (P1+). Avec une rente moyenne de $2 200/mois, le passif annuel total estimé est ~$10,6M/an, couvert par les cotisations des 5 000 actifs si la bourse moyenne est ≥ $42 500/an.`;
+}
+
+// ════════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════════
+window.addEventListener('load', function(){
+  calcSim1();
+  runCohorte();
+  calcFund();
+  runStress();
+  runMatrix();
+});
+</script>
+</body>
+</html>

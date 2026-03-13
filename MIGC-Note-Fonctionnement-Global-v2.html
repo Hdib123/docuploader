@@ -1,0 +1,1600 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MIGC — Note de Fonctionnement Global · v1 · Confidentiel</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #0D0F14;
+  --bg2:      #131620;
+  --bg3:      #1A1E2C;
+  --border:   rgba(255,255,255,.07);
+  --border2:  rgba(255,255,255,.12);
+  --text:     #E8EBF4;
+  --muted:    #7A8099;
+  --dim:      #4A5068;
+
+  --gold:     #C9A84C;
+  --gold2:    #E3BB6A;
+  --gold3:    rgba(201,168,76,.08);
+
+  --teal:     #1DB5A8;
+  --teal2:    #2AD4C5;
+  --teal3:    rgba(29,181,168,.08);
+
+  --blue:     #3B82C4;
+  --blue2:    #5B9FE0;
+  --blue3:    rgba(59,130,196,.08);
+
+  --green:    #28A060;
+  --green2:   #36BE76;
+  --green3:   rgba(40,160,96,.08);
+
+  --amber:    #C07A22;
+  --amber2:   #E0942E;
+  --amber3:   rgba(192,122,34,.08);
+
+  --red:      #B83030;
+  --red2:     #D94848;
+  --red3:     rgba(184,48,48,.08);
+
+  --violet:   #7B4FB5;
+  --violet2:  #9B6FD5;
+  --violet3:  rgba(123,79,181,.08);
+
+  /* Couche colors */
+  --c1: #E04B3A; --c1b: rgba(224,75,58,.1);
+  --c2: #E0873A; --c2b: rgba(224,135,58,.1);
+  --c3: #C9A84C; --c3b: rgba(201,168,76,.1);
+  --c4: #4BAE6A; --c4b: rgba(75,174,106,.1);
+  --c5: #3B82C4; --c5b: rgba(59,130,196,.1);
+  --c6: #7B4FB5; --c6b: rgba(123,79,181,.1);
+  --c7: #1DB5A8; --c7b: rgba(29,181,168,.1);
+  --c8: #2A6B4A; --c8b: rgba(42,107,74,.1);
+
+  --r: 8px;
+  --r2: 12px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── COVER ── */
+.cover {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(201,168,76,.12) 0%, transparent 70%),
+              radial-gradient(ellipse 50% 40% at 80% 100%, rgba(29,181,168,.08) 0%, transparent 60%),
+              var(--bg);
+  padding: 60px 40px;
+  position: relative;
+  overflow: hidden;
+}
+.cover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,.02) 40px),
+              repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,.02) 40px);
+  pointer-events: none;
+}
+.cover-eyebrow {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--gold2);
+  background: rgba(201,168,76,.1);
+  border: 1px solid rgba(201,168,76,.25);
+  border-radius: 20px;
+  padding: 4px 16px;
+  margin-bottom: 32px;
+  display: inline-block;
+}
+.cover-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(36px, 5vw, 64px);
+  line-height: 1.1;
+  color: #fff;
+  margin-bottom: 12px;
+  letter-spacing: -.02em;
+}
+.cover-subtitle {
+  font-size: 18px;
+  color: var(--teal2);
+  font-weight: 400;
+  margin-bottom: 40px;
+  font-style: italic;
+  font-family: 'DM Serif Display', serif;
+}
+.cover-meta {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 64px;
+}
+.cover-meta-item {
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: .05em;
+}
+.cover-meta-item strong { color: var(--text); font-weight: 500; }
+
+/* couche badges row */
+.cover-layers {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 700px;
+}
+.cov-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 20px;
+  letter-spacing: .04em;
+  white-space: nowrap;
+}
+
+/* ── LAYOUT ── */
+.wrap { max-width: 1100px; margin: 0 auto; padding: 0 32px 80px; }
+
+/* ── NAV ── */
+.sidenav {
+  position: fixed;
+  left: 0; top: 0; bottom: 0;
+  width: 220px;
+  background: rgba(13,15,20,.95);
+  border-right: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+  padding: 32px 0;
+  overflow-y: auto;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+}
+.nav-logo {
+  font-family: 'DM Serif Display', serif;
+  font-size: 14px;
+  color: var(--gold2);
+  padding: 0 20px 24px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
+  letter-spacing: .02em;
+}
+.nav-logo small { display: block; font-family: 'DM Sans', sans-serif; font-size: 9px; font-weight: 500; color: var(--muted); letter-spacing: .12em; text-transform: uppercase; margin-bottom: 2px; }
+.nav-section {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--dim);
+  padding: 14px 20px 6px;
+}
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 20px;
+  font-size: 11.5px;
+  color: var(--muted);
+  text-decoration: none;
+  transition: all .15s;
+  cursor: pointer;
+}
+.nav-item:hover { color: var(--text); background: rgba(255,255,255,.04); }
+.nav-item.active { color: var(--text); background: rgba(255,255,255,.07); }
+.nav-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+.main { margin-left: 220px; }
+
+/* ── PAGE SECTIONS ── */
+.page-section {
+  border-bottom: 1px solid var(--border);
+  padding: 72px 0 64px;
+}
+.page-section:last-child { border-bottom: none; }
+
+.section-eyebrow {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--gold2);
+  margin-bottom: 10px;
+}
+.section-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 32px;
+  line-height: 1.15;
+  color: #fff;
+  margin-bottom: 16px;
+  letter-spacing: -.01em;
+}
+.section-lead {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--muted);
+  max-width: 760px;
+  margin-bottom: 48px;
+}
+
+/* ── ARCHITECTURE DIAGRAM ── */
+.arch-diagram {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 40px 0;
+}
+.arch-row {
+  display: flex;
+  align-items: stretch;
+  gap: 4px;
+  min-height: 56px;
+}
+.arch-block {
+  flex: 1;
+  border-radius: var(--r);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--border);
+  cursor: default;
+  transition: all .2s;
+  position: relative;
+  overflow: hidden;
+}
+.arch-block::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+}
+.arch-block:hover { transform: translateY(-1px); border-color: var(--border2); }
+
+.ab-num {
+  font-family: 'DM Serif Display', serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1;
+  flex-shrink: 0;
+  min-width: 26px;
+}
+.ab-content { flex: 1 }
+.ab-label { font-size: 11px; font-weight: 600; color: #fff; line-height: 1.3; }
+.ab-sub { font-size: 9.5px; color: var(--muted); margin-top: 2px; line-height: 1.3; }
+.ab-tag {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 10px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.arch-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  flex-shrink: 0;
+  color: var(--dim);
+  font-size: 18px;
+}
+/* Couche colors for arch */
+.c1 { background: var(--c1b); } .c1::before { background: var(--c1); }
+.c2 { background: var(--c2b); } .c2::before { background: var(--c2); }
+.c3 { background: var(--c3b); } .c3::before { background: var(--c3); }
+.c4 { background: var(--c4b); } .c4::before { background: var(--c4); }
+.c5 { background: var(--c5b); } .c5::before { background: var(--c5); }
+.c6 { background: var(--c6b); } .c6::before { background: var(--c6); }
+.c7 { background: var(--c7b); } .c7::before { background: var(--c7); }
+.c8 { background: var(--c8b); } .c8::before { background: var(--c8); }
+
+/* ── FLOW DIAGRAM ── */
+.flow-diagram {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin: 32px 0;
+}
+.flow-node {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  padding: 16px;
+  position: relative;
+  text-align: center;
+}
+.flow-node::after {
+  content: '→';
+  position: absolute;
+  right: -13px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--dim);
+  font-size: 16px;
+  z-index: 1;
+}
+.flow-node:last-child::after { display: none; }
+.fn-label { font-size: 9px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.fn-name { font-size: 12px; font-weight: 600; color: #fff; margin-bottom: 4px; }
+.fn-desc { font-size: 10px; color: var(--muted); line-height: 1.4; }
+
+/* ── CIRCUIT TABLE ── */
+.circuit-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0;
+  font-size: 12.5px;
+}
+.circuit-table th {
+  background: var(--bg3);
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border2);
+}
+.circuit-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  line-height: 1.5;
+}
+.circuit-table tr:hover td { background: rgba(255,255,255,.02); }
+.ct-type { font-weight: 600; white-space: nowrap; }
+.ct-trigger { color: var(--muted); font-size: 11.5px; }
+.ct-owners { }
+.ct-badge {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 6px;
+  margin-right: 4px;
+  letter-spacing: .03em;
+}
+
+/* ── SECTION CARDS (2-col) ── */
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 24px 0; }
+.grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin: 24px 0; }
+.grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 24px 0; }
+
+.info-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  padding: 20px;
+}
+.ic-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.ic-icon { font-size: 20px; }
+.ic-title { font-size: 12px; font-weight: 700; color: #fff; }
+.ic-sub { font-size: 10px; color: var(--muted); margin-top: 1px; }
+.ic-body { font-size: 12px; line-height: 1.65; color: var(--muted); }
+.ic-body strong { color: var(--text); font-weight: 600; }
+.ic-body em { color: var(--teal2); font-style: normal; }
+
+/* ── COUCHE DETAIL BLOCKS ── */
+.couche-block {
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  overflow: hidden;
+  margin-bottom: 32px;
+}
+.cb-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--border);
+}
+.cb-num {
+  font-family: 'DM Serif Display', serif;
+  font-size: 36px;
+  line-height: 1;
+  flex-shrink: 0;
+  min-width: 48px;
+}
+.cb-info { flex: 1 }
+.cb-name { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 3px; }
+.cb-role { font-size: 11px; color: var(--muted); }
+.cb-badge {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  padding: 4px 12px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+.cb-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+.cb-col {
+  padding: 20px 24px;
+}
+.cb-col + .cb-col {
+  border-left: 1px solid var(--border);
+}
+.cb-col-title {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 12px;
+}
+.item-list { list-style: none; }
+.item-list li {
+  font-size: 12px;
+  color: var(--muted);
+  padding: 4px 0;
+  padding-left: 14px;
+  position: relative;
+  line-height: 1.55;
+}
+.item-list li::before {
+  content: '·';
+  position: absolute;
+  left: 4px;
+  color: var(--dim);
+}
+.item-list li strong { color: var(--text); font-weight: 600; }
+.item-list li em { color: var(--teal2); font-style: normal; }
+
+.cb-footer {
+  padding: 14px 24px;
+  border-top: 1px solid var(--border);
+  background: var(--bg3);
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.cbf-item {
+  font-size: 11px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.cbf-label { font-weight: 700; color: var(--text); }
+
+/* ── LINK TABLE ── */
+.link-table { margin: 20px 0; }
+.lt-row {
+  display: grid;
+  grid-template-columns: 120px 1fr 1fr;
+  gap: 12px;
+  align-items: start;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+}
+.lt-row:last-child { border-bottom: none; }
+.lt-from { font-weight: 700; color: #fff; font-size: 11px; }
+.lt-desc { color: var(--muted); line-height: 1.5; }
+.lt-type {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* ── IA SECTION ── */
+.ia-diagram {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 24px;
+  margin: 24px 0;
+  align-items: start;
+}
+.ia-center {
+  background: linear-gradient(135deg, rgba(29,181,168,.12), rgba(59,130,196,.08));
+  border: 1px solid rgba(29,181,168,.25);
+  border-radius: var(--r2);
+  padding: 24px;
+  text-align: center;
+}
+.ia-center-icon { font-size: 40px; margin-bottom: 10px; }
+.ia-center-title { font-family: 'DM Serif Display', serif; font-size: 16px; color: var(--teal2); margin-bottom: 6px; }
+.ia-center-sub { font-size: 11px; color: var(--muted); line-height: 1.5; }
+.ia-spokes { display: flex; flex-direction: column; gap: 10px; }
+.ia-spoke {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 12px 16px;
+  display: flex;
+  gap: 12px;
+  align-items: start;
+  font-size: 12px;
+}
+.ia-spoke-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.ia-spoke-title { font-weight: 700; color: #fff; margin-bottom: 3px; font-size: 12px; }
+.ia-spoke-desc { color: var(--muted); font-size: 11px; line-height: 1.5; }
+
+/* ── CALLOUT ── */
+.callout {
+  border-left: 3px solid;
+  border-radius: 0 var(--r) var(--r) 0;
+  padding: 14px 18px;
+  margin: 20px 0;
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+.callout strong { font-weight: 700; display: block; margin-bottom: 4px; font-size: 11px; letter-spacing: .04em; text-transform: uppercase; }
+.callout.gold { border-color: var(--gold2); background: var(--gold3); color: var(--muted); }
+.callout.gold strong { color: var(--gold2); }
+.callout.teal { border-color: var(--teal2); background: var(--teal3); color: var(--muted); }
+.callout.teal strong { color: var(--teal2); }
+.callout.red { border-color: var(--red2); background: var(--red3); color: var(--muted); }
+.callout.red strong { color: var(--red2); }
+.callout.blue { border-color: var(--blue2); background: var(--blue3); color: var(--muted); }
+.callout.blue strong { color: var(--blue2); }
+
+/* ── SEPARATOR ── */
+.sep { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+
+/* ── FOOTER ── */
+.doc-footer {
+  margin-left: 220px;
+  border-top: 1px solid var(--border);
+  padding: 24px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 10px;
+  color: var(--dim);
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.doc-footer strong { color: var(--muted); }
+
+/* ── SCROLL ── */
+html { scroll-behavior: smooth; }
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 3px; }
+
+@media (max-width: 900px) {
+  .sidenav { display: none; }
+  .main, .doc-footer { margin-left: 0; }
+  .cb-body { grid-template-columns: 1fr; }
+  .cb-col + .cb-col { border-left: none; border-top: 1px solid var(--border); }
+  .grid2, .grid3, .grid4 { grid-template-columns: 1fr; }
+  .flow-diagram { grid-template-columns: 1fr 1fr; }
+  .ia-diagram { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ──────────────────────────── SIDE NAV ──────────────────────────── -->
+<nav class="sidenav">
+  <div class="nav-logo">
+    <small>Note de Fonctionnement</small>
+    MIGC · v1
+  </div>
+  <div class="nav-section">Vue Globale</div>
+  <a class="nav-item" href="#architecture"><div class="nav-dot" style="background:#C9A84C"></div>Architecture 8 couches</a>
+  <a class="nav-item" href="#vision"><div class="nav-dot" style="background:#2AD4C5"></div>Vision & Raison d'être</a>
+  <a class="nav-item" href="#gouvernance"><div class="nav-dot" style="background:#5B9FE0"></div>Gouvernance & Décisions</a>
+  <a class="nav-item" href="#flux"><div class="nav-dot" style="background:#36BE76"></div>Flux d'information</a>
+  <a class="nav-item" href="#ia"><div class="nav-dot" style="background:#2AD4C5"></div>Rôle de l'IA</a>
+  <div class="nav-section">Couche par Couche</div>
+  <a class="nav-item" href="#c1"><div class="nav-dot" style="background:var(--c1)"></div>C1 — Direction Opér.</a>
+  <a class="nav-item" href="#c2"><div class="nav-dot" style="background:var(--c2)"></div>C2 — Sport7 Labs</a>
+  <a class="nav-item" href="#c3"><div class="nav-dot" style="background:var(--c3)"></div>C3 — Comité Directeur</a>
+  <a class="nav-item" href="#c4"><div class="nav-dot" style="background:var(--c4)"></div>C4 — Commissions</a>
+  <a class="nav-item" href="#c5"><div class="nav-dot" style="background:var(--c5)"></div>C5 — Orgs Pro</a>
+  <a class="nav-item" href="#c6"><div class="nav-dot" style="background:var(--c6)"></div>C6 — Politique & Business</a>
+  <a class="nav-item" href="#c7"><div class="nav-dot" style="background:var(--c7)"></div>C7 — Ambassadeurs</a>
+  <a class="nav-item" href="#c8"><div class="nav-dot" style="background:var(--c8)"></div>C8 — Smart Fund</a>
+  <div class="nav-section">Synthèse</div>
+  <a class="nav-item" href="#cadences"><div class="nav-dot" style="background:#7B4FB5"></div>Cadences de travail</a>
+  <a class="nav-item" href="#interdep"><div class="nav-dot" style="background:#E0873A"></div>Interdépendances</a>
+</nav>
+
+<!-- ──────────────────────────── MAIN ──────────────────────────── -->
+<div class="main">
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-eyebrow">CONFIDENTIEL — Sport7 Labs · Mars 2026</div>
+  <div class="cover-title">Note de Fonctionnement<br>Global du MIGC</div>
+  <div class="cover-subtitle">Comment les 8 couches de l'écosystème travaillent ensemble</div>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><strong>Document</strong> · MIGC-Note-Fonctionnement-Global-v1</div>
+    <div class="cover-meta-item"><strong>Référence</strong> · MIGC-Ecosystème-Personnes-v6</div>
+    <div class="cover-meta-item"><strong>Entité</strong> · Mixed Martial Arts International Grading Council</div>
+    <div class="cover-meta-item"><strong>Opérateur</strong> · Sport7 Labs SARL · Genève</div>
+  </div>
+  <div class="cover-layers">
+    <span class="cov-badge" style="background:var(--c1b);color:var(--c1);border:1px solid rgba(224,75,58,.3)">C1 Direction Opér.</span>
+    <span class="cov-badge" style="background:var(--c2b);color:var(--c2);border:1px solid rgba(224,135,58,.3)">C2 Sport7 Labs</span>
+    <span class="cov-badge" style="background:var(--c3b);color:var(--c3);border:1px solid rgba(201,168,76,.3)">C3 Comité Directeur</span>
+    <span class="cov-badge" style="background:var(--c4b);color:var(--c4);border:1px solid rgba(75,174,106,.3)">C4 Commissions</span>
+    <span class="cov-badge" style="background:var(--c5b);color:var(--c5);border:1px solid rgba(59,130,196,.3)">C5 Orgs Pro</span>
+    <span class="cov-badge" style="background:var(--c6b);color:var(--c6);border:1px solid rgba(123,79,181,.3)">C6 Politique & Business</span>
+    <span class="cov-badge" style="background:var(--c7b);color:var(--c7);border:1px solid rgba(29,181,168,.3)">C7 Ambassadeurs</span>
+    <span class="cov-badge" style="background:var(--c8b);color:var(--c8);border:1px solid rgba(42,107,74,.3)">C8 Smart Fund</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- ════════════════ ARCHITECTURE ════════════════ -->
+<div id="architecture" class="page-section">
+  <div class="section-eyebrow">Vue d'ensemble</div>
+  <div class="section-title">Architecture en 8 couches</div>
+  <div class="section-lead">
+    Le MIGC est structuré en huit couches concentriques et interdépendantes. Chaque couche a une responsabilité précise, un régime juridique propre et des interfaces définies avec les couches adjacentes. L'ensemble forme un écosystème auto-régulé dont Sport7 Labs est l'opérateur technologique mandaté.
+  </div>
+
+  <div class="arch-diagram">
+    <div class="arch-row">
+      <div class="arch-block c1">
+        <div class="ab-num" style="color:var(--c1)">1</div>
+        <div class="ab-content">
+          <div class="ab-label">Direction Opérationnelle MIGC</div>
+          <div class="ab-sub">7–8 salariés · Exécution quotidienne · Yann Dib DG / Bertrand Amoussou DT</div>
+        </div>
+        <span class="ab-tag" style="background:var(--c1b);color:var(--c1);border:1px solid rgba(224,75,58,.2)">EXÉCUTIF</span>
+      </div>
+    </div>
+    <div class="arch-row">
+      <div class="arch-block c2">
+        <div class="ab-num" style="color:var(--c2)">2</div>
+        <div class="ab-content">
+          <div class="ab-label">Sport7 Labs — Opérateur Technologique Mandaté</div>
+          <div class="ab-sub">8–12 ingénieurs · DSP, Ranking, IA Guardian · Mandat exclusif 20 ans · SLA avec pénalités</div>
+        </div>
+        <span class="ab-tag" style="background:var(--c2b);color:var(--c2);border:1px solid rgba(224,135,58,.2)">TECHNOLOGIE</span>
+      </div>
+    </div>
+    <div class="arch-row">
+      <div class="arch-block c3">
+        <div class="ab-num" style="color:var(--c3)">3</div>
+        <div class="ab-content">
+          <div class="ab-label">Comité Directeur — Gouvernance Stratégique</div>
+          <div class="ab-sub">10 sièges · Bertrand Amoussou Président · GSP Président d'Honneur · + siège permanent Orgs Pro (C5) + siège permanent Sport7 Labs (C2)</div>
+        </div>
+        <span class="ab-tag" style="background:var(--c3b);color:var(--c3);border:1px solid rgba(201,168,76,.2)">GOUVERNANCE</span>
+      </div>
+    </div>
+    <div class="arch-row">
+      <div class="arch-block c4">
+        <div class="ab-num" style="color:var(--c4)">4</div>
+        <div class="ab-content">
+          <div class="ab-label">Commissions Spécialisées — 5 pôles d'expertise</div>
+          <div class="ab-sub">Technique, Ranking, Éthique, Protection Sociale, Développement · 20 membres · Renzo Gracie, DC, Fedor…</div>
+        </div>
+        <span class="ab-tag" style="background:var(--c4b);color:var(--c4);border:1px solid rgba(75,174,106,.2)">EXPERTISE</span>
+      </div>
+    </div>
+    <div class="arch-row">
+      <div class="arch-block c5">
+        <div class="ab-num" style="color:var(--c5)">5</div>
+        <div class="ab-content">
+          <div class="ab-label">Comité des Organisations Pro — 10 membres fondateurs</div>
+          <div class="ab-sub">UFC · ONE · PFL · RIZIN · Cage Warriors · KSW · ACA · BRAVE CF · Ares MMA · Oktagon · 1 représentant élu siège permanent C3 · Assemblée trimestrielle souveraine · Co-construction des standards</div>
+        </div>
+        <span class="ab-tag" style="background:var(--c5b);color:var(--c5);border:1px solid rgba(59,130,196,.2)">PARTENAIRE STRATÉGIQUE</span>
+      </div>
+    </div>
+    <div class="arch-row">
+      <div class="arch-block c6">
+        <div class="ab-num" style="color:var(--c6)">6</div>
+        <div class="ab-content">
+          <div class="ab-label">Comité Politique, Business & Influence</div>
+          <div class="ab-sub">Vignal, Attar, Abdelaziz, Bennett, Fertitta · Adoption externe · Ouvertures gouvernements, marchés, investisseurs</div>
+        </div>
+        <span class="ab-tag" style="background:var(--c6b);color:var(--c6);border:1px solid rgba(123,79,181,.2)">INFLUENCE</span>
+      </div>
+    </div>
+    <div class="arch-row">
+      <div class="arch-block c7">
+        <div class="ab-num" style="color:var(--c7)">7</div>
+        <div class="ab-content">
+          <div class="ab-label">Ambassadeurs Régionaux — Représentation Mondiale</div>
+          <div class="ab-sub">9 zones géographiques · Nogueira, Khabib, Ngannou, Bisping… · Visages locaux du MIGC</div>
+        </div>
+        <span class="ab-tag" style="background:var(--c7b);color:var(--c7);border:1px solid rgba(29,181,168,.2)">RAYONNEMENT</span>
+      </div>
+    </div>
+    <div class="arch-row">
+      <div class="arch-block c8">
+        <div class="ab-num" style="color:var(--c8)">8</div>
+        <div class="ab-content">
+          <div class="ab-label">Association de Prévoyance MIGC — Smart Fund</div>
+          <div class="ab-sub">Art. 60–79 CC Suisse · Conseil indépendant · Fonds retraite par points · Gnosis Safe 3/5 multi-sig · Flux jamais via Sport7</div>
+        </div>
+        <span class="ab-tag" style="background:var(--c8b);color:var(--c8);border:1px solid rgba(42,107,74,.2)">PRÉVOYANCE</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout gold">
+    <strong>Principe fondateur</strong>
+    Le MIGC est une <strong>association suisse (Art. 60–79 CC)</strong> à but non lucratif. Sport7 Labs en est l'<strong>opérateur mandaté exclusif</strong> pour 20 ans — deux entités juridiques distinctes mais liées par convention. L'Association de Prévoyance (Couche 8) est une <strong>troisième entité indépendante</strong> : aucun flux financier du fonds ne transite par Sport7 Labs.
+  </div>
+</div>
+
+<!-- ════════════════ VISION ════════════════ -->
+<div id="vision" class="page-section">
+  <div class="section-eyebrow">Raison d'être</div>
+  <div class="section-title">Vision globale & logique d'ensemble</div>
+  <div class="section-lead">Comprendre pourquoi l'écosystème est structuré ainsi, et quelle logique relie chaque couche à la mission centrale du MIGC.</div>
+
+  <div class="grid2">
+    <div class="info-card">
+      <div class="ic-head"><div class="ic-icon">🏆</div><div><div class="ic-title">La mission centrale</div><div class="ic-sub">Ce que le MIGC construit</div></div></div>
+      <div class="ic-body">
+        Le MIGC crée l'<strong>infrastructure de référence mondiale du MMA</strong> : un système de <strong>grades certifiés</strong>, de <strong>rankings reconnus</strong> et d'un <strong>Digital Sport Passport (DSP)</strong> universel.<br><br>
+        Le MIGC standardise <strong>le MMA professionnel, semi-professionnel, amateur et loisir</strong> dans son ensemble — clubs, fédérations, organisations de combat, combattants.
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="ic-head"><div class="ic-icon">⚙️</div><div><div class="ic-title">La logique des 8 couches</div><div class="ic-sub">Trois cercles concentriques</div></div></div>
+      <div class="ic-body">
+        <strong>Cercle opérationnel (C1–C2) :</strong> exécute, livre, maintient au quotidien.<br><br>
+        <strong>Cercle de gouvernance et d'expertise (C3–C5) :</strong> oriente les décisions, valide les standards, représente l'industrie.<br><br>
+        <strong>Cercle d'influence et de rayonnement (C6–C7) :</strong> fait adopter ces standards au plus grand nombre.<br><br>
+        <strong>Cercle de protection (C8) :</strong> pérennise la valeur créée pour les combattants.
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="ic-head"><div class="ic-icon">🔐</div><div><div class="ic-title">Séparation des responsabilités</div><div class="ic-sub">Qui décide de quoi</div></div></div>
+      <div class="ic-body">
+        <strong>Sport7 Labs (C2) :</strong> ne décide jamais des standards — elle les exécute selon les mandats du Comité.<br><br>
+        <strong>Comité Directeur (C3) :</strong> décide des orientations stratégiques et valide les propositions des Commissions.<br><br>
+        <strong>Commissions (C4) :</strong> proposent, jamais n'imposent seules — leurs décisions remontent au Comité pour ratification.<br><br>
+        <strong>Prévoyance (C8) :</strong> totalement autonome des flux commerciaux.
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="ic-head"><div class="ic-icon">🌐</div><div><div class="ic-title">La création de valeur</div><div class="ic-sub">Le cercle vertueux MIGC</div></div></div>
+      <div class="ic-body">
+        Le MIGC certifie des grades → un <em>combattant gradé vaut plus</em> sur le marché (contrats, visibilité, crédibilité) → les clubs intègrent les grades pour attirer et retenir des pratiquants → les organisations pro exigent des grades MIGC dans leurs sélections et contrats → les revenus d'affiliation alimentent le MIGC → le MIGC finance le Smart Fund → les combattants bénéficient d'une retraite garantie → la promesse sociale renforce l'attractivité du grade → boucle de renforcement.<br><br>
+        <strong>La valeur est créée pour le combattant d'abord.</strong> C5, C6 et C7 accélèrent cette adoption, mais c'est la <em>reconnaissance par le marché du travail sportif</em> qui la rend irréversible.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ GOUVERNANCE ════════════════ -->
+<div id="gouvernance" class="page-section">
+  <div class="section-eyebrow">Prises de décision</div>
+  <div class="section-title">Gouvernance & circuits de décision</div>
+  <div class="section-lead">Le MIGC distingue quatre types de décisions selon leur nature, leur urgence et leur impact. Chaque type suit un circuit précis impliquant des couches définies.</div>
+
+  <div class="flow-diagram">
+    <div class="flow-node">
+      <div class="fn-label">Étape 1</div>
+      <div class="fn-name">Proposition</div>
+      <div class="fn-desc">Commission concernée (C4) ou Direction Opér. (C1)</div>
+    </div>
+    <div class="flow-node">
+      <div class="fn-label">Étape 2</div>
+      <div class="fn-name">Instruction</div>
+      <div class="fn-desc">Secrétaire Général (C3) coordonne le dossier + IA Assistant</div>
+    </div>
+    <div class="flow-node">
+      <div class="fn-label">Étape 3</div>
+      <div class="fn-name">Délibération</div>
+      <div class="fn-desc">Comité Directeur (C3) vote — quorum 5/8</div>
+    </div>
+    <div class="flow-node">
+      <div class="fn-label">Étape 4</div>
+      <div class="fn-name">Exécution</div>
+      <div class="fn-desc">C1 (Direction) mandate C2 (Sport7 Labs) pour implémentation</div>
+    </div>
+  </div>
+
+  <table class="circuit-table">
+    <thead>
+      <tr>
+        <th>Type de décision</th>
+        <th>Déclencheur</th>
+        <th>Circuit</th>
+        <th>Délai cible</th>
+        <th>Couches impliquées</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="ct-type" style="color:var(--c1)">Urgence opérationnelle</td>
+        <td class="ct-trigger">Incident DSP, faille IA Guardian, crise réputationnelle</td>
+        <td>DG (C1) → Comité Directeur (C3) en convocation d'urgence → exécution immédiate C2</td>
+        <td><strong>24–72h</strong></td>
+        <td><span class="ct-badge" style="background:var(--c1b);color:var(--c1)">C1</span><span class="ct-badge" style="background:var(--c3b);color:var(--c3)">C3</span><span class="ct-badge" style="background:var(--c2b);color:var(--c2)">C2</span></td>
+      </tr>
+      <tr>
+        <td class="ct-type" style="color:var(--c3)">Standard & grade</td>
+        <td class="ct-trigger">Nouvelle discipline, révision barème, certification nouvelles techniques</td>
+        <td>Commission Technique (C4) instrui → <strong>consultation obligatoire C5</strong> (Assemblée Orgs Pro) → Comité Directeur (C3) vote → publication par C2 dans DSP</td>
+        <td><strong>3–6 semaines</strong></td>
+        <td><span class="ct-badge" style="background:var(--c4b);color:var(--c4)">C4</span><span class="ct-badge" style="background:var(--c5b);color:var(--c5)">C5</span><span class="ct-badge" style="background:var(--c3b);color:var(--c3)">C3</span><span class="ct-badge" style="background:var(--c2b);color:var(--c2)">C2</span></td>
+      </tr>
+      <tr>
+        <td class="ct-type" style="color:var(--c4)">Ranking officiel</td>
+        <td class="ct-trigger">Résultats compétitions, demande organisation pro, contestation</td>
+        <td>Organisation pro soumet les résultats via portail C2 → Commission Ranking (C4) calcule → <strong>représentant C5 au Comité</strong> peut signaler une anomalie sous 24h → Comité (C3) valide → C2 publie dans DSP</td>
+        <td><strong>72h post-événement</strong></td>
+        <td><span class="ct-badge" style="background:var(--c5b);color:var(--c5)">C5</span><span class="ct-badge" style="background:var(--c4b);color:var(--c4)">C4</span><span class="ct-badge" style="background:var(--c3b);color:var(--c3)">C3</span><span class="ct-badge" style="background:var(--c2b);color:var(--c2)">C2</span></td>
+      </tr>
+      <tr>
+        <td class="ct-type" style="color:var(--c5)">Affiliation organisation</td>
+        <td class="ct-trigger">Demande d'une organisation pro ou d'une fédération nationale</td>
+        <td>Commission de Développement &amp; de Partnership (C4) instruit le dossier → Direction (C1) prépare la convention → Comité (C3) vote → C2 intègre dans le système</td>
+        <td><strong>2–6 semaines</strong></td>
+        <td><span class="ct-badge" style="background:var(--c4b);color:var(--c4)">C4</span><span class="ct-badge" style="background:var(--c1b);color:var(--c1)">C1</span><span class="ct-badge" style="background:var(--c3b);color:var(--c3)">C3</span><span class="ct-badge" style="background:var(--c5b);color:var(--c5)">C5</span></td>
+      </tr>
+      <tr>
+        <td class="ct-type" style="color:var(--c8)">Versement pension</td>
+        <td class="ct-trigger">Combattant atteignant l'âge de pension ou seuil de points</td>
+        <td>Comptable C8 calcule droits → Gestionnaire fonds (Joey Dib) vérifie → Gnosis Safe 3/5 signe → virement</td>
+        <td><strong>M+30 jours</strong></td>
+        <td><span class="ct-badge" style="background:var(--c8b);color:var(--c8)">C8</span></td>
+      </tr>
+      <tr>
+        <td class="ct-type" style="color:var(--c6)">Décision stratégique majeure</td>
+        <td class="ct-trigger">Partenariat gouvernemental, nouvelle zone géographique, levée de fonds</td>
+        <td>C6 (influences) ouvre la porte → C1 instruit → C3 vote en AG → C2 adapte la plateforme</td>
+        <td><strong>1–3 mois</strong></td>
+        <td><span class="ct-badge" style="background:var(--c6b);color:var(--c6)">C6</span><span class="ct-badge" style="background:var(--c1b);color:var(--c1)">C1</span><span class="ct-badge" style="background:var(--c3b);color:var(--c3)">C3</span><span class="ct-badge" style="background:var(--c2b);color:var(--c2)">C2</span></td>
+      </tr>
+      <tr>
+        <td class="ct-type" style="color:var(--c4)">Sanction éthique</td>
+        <td class="ct-trigger">Signalement dopage, comportement contraire aux valeurs MIGC, fraude DSP</td>
+        <td>Commission Éthique (C4) instruit → Comité Directeur (C3) prononce la sanction → C2 applique dans DSP</td>
+        <td><strong>2–4 semaines</strong></td>
+        <td><span class="ct-badge" style="background:var(--c4b);color:var(--c4)">C4</span><span class="ct-badge" style="background:var(--c3b);color:var(--c3)">C3</span><span class="ct-badge" style="background:var(--c2b);color:var(--c2)">C2</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout teal">
+    <strong>Principe de subsidiarité</strong>
+    Toute décision est prise au niveau le plus bas capable de la gérer. La Direction Opérationnelle (C1) décide seule des questions d'exécution quotidienne. Elle ne remonte au Comité (C3) que pour les décisions impactant les standards, les affiliations ou le budget. Le Comité ne descend jamais dans l'opérationnel. <strong>Les organisations pro (C5)</strong> sont consultées avant toute décision impactant les conditions de compétition ou les règles de ranking — leur représentant au Comité porte ce droit de consultation systématique.
+  </div>
+
+  <div class="callout red">
+    <strong>Règle d'or — séparation des pouvoirs</strong>
+    Sport7 Labs (C2) dispose d'un <strong>siège permanent au Comité Directeur en tant que co-fondateur</strong>, mais sans droit de vote sur les sujets qui la concernent directement (SLA, rémunération du mandat, renouvellement du contrat, pénalités). Sur toute autre délibération, son rôle est le conseil technique — non la décision. Cette séparation est fondamentale pour la crédibilité institutionnelle du MIGC.
+  </div>
+</div>
+
+<!-- ════════════════ FLUX ════════════════ -->
+<div id="flux" class="page-section">
+  <div class="section-eyebrow">Circulation de l'information</div>
+  <div class="section-title">Flux d'information entre les couches</div>
+  <div class="section-lead">L'information circule selon des canaux définis : des flux descendants (directive → exécution), des flux ascendants (terrain → gouvernance) et des flux horizontaux (coordination entre pairs). L'IA est le système nerveux central.</div>
+
+  <div class="grid3">
+    <div class="info-card">
+      <div class="ic-head"><div class="ic-icon">⬇️</div><div><div class="ic-title">Flux descendant</div><div class="ic-sub">Directives, standards, mandats</div></div></div>
+      <div class="ic-body">
+        <strong>C3 → C1 :</strong> Orientations stratégiques, budget annuel, objectifs institutionnels.<br><br>
+        <strong>C1 → C2 :</strong> Cahiers des charges techniques, SLA, déploiements plateforme.<br><br>
+        <strong>C4 → C2 :</strong> Référentiels grades, algorithmes ranking, règles techniques — via C1 comme interface.<br><br>
+        <strong>C3 → C7 :</strong> Brief ambassadeurs, messages officiels, zones prioritaires.
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="ic-head"><div class="ic-icon">⬆️</div><div><div class="ic-title">Flux ascendant</div><div class="ic-sub">Remontées terrain, alertes, propositions</div></div></div>
+      <div class="ic-body">
+        <strong>C2 → C1 :</strong> Rapports d'activité DSP, métriques d'adoption, alertes IA Guardian.<br><br>
+        <strong>C7 → C1 :</strong> Retours terrain par région (fédérations intéressées, freins locaux, opportunités).<br><br>
+        <strong>C5 → C3 :</strong> Propositions des organisations pro (modifications ranking, nouvelles catégories).<br><br>
+        <strong>C8 → C1 :</strong> Rapports trimestriels fonds, alertes compliance, statuts versements.
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="ic-head"><div class="ic-icon">↔️</div><div><div class="ic-title">Flux horizontal</div><div class="ic-sub">Coordination entre couches de même niveau</div></div></div>
+      <div class="ic-body">
+        <strong>C4 ↔ C4 :</strong> Les 5 commissions se coordonnent en inter-commission mensuelle (Commission Technique + Commission Ranking notamment).<br><br>
+        <strong>C5 ↔ C4 :</strong> L'Assemblée des Organisations Pro (C5) est <em>consultée obligatoirement</em> avant toute révision de standard ou de règle de ranking — pas de standard validé sans retour C5.<br><br>
+        <strong>C5 ↔ C3 :</strong> Le représentant élu C5 siège au Comité — il porte les positions de l'Assemblée Pro et dispose d'un droit de proposition formelle directe.<br><br>
+        <strong>C5 ↔ C7 :</strong> Les organisations pro briefent les ambassadeurs de leur zone avant événements majeurs.<br><br>
+        <strong>C6 ↔ C5 :</strong> Les agents (Attar, Abdelaziz) coordonnent avec les organisations pro pour intégrer les grades MIGC dans les contrats combattants.
+      </div>
+    </div>
+  </div>
+
+  <div style="margin: 32px 0">
+    <div class="section-eyebrow" style="margin-bottom:16px">Interfaces clés entre couches</div>
+    <div class="link-table">
+      <div class="lt-row" style="font-weight:700;font-size:10px;color:var(--dim);border-bottom:1px solid var(--border2)">
+        <div>INTERFACE</div><div>NATURE DU LIEN</div><div>TYPE</div>
+      </div>
+      <div class="lt-row">
+        <div class="lt-from" style="color:var(--c1)">C1 ↔ C2</div>
+        <div class="lt-desc">Contrat de mandat exclusif 20 ans + SLA · La Direction opérationnelle est la <strong>seule interface</strong> entre le MIGC et Sport7 Labs. Toute demande technique passe par le DG.</div>
+        <div><span class="lt-type" style="background:var(--c1b);color:var(--c1)">Contractuel</span></div>
+      </div>
+      <div class="lt-row">
+        <div class="lt-from" style="color:var(--c3)">C3 ↔ C1</div>
+        <div class="lt-desc">Relation mandant/mandataire · Le Comité Directeur fixe les objectifs annuels et évalue la Direction. La Direction exécute et rend compte mensuellement.</div>
+        <div><span class="lt-type" style="background:var(--c3b);color:var(--c3)">Hiérarchique</span></div>
+      </div>
+      <div class="lt-row">
+        <div class="lt-from" style="color:var(--c4)">C4 → C3</div>
+        <div class="lt-desc">Rapports et recommandations · Les commissions n'ont pas de pouvoir décisionnel propre. Elles instruisent les dossiers et soumettent des recommandations au Comité qui ratifie ou rejette.</div>
+        <div><span class="lt-type" style="background:var(--c4b);color:var(--c4)">Consultatif</span></div>
+      </div>
+      <div class="lt-row">
+        <div class="lt-from" style="color:var(--c5)">C5 ↔ C3</div>
+        <div class="lt-desc"><strong>Siège permanent au Comité Directeur :</strong> 1 représentant élu par et parmi les 10 organisations fondatrices · mandat de 2 ans renouvelable · porte les positions de l'Assemblée Pro · sans vote sur les décisions affectant directement son organisation d'origine. <strong>Assemblée trimestrielle souveraine :</strong> les 10 organisations se réunissent entre elles, votent des résolutions formelles transmises au Comité — obligation de réponse dans les 30 jours.</div>
+        <div><span class="lt-type" style="background:var(--c5b);color:var(--c5)">Partenaire Stratégique</span></div>
+      </div>
+      <div class="lt-row">
+        <div class="lt-from" style="color:var(--c6)">C6 → C3</div>
+        <div class="lt-desc">Les membres du Comité Politique & Business ont un <strong>rôle d'ouverture de portes</strong>, pas de décision. Ils facilitent des connexions que la Direction structure ensuite en partenariats formels.</div>
+        <div><span class="lt-type" style="background:var(--c6b);color:var(--c6)">Facilitation</span></div>
+      </div>
+      <div class="lt-row">
+        <div class="lt-from" style="color:var(--c7)">C7 ↔ C4</div>
+        <div class="lt-desc">Les ambassadeurs reçoivent un <strong>brief mensuel des commissions</strong> sur les actualités techniques et ranking à relayer dans leurs zones. Retours terrain vers Commission de Développement &amp; de Partnership.</div>
+        <div><span class="lt-type" style="background:var(--c7b);color:var(--c7)">Communication</span></div>
+      </div>
+      <div class="lt-row">
+        <div class="lt-from" style="color:var(--c8)">C8 ↔ C2</div>
+        <div class="lt-desc">Sport7 Labs fournit les données DSP (points accumulés par combattant) à l'Association de Prévoyance pour le calcul des droits à pension. <strong>Flux de données uniquement — jamais financier.</strong></div>
+        <div><span class="lt-type" style="background:var(--c8b);color:var(--c8)">Données</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ IA ════════════════ -->
+<div id="ia" class="page-section">
+  <div class="section-eyebrow">Intelligence artificielle</div>
+  <div class="section-title">Le rôle transversal de l'IA dans l'écosystème</div>
+  <div class="section-lead">L'IA n'est pas un outil parmi d'autres dans le MIGC — c'est le <strong>système nerveux central</strong> qui connecte, surveille et assiste toutes les couches en temps réel.</div>
+
+  <div class="ia-diagram">
+    <div class="ia-center">
+      <div class="ia-center-icon">🤖</div>
+      <div class="ia-center-title">IA Guardian<br>+ IA Assistants</div>
+      <div class="ia-center-sub">Système 24/7 · Couche 2<br>+ 1 assistant par membre C3</div>
+    </div>
+    <div class="ia-spokes">
+      <div class="ia-spoke">
+        <div class="ia-spoke-icon">🛡️</div>
+        <div>
+          <div class="ia-spoke-title">IA Guardian — Couche 2 (Sport7 Labs)</div>
+          <div class="ia-spoke-desc">Surveille l'intégrité du DSP et des rankings 24/7 · Détecte les anomalies de données, tentatives de manipulation de grades ou de classement · Déclenche des alertes automatiques vers la Direction (C1) et la Commission Éthique (C4) · Co-signe (Gnosis Safe) les versements de pension C8 au-delà de seuils définis · Journal immuable de toutes les modifications de données.</div>
+        </div>
+      </div>
+      <div class="ia-spoke">
+        <div class="ia-spoke-icon">👤</div>
+        <div>
+          <div class="ia-spoke-title">IA Assistants dédiés — Couche 3 (1 par membre du Comité)</div>
+          <div class="ia-spoke-desc">Chaque membre du Comité Directeur dispose d'un assistant IA personnel · Prépare les dossiers avant les réunions · Coordonne les communiqués officiels · Synthétise les rapports des commissions · Génère les procès-verbaux de séances · Suit les plans d'action et relance les parties prenantes.</div>
+        </div>
+      </div>
+      <div class="ia-spoke">
+        <div class="ia-spoke-icon">📊</div>
+        <div>
+          <div class="ia-spoke-title">Moteur de calcul Rankings — Couche 2</div>
+          <div class="ia-spoke-desc">Algorithme de ranking MIGC mis à jour automatiquement après chaque événement soumis par les organisations (C5) · Paramètres définis par la Commission Ranking (C4) · Résultats soumis à validation du Comité avant publication · Transparent et auditable.</div>
+        </div>
+      </div>
+      <div class="ia-spoke">
+        <div class="ia-spoke-icon">📡</div>
+        <div>
+          <div class="ia-spoke-title">DSP — Digital Sport Passport · Couche 2</div>
+          <div class="ia-spoke-desc">Passeport sportif numérique de chaque combattant affilié · Enregistre grades, résultats, points de prévoyance · Alimente la Couche 8 (calcul droits pension) · Accessible aux organisations affiliées en C5 · Toute modification est tracée et signée numériquement.</div>
+        </div>
+      </div>
+      <div class="ia-spoke">
+        <div class="ia-spoke-icon">🌍</div>
+        <div>
+          <div class="ia-spoke-title">Brief IA Ambassadeurs — Couche 7</div>
+          <div class="ia-spoke-desc">Les IA Assistants (C3) génèrent un brief mensuel par zone géographique pour chaque ambassadeur · Contenus localisés sur les actualités grades/ranking, événements partenaires, points de langage MIGC · Réduit la charge de coordination entre le Comité et les 9 ambassadeurs.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout blue">
+    <strong>Règle critique — validation humaine obligatoire</strong>
+    L'IA Guardian <strong>ne décide jamais seule</strong> d'une sanction, d'une modification de grade ou d'un changement de ranking. Elle <strong>détecte, alerte et propose</strong>. La décision finale appartient toujours à un humain (Commission C4 ou Comité C3). La signature multi-sig Gnosis Safe (3/5) pour la Couche 8 impose la même règle pour les flux financiers : aucun versement sans validation humaine croisée.
+  </div>
+</div>
+
+<!-- ════════════════ COUCHES DÉTAILLÉES ════════════════ -->
+<div id="c1" class="page-section">
+  <div class="section-eyebrow">Couche 1</div>
+  <div class="section-title">Direction Opérationnelle MIGC</div>
+  <div class="section-lead">Le moteur quotidien de l'organisation. Elle traduit les orientations du Comité en actions concrètes, pilote Sport7 Labs et est l'interface centrale entre toutes les couches.</div>
+
+  <div class="couche-block">
+    <div class="cb-header" style="border-left: 4px solid var(--c1)">
+      <div class="cb-num" style="color:var(--c1)">01</div>
+      <div class="cb-info">
+        <div class="cb-name">Direction Opérationnelle — 7–8 personnes</div>
+        <div class="cb-role">DG Yann Dib · DT Bertrand Amoussou · DAF Mickael Salfati · Juriste Pierre · Dir. IA Benjamin Bouchard</div>
+      </div>
+      <span class="cb-badge" style="background:var(--c1b);color:var(--c1);border:1px solid rgba(224,75,58,.2)">EXÉCUTIF · Intérim puis Permanent</span>
+    </div>
+    <div class="cb-body">
+      <div class="cb-col">
+        <div class="cb-col-title">Responsabilités & Objectifs</div>
+        <ul class="item-list">
+          <li><strong>Exécution quotidienne</strong> de la feuille de route stratégique définie par le Comité (C3)</li>
+          <li><strong>Pilotage de Sport7 Labs (C2)</strong> : seule interface contractuelle avec l'opérateur technologique · commandes, SLA, livraisons</li>
+          <li><strong>Préparation des séances Comité</strong> : dossiers, ordres du jour, comptes rendus avec support IA Assistants</li>
+          <li><strong>Gestion des affiliations</strong> : instruction des demandes organisations (C5), rédaction des conventions de contribution</li>
+          <li><strong>Relations extérieures courantes</strong> : médias, partenaires institutionnels, coordination avec C6 sur ouvertures</li>
+          <li><strong>Suivi financier MIGC</strong> : DAF consolide les comptes de l'association · indépendant des flux C8</li>
+          <li><strong>Suivi légal et compliance</strong> : juriste veille au respect des statuts CC suisses, droit du sport international</li>
+        </ul>
+      </div>
+      <div class="cb-col">
+        <div class="cb-col-title">Cadence & Coordination IA</div>
+        <ul class="item-list">
+          <li><strong>Réunion de direction hebdomadaire</strong> (lundi) : revue des priorités, état des livrables C2, alertes Guardian</li>
+          <li><strong>Rapport mensuel au Comité (C3)</strong> : activité, métriques DSP, pipeline affiliations, finances</li>
+          <li><strong>Comité de pilotage trimestriel</strong> avec Sport7 Labs : SLA, roadmap technique, budgets</li>
+          <li><strong>IA Assistant DG</strong> : coordonne la préparation de chaque séance Comité · génère les ordres du jour · centralise les inputs des 5 commissions</li>
+          <li><strong>IA Assistant Juridique</strong> : veille réglementaire internationale · premiers drafts de conventions · alertes droit du sport</li>
+          <li><em>Alerte Guardian</em> → DG informé sous 2h · évaluation sous 24h · décision sous 72h</li>
+        </ul>
+      </div>
+    </div>
+    <div class="cb-footer">
+      <div class="cbf-item"><span class="cbf-label">Liens avec</span> C2 (contrat SLA), C3 (compte-rendu mensuel), C4 (collecte recommandations), C5 (affiliations), C6 (opportunités), C7 (brief ambassadeurs), C8 (données DSP uniquement)</div>
+    </div>
+  </div>
+</div>
+
+<div id="c2" class="page-section">
+  <div class="section-eyebrow">Couche 2</div>
+  <div class="section-title">Sport7 Labs — Opérateur Technologique</div>
+  <div class="section-lead">Entité juridique distincte (SARL), Sport7 Labs est l'architecte et le mainteneur de toute l'infrastructure numérique du MIGC. Son mandat exclusif de 20 ans l'engage sur des engagements de résultat, pas de moyens.</div>
+
+  <div class="couche-block">
+    <div class="cb-header" style="border-left: 4px solid var(--c2)">
+      <div class="cb-num" style="color:var(--c2)">02</div>
+      <div class="cb-info">
+        <div class="cb-name">Sport7 Labs SARL — 8–12 ingénieurs + IA systèmes</div>
+        <div class="cb-role">DSP · Ranking · IA Guardian · IA Assistants · Smart contracts · Sécurité</div>
+      </div>
+      <span class="cb-badge" style="background:var(--c2b);color:var(--c2);border:1px solid rgba(224,135,58,.2)">MANDAT EXCLUSIF 20 ANS</span>
+    </div>
+    <div class="cb-body">
+      <div class="cb-col">
+        <div class="cb-col-title">Périmètre technique & Livrables</div>
+        <ul class="item-list">
+          <li><strong>DSP (Digital Sport Passport)</strong> : développement, maintenance, évolutions · base de données immuable des parcours combattants</li>
+          <li><strong>Moteur de Ranking</strong> : algorithme · mises à jour post-événements · interface soumission des organisations pro</li>
+          <li><strong>IA Guardian</strong> : surveillance 24/7 intégrité données · alertes anomalies · journal immuable · co-signature smart contracts</li>
+          <li><strong>IA Assistants</strong> : déploiement et maintenance d'un assistant dédié pour chaque membre du Comité (C3)</li>
+          <li><strong>Interface Organisations Pro (C5)</strong> : portail d'accès aux données MIGC pour les membres fondateurs</li>
+          <li><strong>Smart contracts C8</strong> : infrastructure Gnosis Safe + Polygon pour l'Association de Prévoyance · flux de données DSP vers C8</li>
+        </ul>
+      </div>
+      <div class="cb-col">
+        <div class="cb-col-title">SLA & Engagements</div>
+        <ul class="item-list">
+          <li><strong>Disponibilité DSP :</strong> 99,5% uptime · pénalités contractuelles en cas de dépassement</li>
+          <li><strong>Mise à jour Rankings :</strong> max 72h après réception des résultats d'un événement soumis</li>
+          <li><strong>Alertes Guardian :</strong> détection et notification C1 sous 2h maximum en cas d'anomalie critique</li>
+          <li><strong>MIGC co-propriétaire des données</strong> : toute la data DSP appartient conjointement au MIGC · Sport7 ne peut pas l'exploiter commercialement sans accord</li>
+          <li><strong>Siège permanent co-fondateur</strong> au Comité Directeur (C3) : droit de présence et d'expression · pas de vote sur les décisions impliquant Sport7 Labs</li>
+          <li><strong>Rapport technique mensuel</strong> à la Direction (C1) : métriques, incidents, roadmap</li>
+          <li><strong>Audit de sécurité</strong> : annuel par cabinet externe · smart contracts : CHF 15–25K</li>
+        </ul>
+      </div>
+    </div>
+    <div class="cb-footer">
+      <div class="cbf-item"><span class="cbf-label">Liens avec</span> C1 (interface unique, SLA), C3 (IA Assistants membres), C4 (paramètres ranking reçus), C8 (données DSP → calcul pension, jamais flux financiers)</div>
+    </div>
+  </div>
+
+  <div class="callout red">
+    <strong>Cloisonnement critique</strong>
+    Sport7 Labs n'a <strong>aucun accès aux flux financiers</strong> de l'Association de Prévoyance (C8). Elle fournit uniquement les données DSP (points accumulés par combattant) via une API sécurisée. Le calcul des droits à pension et les virements sont exclusivement sous contrôle de l'Association de Prévoyance et de son Conseil indépendant.
+  </div>
+</div>
+
+<div id="c3" class="page-section">
+  <div class="section-eyebrow">Couche 3</div>
+  <div class="section-title">Comité Directeur — Gouvernance stratégique</div>
+  <div class="section-lead">Organe souverain de l'association MIGC. Il définit les orientations à long terme, valide les standards et représente l'intérêt général du MIGC face aux parties prenantes extérieures.</div>
+
+  <div class="couche-block">
+    <div class="cb-header" style="border-left: 4px solid var(--c3)">
+      <div class="cb-num" style="color:var(--c3)">03</div>
+      <div class="cb-info">
+        <div class="cb-name">Comité Directeur — 10 sièges · Art. 60–79 CC Suisse</div>
+        <div class="cb-role">Bertrand Amoussou Pdt · GSP Pdt d'Honneur · Nogueira VP · Lembo SG · Perillo Trésorier · Zahabi · Kavanagh · Gane · + Siège permanent Orgs Pro (C5) · + Siège permanent Sport7 Labs (C2)</div>
+      </div>
+      <span class="cb-badge" style="background:var(--c3b);color:var(--c3);border:1px solid rgba(201,168,76,.2)">ORGANE SOUVERAIN · 10 SIÈGES</span>
+    </div>
+    <div class="cb-body">
+      <div class="cb-col">
+        <div class="cb-col-title">Pouvoirs & Responsabilités</div>
+        <ul class="item-list">
+          <li><strong>Ratification des standards MIGC</strong> : tout grade, règle technique, barème de ranking — proposé par C4, <em>consulté C5</em>, ratifié par C3</li>
+          <li><strong>Approbation du budget annuel</strong> et des grandes dépenses</li>
+          <li><strong>Décision d'affiliation</strong> des nouvelles organisations (C5) et des fédérations</li>
+          <li><strong>Nomination et révocation</strong> de la Direction Opérationnelle (C1)</li>
+          <li><strong>Représentation institutionnelle</strong> externe du MIGC</li>
+          <li><strong>Prononcé des sanctions</strong> majeures sur proposition de la Commission Éthique</li>
+          <li><strong>Vote en AG</strong> : quorum 6/10 pour décisions ordinaires · unanimité pour modifications statutaires</li>
+          <li><strong>Siège permanent Sport7 Labs (siège 9)</strong> : en tant que co-fondateur et opérateur mandaté, Sport7 Labs dispose d'un siège permanent au Comité Directeur · <em>sans droit de vote</em> sur toute décision impliquant directement Sport7 Labs (SLA, rémunération, renouvellement, pénalités)</li>
+          <li><strong>Siège permanent Organisations Pro (siège 10)</strong> : 1 représentant élu à la majorité par les 10 organisations fondatrices (C5) · mandat de 2 ans renouvelable une fois · porte les résolutions de l'Assemblée des Organisations Pro au Comité · <em>sans droit de vote</em> sur les décisions affectant directement son organisation d'origine · droit de veto consultatif sur les modifications de règles de ranking</li>
+        </ul>
+      </div>
+      <div class="cb-col">
+        <div class="cb-col-title">Cadence & Fonctionnement</div>
+        <ul class="item-list">
+          <li><strong>Séance mensuelle ordinaire</strong> (présentiel ou visio) : durée 3–4h · ordre du jour préparé par le SG avec IA Assistant</li>
+          <li><strong>Séance trimestrielle élargie</strong> avec les présidents de commissions (C4) : revue des travaux, validation des chantiers en cours</li>
+          <li><strong>Séance d'urgence</strong> : convocable sous 48h par le Président ou 3 membres · décision possible par voie électronique</li>
+          <li><strong>IA Assistant par membre</strong> : chacun des 8 membres dispose d'un assistant IA dédié · préparation dossiers, rédaction de positions, suivi des actions</li>
+          <li><strong>Secrétaire Général (Lembo)</strong> : centralise les rapports des 5 commissions · prépare les PV · suit les plans d'action</li>
+          <li><em>4–6 jours de présence par mois</em> — engagement bénévole</li>
+        </ul>
+      </div>
+    </div>
+    <div class="cb-footer">
+      <div class="cbf-item"><span class="cbf-label">Liens avec</span> C1 (mandant), C4 (ratification), C5 (représentants siégeants), C6 (facilitateurs à saisir), C8 (surveillance éthique du fonds via Nogueira au Conseil de Prévoyance)</div>
+    </div>
+  </div>
+</div>
+
+<div id="c4" class="page-section">
+  <div class="section-eyebrow">Couche 4</div>
+  <div class="section-title">Commissions Spécialisées — 5 pôles d'expertise</div>
+  <div class="section-lead">Les commissions sont les cerveaux techniques du MIGC. Elles ne décident pas seules — elles instruisent, analysent, proposent et leur travail est ratifié par le Comité Directeur. Leur légitimité vient de l'excellence des profils qui les composent.</div>
+
+  <div class="grid2">
+    <div class="info-card" style="border-color:rgba(75,174,106,.2)">
+      <div class="ic-head"><div class="ic-icon">🥊</div><div><div class="ic-title">Commission Technique & Grading</div><div class="ic-sub">Président : Renzo Gracie ★ | Big John McCarthy · Cordeiro · Bareman</div></div></div>
+      <div class="ic-body">
+        <strong>Mission :</strong> définir et maintenir le référentiel mondial des grades MIGC · Valider les curriculums de chaque discipline · Certifier les examinateurs.<br><br>
+        <strong>Cadence :</strong> réunion mensuelle + révision annuelle du référentiel · résultats soumis au Comité pour ratification.<br><br>
+        <strong>Lien C2 :</strong> transmet les barèmes à Sport7 Labs pour intégration dans le DSP.
+      </div>
+    </div>
+    <div class="info-card" style="border-color:rgba(75,174,106,.2)">
+      <div class="ic-head"><div class="ic-icon">📊</div><div><div class="ic-title">Commission Ranking & Compétitions</div><div class="ic-sub">Président : Daniel Cormier | Ratner · Couture · Paulson</div></div></div>
+      <div class="ic-body">
+        <strong>Mission :</strong> définir la méthodologie du ranking MIGC · valider les paramètres de l'algorithme · traiter les contestations · accréditer les compétitions.<br><br>
+        <strong>Cadence :</strong> validation hebdomadaire des mises à jour post-événements · réunion mensuelle · révision trimestrielle des paramètres.<br><br>
+        <strong>Lien C5 :</strong> interface directe avec les organisations pro pour la soumission des résultats.
+      </div>
+    </div>
+    <div class="info-card" style="border-color:rgba(75,174,106,.2)">
+      <div class="ic-head"><div class="ic-icon">⚖️</div><div><div class="ic-title">Commission Éthique & Intégrité</div><div class="ic-sub">Président : Fedor Emelianenko | Jackson · Wittman · Khabib</div></div></div>
+      <div class="ic-body">
+        <strong>Mission :</strong> instruire les signalements (dopage, comportements contraires aux valeurs, fraudes DSP) · proposer des sanctions au Comité · maintenir le code éthique MIGC.<br><br>
+        <strong>Cadence :</strong> réunion mensuelle + convocations sur signalement · rapport trimestriel au Comité.<br><br>
+        <strong>Lien IA Guardian :</strong> reçoit les alertes automatiques d'anomalie pour instruction.
+      </div>
+    </div>
+    <div class="info-card" style="border-color:rgba(75,174,106,.2)">
+      <div class="ic-head"><div class="ic-icon">🛡️</div><div><div class="ic-title">Commission Protection Sociale</div><div class="ic-sub">Président : Amanda Nunes | Ngannou ★ · Shevchenko · Johnson</div></div></div>
+      <div class="ic-body">
+        <strong>Mission :</strong> défendre les droits et intérêts des combattants affiliés · surveiller les conditions d'affiliation des clubs · interface avec l'Association de Prévoyance (C8) pour garantir l'accès de tous les combattants au Smart Fund.<br><br>
+        <strong>Cadence :</strong> réunion mensuelle · rapport semestriel état des protections · interface trimestrielle avec Conseil de Prévoyance.
+      </div>
+    </div>
+    <div class="info-card" style="border-color:rgba(75,174,106,.2)">
+      <div class="ic-head"><div class="ic-icon">🌍</div><div><div class="ic-title">Commission de Développement &amp; de Partnership</div><div class="ic-sub">Président : Ubaldo Maroquin ★ | Vignal · Attar · Sakakibara</div></div></div>
+      <div class="ic-body">
+        <strong>Mission :</strong> piloter le déploiement mondial des grades, construire les partenariats stratégiques (organisations, fédérations, clubs) et du ranking MIGC · identifier les marchés prioritaires · recruter fédérations et clubs · coordonner les ambassadeurs (C7).<br><br>
+        <strong>Cadence :</strong> réunion mensuelle · revue trimestrielle de la carte d'adoption mondiale · coordination directe avec ambassadeurs régionaux (C7).<br><br>
+        <strong>Lien C7 :</strong> brief mensuel aux ambassadeurs · retours terrain intégrés dans la stratégie.
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="ic-head"><div class="ic-icon">🔄</div><div><div class="ic-title">Coordination Inter-commissions</div><div class="ic-sub">Réunion mensuelle des 5 présidents</div></div></div>
+      <div class="ic-body">
+        <strong>Réunion mensuelle</strong> des 5 présidents de commission : identifier les chevauchements, partager les travaux en cours, préparer conjointement le rapport au Comité.<br><br>
+        Exemple de coordination critique : <em>Commission Technique + Commission Ranking</em> doivent s'assurer que les grades requis pour participer à un niveau de compétition sont cohérents entre les deux référentiels.<br><br>
+        Le <strong>Secrétaire Général (C3)</strong> coordonne cette réunion mensuelle.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="c5" class="page-section">
+  <div class="section-eyebrow">Couche 5</div>
+  <div class="section-title">Comité des Organisations Pro — Partenaires Stratégiques Fondateurs</div>
+  <div class="section-lead">Les organisations pro ne sont pas de simples affiliées — elles sont des <strong>co-constructeurs actifs</strong> du MIGC. Sans leur adoption des grades et du ranking, le système n'a pas de réalité sur le terrain. Leur implication dans les décisions est donc structurelle, formelle et continue.</div>
+
+  <div class="callout gold">
+    <strong>Principe fondamental</strong>
+    Un standard que les organisations pro n'ont pas contribué à construire est un standard qu'elles n'adopteront pas. La Couche 5 est donc <strong>co-décisionnaire</strong> sur tout ce qui touche aux conditions de compétition, aux règles de ranking et aux protocoles de grade — et <strong>représentée en permanence</strong> au Comité Directeur.
+  </div>
+
+  <div class="couche-block">
+    <div class="cb-header" style="border-left: 4px solid var(--c5)">
+      <div class="cb-num" style="color:var(--c5)">05</div>
+      <div class="cb-info">
+        <div class="cb-name">10 organisations fondatrices · Siège permanent au Comité Directeur</div>
+        <div class="cb-role">UFC · ONE Championship · PFL/Bellator · RIZIN · Cage Warriors · KSW · ACA · BRAVE CF · Ares MMA · Oktagon</div>
+      </div>
+      <span class="cb-badge" style="background:var(--c5b);color:var(--c5);border:1px solid rgba(59,130,196,.2)">PARTENAIRE STRATÉGIQUE FONDATEUR</span>
+    </div>
+    <div class="cb-body">
+      <div class="cb-col">
+        <div class="cb-col-title">Droits & Pouvoirs réels</div>
+        <ul class="item-list">
+          <li><strong>Siège permanent au Comité Directeur (siège 10)</strong> : 1 représentant élu à la majorité par les 10 organisations · mandat de 2 ans renouvelable · porte officiellement les positions de l'Assemblée Pro au Comité</li>
+          <li><strong>Droit de consultation obligatoire</strong> : aucun standard de grade, règle de ranking ou modification des protocoles de compétition ne peut être ratifié sans avis formel de l'Assemblée des Organisations Pro</li>
+          <li><strong>Droit de veto consultatif</strong> sur les paramètres de ranking : l'Assemblée Pro peut bloquer temporairement (30 jours) une modification de ranking pour demander un réexamen en Commission</li>
+          <li><strong>Droit de proposition formelle</strong> au Comité Directeur : toute organisation peut soumettre une proposition via son représentant · obligation de réponse argumentée sous 30 jours</li>
+          <li><strong>Accès prioritaire au DSP</strong> : consultation temps réel des profils combattants affiliés et de leurs grades certifiés</li>
+          <li><strong>Co-cotisation optionnelle au Smart Fund (C8)</strong> : les organisations peuvent cotiser pour leurs combattants, renforçant leur attractivité et la protection des fighters</li>
+        </ul>
+      </div>
+      <div class="cb-col">
+        <div class="cb-col-title">Assemblée des Organisations Pro — Fonctionnement</div>
+        <ul class="item-list">
+          <li><strong>Assemblée trimestrielle souveraine</strong> : réunit les représentants des 10 organisations · ordre du jour préparé par la Commission de Développement &amp; de Partnership (C4) et le représentant C5 au Comité · durée : demi-journée</li>
+          <li><strong>Vote de résolutions formelles</strong> : l'Assemblée vote à la majorité simple des organisations présentes · les résolutions sont transmises au Comité Directeur avec obligation de traitement</li>
+          <li><strong>Groupes de travail ad hoc</strong> : l'Assemblée peut constituer des groupes de travail thématiques (ranking, contrats, catégories de poids) qui alimentent directement les commissions (C4)</li>
+          <li><strong>Session commune annuelle</strong> : 1 réunion plénière par an avec le Comité Directeur au complet · bilan de l'année, roadmap, orientations stratégiques communes</li>
+          <li><strong>Communication mensuelle</strong> : newsletter de synthèse envoyée par C1 aux 10 organisations : actualités rankings, nouveaux grades, agenda MIGC, statistiques DSP de leur zone</li>
+          <li><em>Max 2 sièges MIGC supplémentaires</em> (C3 ou C4) par organisation, en plus du siège mutualisé</li>
+        </ul>
+      </div>
+    </div>
+    <div class="cb-footer">
+      <div class="cbf-item"><span class="cbf-label">Liens avec</span> C3 (siège permanent représentant élu · résolutions formelles), C4 (consultation obligatoire standards et ranking · groupes de travail ad hoc), C2 (portail soumission résultats · accès DSP), C6 (agents Attar/Abdelaziz facilitent les négociations d'adhésion et l'intégration grades dans contrats fighters), C7 (brief commun avec ambassadeurs de leur zone avant événements majeurs), C8 (co-cotisation optionnelle Smart Fund)</div>
+    </div>
+  </div>
+
+  <div class="section-eyebrow" style="margin-top:32px;margin-bottom:16px">Matrice d'engagement C5 — que se passe-t-il quand</div>
+  <table class="circuit-table">
+    <thead>
+      <tr>
+        <th>Événement / Déclencheur</th>
+        <th>Action de l'Assemblée Pro (C5)</th>
+        <th>Délai</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Résultats d'un événement soumis</strong> par une organisation</td>
+        <td>Soumission via portail C2 · le représentant C5 au Comité peut signaler une anomalie de ranking sous 24h</td>
+        <td>En continu</td>
+      </tr>
+      <tr>
+        <td><strong>Proposition de nouveau standard</strong> grade ou règle de compétition</td>
+        <td>Commission Technique (C4) soumet à l'Assemblée Pro pour avis · l'Assemblée vote en session ordinaire ou extraordinaire</td>
+        <td>≤ 3 semaines</td>
+      </tr>
+      <tr>
+        <td><strong>Modification des paramètres ranking</strong></td>
+        <td>Assemblée Pro co-construit avec Commission Ranking (C4) · droit de veto consultatif de 30 jours</td>
+        <td>≤ 1 mois</td>
+      </tr>
+      <tr>
+        <td><strong>Nouvelle organisation candidate</strong> à l'adhésion</td>
+        <td>L'Assemblée Pro est consultée · son avis formel est requis avant vote du Comité · elle peut s'opposer et motiver son opposition</td>
+        <td>≤ 2 semaines</td>
+      </tr>
+      <tr>
+        <td><strong>Assemblée trimestrielle ordinaire</strong></td>
+        <td>Revue des rankings · retours terrain sur l'adoption des grades · résolutions formelles sur sujets ouverts · transmission au Comité Directeur</td>
+        <td>Trimestriel</td>
+      </tr>
+      <tr>
+        <td><strong>Session annuelle commune avec le Comité</strong></td>
+        <td>Bilan annuel · co-construction roadmap · vote du plan d'action de l'année suivante · renouvellement éventuel du représentant C5 au Comité</td>
+        <td>Annuel</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div id="c6" class="page-section">
+  <div class="section-eyebrow">Couche 6</div>
+  <div class="section-title">Comité Politique, Business & Influence</div>
+  <div class="section-lead">Ce comité est le bras long du MIGC dans les cercles auxquels ni la Direction ni le Comité Directeur n'ont accès naturellement — législateurs, agents de premier plan, régulateurs, investisseurs stratégiques. Leur rôle est l'ouverture de portes, pas la décision.</div>
+
+  <div class="couche-block">
+    <div class="cb-header" style="border-left: 4px solid var(--c6)">
+      <div class="cb-num" style="color:var(--c6)">06</div>
+      <div class="cb-info">
+        <div class="cb-name">5 profils · Politique · Agents · Réglementation · Investissement</div>
+        <div class="cb-role">Vignal (politique/Fr) · Attar (agents/US) · Abdelaziz (MENA) · Bennett (réglementation US) · Fertitta (investissement)</div>
+      </div>
+      <span class="cb-badge" style="background:var(--c6b);color:var(--c6);border:1px solid rgba(123,79,181,.2)">FACILITATION & INFLUENCE</span>
+    </div>
+    <div class="cb-body">
+      <div class="cb-col">
+        <div class="cb-col-title">Mode d'intervention</div>
+        <ul class="item-list">
+          <li><strong>Ouverture de portes</strong> : faciliter des rencontres entre le MIGC (C1/C3) et des cibles stratégiques inaccessibles directement</li>
+          <li><strong>Plaidoyer institutionnel</strong> : Vignal porte la cause de la reconnaissance officielle du MMA et des grades MIGC auprès des gouvernements européens</li>
+          <li><strong>Intégration dans les contrats</strong> : Attar et Abdelaziz incluent les grades MIGC comme critère dans les contrats combattants de leurs 100+ fighters</li>
+          <li><strong>Légitimation réglementaire</strong> : Bennett fait reconnaître les grades MIGC par les commissions athlétiques US (48 États)</li>
+          <li><strong>Capital et réseau investisseurs</strong> : Fertitta ouvre les discussions avec des fonds sport institutionnels</li>
+        </ul>
+      </div>
+      <div class="cb-col">
+        <div class="cb-col-title">Gouvernance de la couche</div>
+        <ul class="item-list">
+          <li><strong>Pas de siège de vote</strong> au Comité Directeur · Rôle strictement consultatif et facilitateur</li>
+          <li><strong>Brief trimestriel</strong> de la Direction (C1) : état d'avancement, cibles prioritaires de la période, résultats obtenus</li>
+          <li><strong>Rapport d'activité semestriel</strong> de chaque membre au Secrétaire Général (C3)</li>
+          <li><strong>Honoraires symboliques</strong> ou défraiements uniquement — pas de rémunération fixe</li>
+          <li><strong>Conflits d'intérêt</strong> : déclaration obligatoire de tout rôle concurrent · Fertitta par ex. doit déclarer tout investissement concurrent dans le MMA</li>
+          <li><em>2–3 jours par mois</em> · engagement souple adapté à chaque profil</li>
+        </ul>
+      </div>
+    </div>
+    <div class="cb-footer">
+      <div class="cbf-item"><span class="cbf-label">Liens avec</span> C1 (direction des missions, brief), C3 (rapports semestriels), C4 Commission de Développement &amp; de Partnership (coordination stratégie d'adoption), C5 (agents et orgs pro sont naturellement liés)</div>
+    </div>
+  </div>
+</div>
+
+<div id="c7" class="page-section">
+  <div class="section-eyebrow">Couche 7</div>
+  <div class="section-title">Ambassadeurs Régionaux</div>
+  <div class="section-lead">Les ambassadeurs sont les visages humains et locaux du MIGC. Là où le Comité parle aux institutions, ils parlent aux pratiquants, aux clubs, aux fédérations et aux médias dans leur langue et leur culture.</div>
+
+  <div class="couche-block">
+    <div class="cb-header" style="border-left: 4px solid var(--c7)">
+      <div class="cb-num" style="color:var(--c7)">07</div>
+      <div class="cb-info">
+        <div class="cb-name">9 zones géographiques · Rôle honorifique bénévole</div>
+        <div class="cb-role">Nogueira (Brésil) · Couture (Am.Nord) · Maroquin (LATAM) · Bisping (Europe) · Gustafsson (Europe N.) · Khabib (MENA) · Sudo (Japon) · Ngannou ★ (Afrique) · Hunt+Volkanovski (Océanie)</div>
+      </div>
+      <span class="cb-badge" style="background:var(--c7b);color:var(--c7);border:1px solid rgba(29,181,168,.2)">RAYONNEMENT MONDIAL</span>
+    </div>
+    <div class="cb-body">
+      <div class="cb-col">
+        <div class="cb-col-title">Missions concrètes par ambassadeur</div>
+        <ul class="item-list">
+          <li><strong>Présence aux événements MMA locaux</strong> majeurs de leur zone · représentation physique du MIGC</li>
+          <li><strong>Discours d'adoption</strong> : expliquer et promouvoir les grades MIGC auprès des clubs et fédérations locales</li>
+          <li><strong>Identification d'opportunités</strong> : signaler à C1 les organisations, clubs, fédérations locales intéressées par une affiliation</li>
+          <li><strong>Contenu digital</strong> : soutien aux campagnes de communication MIGC sur leurs réseaux sociaux</li>
+          <li><strong>Ambassadeur ≠ représentant légal</strong> : ils ne signent aucune convention, ne prennent aucune décision</li>
+        </ul>
+      </div>
+      <div class="cb-col">
+        <div class="cb-col-title">Coordination & Support</div>
+        <ul class="item-list">
+          <li><strong>Brief mensuel IA</strong> : chaque ambassadeur reçoit un brief préparé par l'IA Assistant du Comité · actualités grades/ranking de sa zone, messages clés, événements du mois</li>
+          <li><strong>Remontée terrain mensuelle</strong> vers la Commission de Développement &amp; de Partnership (C4) : 1–2 pages synthèse · contacts identifiés · freins observés</li>
+          <li><strong>Réunion ambassadeurs semestrielle</strong> coordonnée par C1 : retours croisés, calibration des messages, priorités suivant semestre</li>
+          <li><strong>Nogueira double rôle</strong> : VP Comité Directeur (C3) + Ambassadeur Brésil/Amériques du Sud · interface naturelle entre la gouvernance et le terrain</li>
+          <li><em>1–2 jours par mois</em> · engagement adapté à l'actualité sportive de leur zone</li>
+        </ul>
+      </div>
+    </div>
+    <div class="cb-footer">
+      <div class="cbf-item"><span class="cbf-label">Liens avec</span> C1 (reporting, brief), C4 Commission de Développement &amp; de Partnership (coordination terrain), C5 (orgs pro leur zone — brief commun avant événements majeurs), C3 (Nogueira fait le lien direct)</div>
+    </div>
+  </div>
+</div>
+
+<div id="c8" class="page-section">
+  <div class="section-eyebrow">Couche 8</div>
+  <div class="section-title">Association de Prévoyance MIGC — Smart Fund</div>
+  <div class="section-lead">Entité juridique entièrement autonome, l'Association de Prévoyance est la clé de voûte sociale de l'écosystème MIGC. Elle transforme les points DSP accumulés par chaque combattant en droits à pension — une première mondiale dans le MMA.</div>
+
+  <div class="couche-block">
+    <div class="cb-header" style="border-left: 4px solid var(--c8)">
+      <div class="cb-num" style="color:var(--c8)">08</div>
+      <div class="cb-info">
+        <div class="cb-name">Association de Prévoyance MIGC · Art. 60–79 CC Suisse · Smart Fund</div>
+        <div class="cb-role">Conseil : Oswald · Odier · Pailhol · Nogueira | Équipe : Joey Dib · CFA Directeur Invest. · Expert-comptable LPP/BVG</div>
+      </div>
+      <span class="cb-badge" style="background:var(--c8b);color:var(--c8);border:1px solid rgba(42,107,74,.2)">ENTITÉ AUTONOME · FLUX JAMAIS VIA SPORT7</span>
+    </div>
+    <div class="cb-body">
+      <div class="cb-col">
+        <div class="cb-col-title">Architecture & Fonctionnement</div>
+        <ul class="item-list">
+          <li><strong>Conseil de Prévoyance indépendant</strong> (4 membres) : gouvernance du fonds, politique d'investissement, supervision des versements</li>
+          <li><strong>Calcul des droits :</strong> points DSP du combattant (C2) → Expert-comptable LPP/BVG calcule la rente · validé par le Directeur d'Investissement</li>
+          <li><strong>Gnosis Safe 3/5 multi-signature</strong> : tout versement ≥ seuil défini requiert 3 signatures parmi 5 signataires désignés</li>
+          <li><strong>Infrastructure :</strong> Polygon · USDC/EURC · Stratégie rendement Aave + BlackRock BUIDL</li>
+          <li><strong>IPS (Investment Policy Statement)</strong> : rédigé avec Lombard Odier · définit les contraintes d'allocation</li>
+          <li><strong>Affiliation OAR-OREF</strong> (LBA/AMLA) dès constitution · Compliance AML/KYC</li>
+        </ul>
+      </div>
+      <div class="cb-col">
+        <div class="cb-col-title">Équipe opérationnelle & Cadence</div>
+        <ul class="item-list">
+          <li><strong>Joey Dib (Responsable Stratégie Satellite Tactique)</strong> : pilotage quotidien du fonds · interface Conseil de Prévoyance ↔ dépositaire · co-signature &gt;$10K</li>
+          <li><strong>Directeur de Gestion des Investissements (CFA)</strong> : gestion des actifs · stratégie d'allocation · reporting trimestriel Conseil</li>
+          <li><strong>Expert-comptable LPP/BVG</strong> : calcul des droits à pension · tenue comptabilité · reporting fiscal AFC Genève</li>
+          <li><strong>Réunion Conseil mensuelle</strong> : revue du fonds, validation des versements, alertes compliance</li>
+          <li><strong>Rapport trimestriel</strong> à l'MIGC (C1/C3) : état du fonds, ratio couverture, bénéficiaires</li>
+          <li><strong>Audit annuel</strong> smart contracts par cabinet externe · CHF 15–25K</li>
+        </ul>
+      </div>
+    </div>
+    <div class="cb-footer">
+      <div class="cbf-item"><span class="cbf-label">Liens avec</span> C2 (données DSP → calcul points · jamais flux financier), C3 (Nogueira au Conseil · reporting trimestriel), C4 Commission Protection Sociale (surveillance accès combattants), C5 (orgs pro peuvent co-cotiser pour leurs combattants)</div>
+    </div>
+  </div>
+
+  <div class="callout teal">
+    <strong>Cercle vertueux du Smart Fund</strong>
+    Plus de combattants affiliés au MIGC → plus de points DSP collectés → plus le fonds est alimenté → plus la promesse de pension est crédible → plus les combattants exigent l'affiliation MIGC de leurs clubs et organisations → plus d'organisations s'affilient → boucle de renforcement.
+  </div>
+</div>
+
+<!-- ════════════════ CADENCES ════════════════ -->
+<div id="cadences" class="page-section">
+  <div class="section-eyebrow">Synthèse opérationnelle</div>
+  <div class="section-title">Calendrier de gouvernance — vue annuelle</div>
+  <div class="section-lead">L'ensemble des couches suit un rythme de gouvernance synchronisé. Ce calendrier assure que chaque couche produit ses livrables à temps pour alimenter les couches qui en dépendent.</div>
+
+  <div class="grid4">
+    <div class="info-card" style="border-color:rgba(224,75,58,.2)">
+      <div class="ic-head"><div class="ic-icon">📅</div><div><div class="ic-title">Hebdomadaire</div></div></div>
+      <div class="ic-body" style="font-size:11px">
+        <strong style="display:block;margin-bottom:4px">Lundi — C1 Direction</strong>
+        Revue priorities, alertes Guardian, état livrables C2.<br><br>
+        <strong style="display:block;margin-bottom:4px">En continu — C2 Sport7</strong>
+        Mises à jour rankings (max 72h post-événement) · Surveillance IA Guardian 24/7.
+      </div>
+    </div>
+    <div class="info-card" style="border-color:rgba(201,168,76,.2)">
+      <div class="ic-head"><div class="ic-icon">📆</div><div><div class="ic-title">Mensuel</div></div></div>
+      <div class="ic-body" style="font-size:11px">
+        <strong style="display:block;margin-bottom:4px">C3 — Séance Comité (10 membres)</strong>
+        Ratifications, budget, affiliations, sanctions · le représentant C5 porte les résolutions de l'Assemblée Pro.<br><br>
+        <strong style="display:block;margin-bottom:4px">C4 — 5 Commissions + Inter-commissions</strong>
+        Travaux spécialisés + coordination présidents.<br><br>
+        <strong style="display:block;margin-bottom:4px">C1 → C5 — Newsletter Organisations Pro</strong>
+        Actualités grades/ranking · agenda · stats DSP par zone.<br><br>
+        <strong style="display:block;margin-bottom:4px">C7 — Brief Ambassadeurs (IA)</strong>
+        Messages clés zone, événements, cibles recrutement.<br><br>
+        <strong style="display:block;margin-bottom:4px">C8 — Conseil de Prévoyance</strong>
+        Revue fonds · validation versements.
+      </div>
+    </div>
+    <div class="info-card" style="border-color:rgba(75,174,106,.2)">
+      <div class="ic-head"><div class="ic-icon">🗓️</div><div><div class="ic-title">Trimestriel</div></div></div>
+      <div class="ic-body" style="font-size:11px">
+        <strong style="display:block;margin-bottom:4px">C5 — Assemblée des Organisations Pro</strong>
+        Revue rankings · vote résolutions formelles · groupes de travail · transmission au Comité.<br><br>
+        <strong style="display:block;margin-bottom:4px">C3 — Séance élargie (+ présidents C4 + résolutions C5)</strong>
+        Revue des chantiers, validation standards, traitement résolutions Assemblée Pro.<br><br>
+        <strong style="display:block;margin-bottom:4px">C1 ↔ C2 — Comité de pilotage</strong>
+        SLA, roadmap technique, budgets.<br><br>
+        <strong style="display:block;margin-bottom:4px">C6 — Brief Direction</strong>
+        État des missions d'influence, résultats, nouvelles cibles.<br><br>
+        <strong style="display:block;margin-bottom:4px">C8 — Rapport MIGC</strong>
+        Ratio couverture, bénéficiaires, conformité.
+      </div>
+    </div>
+    <div class="info-card" style="border-color:rgba(123,79,181,.2)">
+      <div class="ic-head"><div class="ic-icon">🏛️</div><div><div class="ic-title">Semestriel / Annuel</div></div></div>
+      <div class="ic-body" style="font-size:11px">
+        <strong style="display:block;margin-bottom:4px">C6 — Rapports d'activité</strong>
+        Bilan missions politiques, business, réglementation.<br><br>
+        <strong style="display:block;margin-bottom:4px">C7 — Réunion ambassadeurs</strong>
+        Retours croisés, calibration, priorités S2.<br><br>
+        <strong style="display:block;margin-bottom:4px">C3 + C5 — Session plénière annuelle commune</strong>
+        Comité Directeur + 10 organisations pro · bilan · co-construction roadmap · renouvellement représentant C5 si mandat échu.<br><br>
+        <strong style="display:block;margin-bottom:4px">AG MIGC — Annuelle</strong>
+        Approbation budgets, renouvellement mandats, standards.<br><br>
+        <strong style="display:block;margin-bottom:4px">C8 — Audit smart contracts</strong>
+        Cabinet externe · CHF 15–25K.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ INTERDÉPENDANCES ════════════════ -->
+<div id="interdep" class="page-section">
+  <div class="section-eyebrow">Synthèse finale</div>
+  <div class="section-title">Matrice des interdépendances critiques</div>
+  <div class="section-lead">Les chaînes de dépendance les plus importantes à surveiller pour assurer le bon fonctionnement de l'ensemble.</div>
+
+  <div class="grid2">
+    <div class="info-card" style="border-left:3px solid var(--red2)">
+      <div class="ic-head"><div class="ic-icon">⚠️</div><div><div class="ic-title">Dépendances critiques à protéger</div></div></div>
+      <div class="ic-body">
+        <strong>C2 → C8 (données seulement) :</strong> si Sport7 Labs cesse de fournir les données DSP, le calcul des pensions s'arrête. Prévoir un mécanisme de sauvegarde indépendant de la base DSP.<br><br>
+        <strong>C3 (quorum 5/8) :</strong> le Comité ne peut fonctionner sans quorum. Maintenir des suppléants désignés pour chaque poste clé.<br><br>
+        <strong>C1 ↔ C2 (interface unique) :</strong> si le DG est indisponible, la chaîne de commandes vers Sport7 Labs doit avoir un suppléant désigné.
+      </div>
+    </div>
+    <div class="info-card" style="border-left:3px solid var(--green2)">
+      <div class="ic-head"><div class="ic-icon">🔗</div><div><div class="ic-title">Synergies à activer en priorité</div></div></div>
+      <div class="ic-body">
+        <strong>Renzo Gracie (C4) + Cage Warriors (C5) :</strong> Renzo Gracie est un contact vert ★ ET Cage Warriors est dans son réseau direct — double levier d'adoption des grades en Europe/UK.<br><br>
+        <strong>C5 représentant au Comité :</strong> élire dès la constitution un représentant légitime parmi les orgs fondatrices Tier 1 ou Tier 2 envoie un signal fort à l'industrie — à prioriser avant la première séance officielle du Comité.<br><br>
+        <strong>Ngannou (C4 Protection + C7 Afrique) :</strong> engagement acquis sur les deux fronts — premier ambassadeur à activer pour le continent africain.<br><br>
+        <strong>Attar (C6) + C5 orgs pro :</strong> ses 50+ combattants sous contrat avec des organisations MIGC créent une adoption "bottom-up" naturelle — l'intégration des grades dans les contrats combattants est le premier levier concret à activer.
+      </div>
+    </div>
+    <div class="info-card" style="border-left:3px solid var(--amber2)">
+      <div class="ic-head"><div class="ic-icon">🎯</div><div><div class="ic-title">Les 3 premières actions de mise en route</div></div></div>
+      <div class="ic-body">
+        <strong>1 — Constituer l'association MIGC (C3) :</strong> acte fondateur · Genève · déclenche tout le reste legalement.<br><br>
+        <strong>2 — Signer la Convention de Contribution avec Sport7 Labs (C1/C2) :</strong> formalise le mandat exclusif 20 ans · active le développement DSP.<br><br>
+        <strong>3 — Recruter Renzo Gracie (C4) comme premier signataire public :</strong> signal fort à l'industrie · son engagement ★ est acquis · il valide les grades MIGC auprès de toute la communauté grappling mondiale.<br><br>
+        <strong>Et dès que 3 organisations pro fondatrices sont à bord :</strong> organiser la première Assemblée des Organisations Pro pour élire leur représentant au siège 10 du Comité Directeur — ce geste incarne immédiatement la gouvernance co-construite avec l'industrie.
+      </div>
+    </div>
+    <div class="info-card" style="border-left:3px solid var(--blue2)">
+      <div class="ic-head"><div class="ic-icon">📐</div><div><div class="ic-title">Principes architecturaux non négociables</div></div></div>
+      <div class="ic-body">
+        <strong>1 — Étanchéité C8 :</strong> aucun flux financier du Smart Fund ne peut transiter par Sport7 Labs. Jamais.<br><br>
+        <strong>2 — Subsidiarité :</strong> C1 ne remonte à C3 que pour les décisions stratégiques. C3 ne descend jamais dans l'opérationnel.<br><br>
+        <strong>3 — Validation humaine IA :</strong> l'IA Guardian propose et alerte, elle ne décide jamais seule d'une sanction ou d'un grade.<br><br>
+        <strong>4 — Neutralité géopolitique :</strong> le MIGC évalue les individus sur leur compétence, pas leur nationalité.
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+</div><!-- /main -->
+
+<!-- ──────────────────────────── FOOTER ──────────────────────────── -->
+<div class="doc-footer">
+  <div>MIGC-Note-Fonctionnement-Global-<strong>v1</strong> · Sport7 Labs SARL · Genève · Mars 2026</div>
+  <div>Référence : MIGC-Ecosystème-Personnes-v6 · <strong>CONFIDENTIEL</strong></div>
+  <div>Mixed Martial Arts International Grading Council · Art. 60–79 CC Suisse</div>
+</div>
+
+<script>
+// Active nav on scroll
+const sections = document.querySelectorAll('[id]');
+const navItems = document.querySelectorAll('.nav-item');
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navItems.forEach(n => n.classList.remove('active'));
+      const active = document.querySelector(`.nav-item[href="#${e.target.id}"]`);
+      if (active) active.classList.add('active');
+    }
+  });
+}, { threshold: 0.3 });
+sections.forEach(s => obs.observe(s));
+</script>
+
+</body>
+</html>

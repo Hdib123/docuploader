@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MIGC — Charte Graphique · Brand Guide · 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ─── RESET ─── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+
+/* ─── TOKENS ─── */
+:root{
+  --gold:        #B8890A;
+  --gold-dk:     #8B6A06;
+  --gold-deep:   #5C4604;
+  --gold-lt:     #D4A828;
+  --gold-pale:   #F5EDD8;
+  --gold-blush:  #FCF8EE;
+  --charcoal:    #1B1B18;
+  --ink:         #2A2A26;
+  --slate:       #5A5A54;
+  --silver:      #8A8A82;
+  --mist:        #C4C3BC;
+  --cream:       #EDECEA;
+  --ivory:       #F7F6F2;
+  --white:       #FDFCF8;
+  --serif: 'DM Serif Display',Georgia,serif;
+  --sans:  'DM Sans','Helvetica Neue',sans-serif;
+  --mono:  'JetBrains Mono',monospace;
+  --max: 960px;
+  --pad: 56px;
+  --gap: 88px;
+}
+
+body{
+  background:var(--white);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:14px;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ─── PRINT ─── */
+@media print{
+  .no-print{display:none!important;}
+  .page-break{page-break-before:always;}
+  body{font-size:11px;}
+  :root{--pad:28px;--gap:56px;}
+  .nav-fixed{display:none!important;}
+}
+
+/* ─── NAV ─── */
+.nav-fixed{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  background:rgba(27,27,24,.97);
+  backdrop-filter:blur(16px);
+  padding:12px var(--pad);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.nav-brand{display:flex;align-items:center;gap:12px;}
+.nav-wordmark{font-family:var(--serif);font-size:17px;color:var(--ivory);letter-spacing:.06em;}
+.nav-sep{width:1px;height:16px;background:rgba(184,137,10,.3);}
+.nav-sub{font-size:9px;color:var(--gold);letter-spacing:.18em;text-transform:uppercase;font-weight:500;}
+.nav-links{display:flex;gap:2px;}
+.nav-link{font-size:11px;color:rgba(255,255,255,.45);text-decoration:none;padding:5px 11px;border-radius:20px;transition:all .15s;letter-spacing:.03em;}
+.nav-link:hover{color:#fff;background:rgba(255,255,255,.07);}
+.nav-link.on{color:var(--gold);}
+.nav-print{font-size:10px;font-weight:500;color:rgba(255,255,255,.45);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:4px 12px;background:none;cursor:pointer;font-family:var(--sans);transition:all .15s;}
+.nav-print:hover{border-color:var(--gold);color:var(--gold);}
+
+/* ─── SECTIONS ─── */
+.page-body{padding-top:56px;}
+section{padding:var(--gap) 0;border-bottom:1px solid var(--cream);}
+section:last-child{border-bottom:none;}
+.inner{max-width:var(--max);margin:0 auto;padding:0 var(--pad);}
+.sec-head{margin-bottom:44px;}
+.sec-num{font-family:var(--mono);font-size:10px;color:var(--gold);letter-spacing:.2em;text-transform:uppercase;margin-bottom:8px;}
+.sec-title{font-family:var(--serif);font-size:34px;color:var(--charcoal);line-height:1.1;letter-spacing:-.01em;}
+.sec-lead{font-size:14px;color:var(--slate);line-height:1.7;max-width:580px;margin-top:10px;}
+.row-lbl{font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--silver);margin-bottom:14px;}
+
+/* ─── COVER ─── */
+.cover{
+  min-height:100vh;
+  background:var(--charcoal);
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:80px var(--pad);
+  position:relative;overflow:hidden;
+}
+.cover-grid{
+  position:absolute;inset:0;opacity:.03;
+  background-image:
+    linear-gradient(rgba(184,137,10,.8) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(184,137,10,.8) 1px,transparent 1px);
+  background-size:56px 56px;
+}
+.cover-inner{position:relative;max-width:var(--max);margin:0 auto;width:100%;}
+.cover-eyebrow{font-size:10px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:32px;}
+.cover-logo-row{display:flex;align-items:center;gap:26px;margin-bottom:56px;}
+.cover-wordmark{font-family:var(--serif);font-size:68px;color:var(--ivory);line-height:1;letter-spacing:.06em;}
+.cover-tagline-block{border-left:1.5px solid rgba(184,137,10,.5);padding-left:20px;margin-top:4px;}
+.cover-tagline{font-size:11px;color:var(--gold);letter-spacing:.2em;text-transform:uppercase;font-weight:500;line-height:1.9;}
+.cover-meta{
+  display:flex;gap:40px;font-size:11px;color:rgba(255,255,255,.35);
+  padding-top:36px;border-top:1px solid rgba(255,255,255,.07);
+}
+.cover-meta strong{color:rgba(255,255,255,.65);display:block;margin-bottom:2px;}
+
+/* ─── BLASON SVG path ─── */
+/* Reused across all instances */
+
+/* ─── LOGO SHOWCASE ─── */
+.logo-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:36px;}
+.logo-card{border-radius:12px;padding:48px 28px;display:flex;align-items:center;justify-content:center;gap:22px;flex-wrap:wrap;}
+.logo-card.dark{background:var(--charcoal);}
+.logo-card.light{background:var(--ivory);border:1px solid var(--cream);}
+.logo-card.gold-bg{background:var(--gold);}
+.logo-card.cream-bg{background:var(--gold-blush);border:1px solid var(--gold-pale);}
+.logo-lbl{font-size:10px;color:var(--slate);text-align:center;margin-top:8px;letter-spacing:.06em;}
+
+.lockup{display:flex;flex-direction:column;gap:6px;}
+.lk-wordmark{font-family:var(--serif);letter-spacing:.05em;line-height:1;}
+.lk-sep{height:1px;background:rgba(184,137,10,.4);margin:2px 0;}
+.lk-tag{font-size:9px;letter-spacing:.2em;text-transform:uppercase;font-weight:500;line-height:1.8;}
+
+/* ─── CLEAR SPACE ─── */
+.clearspace-wrap{display:flex;justify-content:center;padding:32px 0;}
+.clearspace-box{
+  position:relative;
+  border:1.5px dashed var(--mist);
+  border-radius:4px;
+  padding:36px;
+  display:inline-flex;
+}
+.cs-label{
+  position:absolute;
+  font-size:9px;font-family:var(--mono);color:var(--silver);
+  white-space:nowrap;
+}
+.cs-top{top:-18px;left:50%;transform:translateX(-50%);}
+.cs-left{left:-52px;top:50%;transform:translateY(-50%) rotate(-90deg);}
+.cs-right{right:-52px;top:50%;transform:translateY(-50%) rotate(90deg);}
+.cs-bot{bottom:-18px;left:50%;transform:translateX(-50%);}
+.size-tbl{width:100%;border-collapse:collapse;margin-top:28px;}
+.size-tbl th{text-align:left;padding:9px 14px;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--silver);border-bottom:1px solid var(--cream);}
+.size-tbl td{padding:11px 14px;font-size:13px;border-bottom:1px solid var(--cream);color:var(--slate);vertical-align:middle;}
+.size-tbl td:first-child{font-family:var(--mono);font-size:12px;color:var(--ink);}
+.size-tbl tr:last-child td{border-bottom:none;}
+
+/* ─── DONTS ─── */
+.donts{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:24px;}
+.dont{border:1px solid var(--cream);border-radius:10px;overflow:hidden;}
+.dont-prev{height:110px;display:flex;align-items:center;justify-content:center;background:var(--ivory);border-bottom:1px solid var(--cream);}
+.dont-lbl{padding:10px 14px;font-size:11px;font-weight:600;color:#7A1A1A;display:flex;align-items:center;gap:5px;}
+.dont-lbl::before{content:'✕';font-size:10px;}
+.dont-sub{padding:0 14px 12px;font-size:11px;color:var(--slate);}
+
+/* ─── COLORS ─── */
+.color-system{display:flex;flex-direction:column;gap:44px;}
+.cg-title{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--silver);margin-bottom:16px;}
+.swatches{display:flex;border-radius:10px;overflow:hidden;height:72px;}
+.sw{flex:1;position:relative;}
+.sw-lbl{position:absolute;bottom:7px;left:8px;font-size:9px;font-family:var(--mono);font-weight:500;line-height:1.4;}
+.color-cards{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:20px;}
+.cc{border-radius:8px;overflow:hidden;border:1px solid var(--cream);}
+.cc-sw{height:56px;}
+.cc-info{padding:10px 12px;background:var(--white);}
+.cc-name{font-size:12px;font-weight:600;color:var(--ink);margin-bottom:2px;}
+.cc-hex{font-size:11px;font-family:var(--mono);color:var(--slate);}
+.cc-role{font-size:10px;color:var(--silver);margin-top:3px;}
+.semantic{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:20px;}
+.sem{padding:16px;border-radius:8px;border:1px solid var(--cream);}
+.sem-role{font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;}
+.sem-dots{display:flex;gap:6px;margin-bottom:8px;}
+.dot{width:20px;height:20px;border-radius:50%;}
+.sem-desc{font-size:11px;color:var(--slate);line-height:1.5;}
+
+/* ─── TYPOGRAPHY ─── */
+.type-block{border:1px solid var(--cream);border-radius:10px;overflow:hidden;margin-bottom:20px;}
+.type-hd{padding:12px 18px;background:var(--ivory);border-bottom:1px solid var(--cream);display:flex;justify-content:space-between;align-items:center;}
+.type-name{font-size:12px;font-weight:600;color:var(--ink);}
+.type-meta{font-size:11px;font-family:var(--mono);color:var(--silver);}
+.type-body{padding:20px 18px;}
+.scale-row{display:flex;align-items:baseline;gap:20px;padding:10px 0;border-bottom:1px solid var(--cream);}
+.scale-row:last-child{border-bottom:none;}
+.scale-lbl{font-size:9.5px;font-family:var(--mono);color:var(--silver);white-space:nowrap;width:160px;flex-shrink:0;}
+
+/* ─── GRADE SCALE ─── */
+.grade-scale{display:flex;border-radius:10px;overflow:hidden;border:1px solid var(--cream);margin-top:24px;}
+.gs-step{flex:1;padding:14px 6px;text-align:center;border-right:1px solid var(--cream);}
+.gs-step:last-child{border-right:none;}
+.gs-name{font-family:var(--serif);font-size:18px;color:var(--charcoal);}
+.gs-lbl{font-size:9px;color:var(--slate);margin-top:2px;}
+.gs-pips{display:flex;gap:2px;justify-content:center;margin-top:6px;}
+.pip{width:7px;height:7px;border-radius:1px;background:var(--cream);}
+.pip.on{background:var(--gold);}
+
+/* ─── APPLICATIONS ─── */
+.app-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:24px;}
+.app-card{border-radius:10px;overflow:hidden;border:1px solid var(--cream);}
+.ac-hd{background:var(--charcoal);padding:10px 16px;font-size:10px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.1em;font-weight:500;}
+.ac-bd{padding:20px;display:flex;align-items:center;justify-content:center;background:var(--ivory);}
+
+/* cert */
+.cert{border:1px solid var(--gold);border-radius:6px;padding:18px 22px;background:var(--white);width:220px;}
+.cert-top{display:flex;align-items:center;gap:10px;padding-bottom:12px;border-bottom:1px solid var(--cream);margin-bottom:12px;}
+.cert-ctr{text-align:center;}
+
+/* badge */
+.badge-num{background:var(--charcoal);border-radius:8px;padding:12px 16px;width:210px;}
+
+/* letterhead mock */
+.lh-mock{width:220px;border:1px solid var(--cream);border-radius:6px;overflow:hidden;}
+.lh-top{background:var(--charcoal);padding:12px 16px;display:flex;align-items:center;gap:10px;}
+.lh-body{padding:14px 16px;background:var(--white);}
+.lh-line{height:6px;background:var(--cream);border-radius:3px;margin-bottom:6px;}
+
+/* favicon */
+.fav-row{display:flex;align-items:flex-end;gap:14px;}
+.fav-item{display:flex;flex-direction:column;align-items:center;gap:6px;}
+.fav-box{background:var(--charcoal);display:flex;align-items:center;justify-content:center;}
+.fav-lbl{font-size:9.5px;color:var(--silver);}
+
+/* ─── PHOTOGRAPHIE ─── */
+.photo-rules{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:24px;}
+.photo-card{border-radius:10px;overflow:hidden;border:1px solid var(--cream);}
+.ph-hd{padding:8px 14px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;background:var(--ivory);border-bottom:1px solid var(--cream);}
+.ph-bd{padding:16px;font-size:12.5px;color:var(--slate);line-height:1.6;}
+.ph-bd strong{color:var(--ink);font-weight:600;}
+.ph-bd ul{padding-left:16px;margin-top:6px;}
+.ph-bd li{margin-bottom:4px;}
+
+/* ─── GRID & UTILS ─── */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.callout{border-left:3px solid var(--gold);padding:13px 17px;background:var(--gold-blush);border-radius:0 6px 6px 0;font-size:13px;color:var(--gold-deep);line-height:1.6;margin:16px 0;}
+.callout strong{font-weight:700;color:var(--gold-dk);}
+.ssub{font-size:13px;font-weight:700;color:var(--ink);margin:28px 0 14px;display:flex;align-items:center;gap:10px;}
+.ssub::after{content:'';flex:1;height:1px;background:var(--cream);}
+
+/* ─── FOOTER ─── */
+.brand-footer{
+  background:var(--charcoal);
+  padding:36px var(--pad);
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;
+}
+.bf-left{display:flex;align-items:center;gap:16px;}
+.bf-text{font-size:11px;color:rgba(255,255,255,.35);line-height:1.7;}
+.bf-text strong{color:rgba(255,255,255,.6);}
+.bf-ver{font-family:var(--mono);font-size:10px;color:rgba(184,137,10,.5);}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:720px){
+  :root{--pad:20px;--gap:60px;}
+  .logo-grid,.app-grid,.grid2,.photo-rules{grid-template-columns:1fr;}
+  .color-cards{grid-template-columns:repeat(3,1fr);}
+  .donts{grid-template-columns:1fr 1fr;}
+  .nav-fixed,.nav-links{display:none;}
+  .semantic{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ NAV ═══ -->
+<nav class="nav-fixed no-print">
+  <div class="nav-brand">
+    <svg width="22" height="26" viewBox="0 0 100 122">
+      <path d="M3,3 L97,3 L97,74 Q97,112 50,119 Q3,112 3,74 Z" fill="none" stroke="#B8890A" stroke-width="2"/>
+      <line x1="3" y1="32" x2="97" y2="32" stroke="#B8890A" stroke-width="1.2" opacity=".55"/>
+      <text x="50" y="25" font-family="'DM Sans',sans-serif" font-size="8" fill="#B8890A" text-anchor="middle" letter-spacing="3" font-weight="500">MMA</text>
+      <text x="50" y="72" font-family="'DM Serif Display',Georgia,serif" font-size="30" fill="#F7F6F2" text-anchor="middle" letter-spacing="1">MIGC</text>
+    </svg>
+    <div class="nav-sep"></div>
+    <span class="nav-wordmark">MIGC</span>
+    <span class="nav-sub">Charte graphique</span>
+  </div>
+  <div class="nav-links">
+    <a class="nav-link" href="#logo">Logo</a>
+    <a class="nav-link" href="#couleurs">Couleurs</a>
+    <a class="nav-link" href="#typographie">Typographie</a>
+    <a class="nav-link" href="#grades">Grades</a>
+    <a class="nav-link" href="#applications">Applications</a>
+    <a class="nav-link" href="#photo">Photographie</a>
+  </div>
+  <button class="nav-print" onclick="window.print()">Imprimer · PDF</button>
+</nav>
+
+<div class="page-body">
+
+<!-- ═══ COVER ═══ -->
+<div class="cover">
+  <div class="cover-grid"></div>
+  <div class="cover-inner">
+    <div class="cover-eyebrow">Mixed Martial Arts International Grading Council</div>
+    <div class="cover-logo-row">
+      <svg width="96" height="116" viewBox="0 0 100 122">
+        <path d="M3,3 L97,3 L97,74 Q97,112 50,119 Q3,112 3,74 Z" fill="none" stroke="#B8890A" stroke-width="1.2"/>
+        <path d="M9,9 L91,9 L91,73 Q91,107 50,113 Q9,107 9,73 Z" fill="none" stroke="#B8890A" stroke-width=".4" opacity=".4"/>
+        <line x1="3" y1="32" x2="97" y2="32" stroke="#B8890A" stroke-width=".9" opacity=".55"/>
+        <text x="50" y="25" font-family="'DM Sans',sans-serif" font-size="8" fill="#B8890A" text-anchor="middle" letter-spacing="3.5" font-weight="500">MMA</text>
+        <text x="50" y="72" font-family="'DM Serif Display',Georgia,serif" font-size="30" fill="#F7F6F2" text-anchor="middle" letter-spacing="1">MIGC</text>
+      </svg>
+      <div class="cover-logo-row" style="gap:0;flex-direction:column;align-items:flex-start">
+        <div class="cover-wordmark">MIGC</div>
+        <div class="cover-tagline-block">
+          <div class="cover-tagline">Mixed Martial Arts<br>International Grading Council</div>
+        </div>
+      </div>
+    </div>
+    <div class="cover-meta">
+      <div><strong>Document</strong>Charte Graphique Officielle — v1.0</div>
+      <div><strong>Entité</strong>MIGC · Association Art. 60–79 CC Suisse</div>
+      <div><strong>Opérateur</strong>Sport7 Labs SARL · Genève</div>
+      <div><strong>Mise à jour</strong>Mars 2026</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 01 — LOGO ═══ -->
+<section id="logo">
+<div class="inner">
+  <div class="sec-head">
+    <div class="sec-num">01 — Logo</div>
+    <h2 class="sec-title">Le blason MIGC</h2>
+    <p class="sec-lead">Le logo institutionnel du MIGC est un blason à pointe classique — forme héraldique qui évoque autorité, certification et héritage. Il se compose du blason seul (symbole) et du lockup complet (symbole + typographie).</p>
+  </div>
+
+  <!-- Variantes principales -->
+  <div class="row-lbl">Variantes officielles</div>
+  <div class="logo-grid">
+    <div>
+      <div class="logo-card dark">
+        <svg width="72" height="88" viewBox="0 0 100 122">
+          <path d="M3,3 L97,3 L97,74 Q97,112 50,119 Q3,112 3,74 Z" fill="none" stroke="#B8890A" stroke-width="1.2"/>
+          <path d="M9,9 L91,9 L91,73 Q91,107 50,113 Q9,107 9,73 Z" fill="none" stroke="#B8890A" stroke-width=".4" opacity=".4"/>
+          <line x1="3" y1="32" x2="97" y2="32" stroke="#B8890A" stroke-width=".9" opacity=".55"/>
+          <text x="50" y="25" font-family="'DM Sans',sans-serif" font-size="8" fill="#B8890A" text-anchor="middle" letter-spacing="3.5" font-weight="500">MMA</text>
+          <text x="50" y="72" font-family="'DM Serif Display',Georgia,serif" font-size="30" fill="#F7F6F2" text-anchor="middle" letter-spacing="1">MIGC</text>
+        </svg>
+        <div class="lockup">
+          <div class="lk-wordmark" style="font-size:28px;color:#F7F6F2;">MIGC</div>
+          <div class="lk-sep"></div>
+          <div class="lk-tag" style="color:#B8890A;">Mixed Martial Arts<br>International Grading Council</div>
+        </div>
+      </div>
+      <div class="logo-lbl">Version principale · fond sombre</div>
+    </div>
+    <div>
+      <div class="logo-card light">
+        <svg width="72" height="88" viewBox="0 0 100 122">
+          <path d="M3,3 L97,3 L97,74 Q97,112 50,119 Q3,112 3,74 Z" fill="none" stroke="#1B1B18" stroke-width="1.2"/>
+          <path d="M9,9 L91,9 L91,73 Q91,107 50,113 Q9,107 9,73 Z" fill="none" stroke="#1B1B18" stroke-width=".4" opacity=".25"/>
+          <line x1="3" y1="32" x2="97" y2="32" stroke="#1B1B18" stroke-width=".9" opacity=".3"/>
+          <text x="50" y="25" font-family="'DM Sans',sans-serif" font-size="8" fill="#8B6A06" text-anchor="middle" letter-spacing="3.5" font-weight="500">MMA</text>
+          <text x="50" y="72" font-family="'DM Serif Display',Georgia,serif" font-size="30" fill="#1B1B18" text-anchor="middle" letter-spacing="1">MIGC</text>
+        </svg>
+        <div class="lockup">
+          <div class="lk-wordmark" style="font-size:28px;color:#1B1B18;">MIGC</div>
+          <div class="lk-sep" style="background:rgba(27,27,24,.2);"></div>
+          <div class="lk-tag" style="color:#8B6A06;">Mixed Martial Arts<br>International Grading Council</div>
+        </div>
+      </div>
+      <div class="logo-lbl">Version inversée · fond clair</div>
+    </div>
+  </div>
+
+  <!-- Monochrome & gold -->
+  <div class="logo-grid">
+    <div>
+      <div class="logo-card" style="background:#fff;border:1px solid var(--cream);">
+        <svg width="56" height="68" viewBox="0 0 100 122">
+          <path d="M3,3 L97,3 L97,74 Q97,112 50,119 Q3,112 3,74 Z" fill="none" stroke="#1B1B18" stroke-width="1.5"/>
+          <line x1="3" y1="32" x2="97" y2="32" stroke="#1B1B18" stroke-width="1" opacity=".3"/>
+          <text x="50" y="25" font-family="'DM Sans',sans-serif" font-size="8" fill="#1B1B18" text-anchor="middle" letter-spacing="3.5" font-weight="500">MMA</text>
+          <text x="50" y="72" font-family="'DM Serif Display',Georgia,serif" font-size="30" fill="#1B1B18" text-anchor="middle" letter-spacing="1">MIGC</text>
+        </svg>
+        <svg width="56" height="68" viewBox="0 0 100 122" style="opacity:.15">
+          <path d="M3,3 L97,3 L97,74 Q97,112 50,119 Q3,112 3,74 Z" fill="none" stroke="#1B1B18" stroke-width="1.5"/>
+          <line x1="3" y1="32" x2="97" y2="32" stroke="#1B1B18" stroke-width="1" opacity=".3"/>
+          <text x="50" y="72" font-family="'DM Serif Display',Georgia,serif" font-size="30" fill="#1B1B18" text-anchor="middle" letter-spacing="1">MIGC</text>
+        </svg>
+      </div>
+      <div class="logo-lbl">Monochrome noir · impression documents officiels</div>
+    </div>
+    <div>
+      <div class="logo-card gold-bg">
+        <svg width="56" height="68" viewBox="0 0 100 122">
+          <path d="M3,3 L97,3 L97,74 Q97,112 50,119 Q3,112 3,74 Z" fill="none" stroke="white" stroke-width="1.5"/>
+          <path d="M9,9 L91,9 L91,73 Q91,107 50,113 Q9,107 9,73 Z" fill="none" stroke="white" stroke-width=".4" opacity=".3"/>
+          <line x1="3" y1="32" x2="97" y2="32" stroke="white" stroke-width="1" opacity=".4"/>
+          <text x="50" y="25" font-family="'DM Sans',sans-serif" font-size="8" fill="white" text-anchor="middle" letter-spacing="3.5" font-weight="500">MMA</text>
+          <text x="50" y="72" font-family="'DM Serif Display',Georgia,serif" font-size="30" fill="white" text-anchor="middle" letter-spacing="1">MIGC</text>
+        </svg>
+        <div class="lockup">
+          <div class="lk-wordmark" style="font-size:26px;color:white;">MIGC</div>
+          <div class="lk-sep" style="background:rgba(255,255,255,.4);"></div>
+          <div class="lk-tag" style="color:rgba(255,255,255,.8);">Mixed Martial Arts<br>International Grading Council</div>
+        </div>
+      </div>
+      <div class="logo-lbl">Version or · sceaux, certifications, badges officiels</div>
+    </div>
+  </div>
+
+  <!-- Lockups horizontaux -->
+  <div class="ssub">Lockups horizontaux</div>
+  <div style="display:flex;flex-direction:column;gap:12px;">
+    <div style="background:var(--charcoal);border-radius:10px;padding:22px 28px;display:flex;align-items:center;gap:16px;">
+      <svg width="34" height="42" viewBox="0 0 100 122">
+        <path d="M3,3 L97,3 L97,74 Q97,112 50,119 Q3,112 3,74 Z" fill="none" stroke="#B8890A" stroke-width="1.5"/>
+        <line x1="3" y1="32" x2="97" y2="32" stroke="#B8890A" stroke-width="1" opacity=".5"/>
+        <text x="50" y="25" font-family="'DM Sans',sans-serif" font-size="8" fill="#B8890A" text-anchor="middle" letter-spacing="3" font-weight="500">MMA</text>
+        <text x="50" y="72" font-family="'DM Serif Display',Georgia,serif" font-size="30" fill="#F7F6F2" text-anchor="middle" letter-spacing="1">MIGC</text>
+      </svg>
+      <div style="width:1px;height:40px;background:rgba(184,137,10,.3);"></div>
+      <div>
+        <div style="font-family:var(--serif);font-size:22px;color:var(--ivory);letter-spacing:.05em;line-height:1;">MIGC</div>
+        <div style="font-size:8.5px;color:var(--gold);letter-spacing:.18em;text-transform:uppercase;font-weight:500;margin-top:4px;line-height:1.7;">Mixed Martial Arts · International Grading Council</div>
+      </div>
+    </div>
+    <div style="background:var(--ivory);border:1px solid var(--cream);border-radius:10px;padding:18px 28px;display:flex;align-items:center;gap:16px;">
+      <svg width="26" height="32" viewBox="0 0 100 122">
+        <path d="M3,3 L97,3 L97,74 Q97,112 50,119 Q3,112 3,74 Z" fill="none" stroke="#1B1B18" stroke-width="2"/>
+        <line x1="3" y1="32" x2="97" y2="32" stroke="#8B6A06" stroke-width="1.2" opacity=".5"/>
+        <text x="50" y="25" font-family="'DM Sans',sans-serif" font-size="8" fill="#8B6A06" text-anchor="middle" letter-spacing="3" font-weight="500">MMA</text>
+        <text x="50" y="72" font-family="'DM Serif Display',Georgia,serif" font-size="30" fill="#1B1B18" text-anchor="middle" letter-spacing="1">MIGC</text>
+      </svg>
+      <div style="width:1px;height:32px;background:rgba(27,27,24,.12);"></div>
+      <div>
+        <div style="font-family:var(--serif);font-size:18px;color:var(--charcoal);letter-spacing:.05em;line-height:1;">MIGC</div>
+        <div style="font-size:8px;color:var(--gold-dk);letter-spacing:.18em;text-transform:uppercase;font-weight:500;margin-top:3px;line-height:1.7;">Mixed Martial Arts · International Grading Council</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Zone de protection -->
+  <div class="ssub">Zone de protection</div>
+  <div class="clearspace-wrap">
+    <div class="clearspace-box">
+      <div class="cs-label cs-top">= hauteur du bandeau "MMA"</div>
+      <div class="cs-label cs-left">= hauteur du bandeau</div>
+      <div class="cs-label cs-right">= hauteur du bandeau</div>
+      <div class="cs-label cs-bot">= hauteur du bandeau</div>
+      <svg width="80" height="98" viewBox="0 0 100 122">
+        <path d="M3,3 L97,3 L97,74 Q97,112 50,119 Q3,112 3,74 Z" fill="none" stroke="#1B1B18" stroke-width="1.5"/>
+        <line x1="3" y1="32" x2="97" y2="32" stroke="#8B6A06" stroke-width="1" opacity=".5"/>
+        <text x="50" y="25" font-family="'DM Sans',sans-serif" font-size="8" fill="#8B6A06" text-anchor="middle" letter-spacing="3.5" font-weight="500">MMA</text>
+        <text x="50" y="72" font-family="'DM Serif Display',Georgia,serif" font-size="30" fill="#1B1B18" text-anchor="middle" letter-spacing="1">MIGC</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Tailles minimales -->
+  <div class="ssub">Tailles minimales</div>
+  <table class="size-tbl">
+    <thead>
+      <tr>
+        <th>Usage</th><th>Taille minimale</th><th>Format</th><th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Blason seul</td><td>28 × 34 px</td><td>PNG · SVG</td><td>En dessous, utiliser le monogramme MG uniquement</td></tr>
+      <tr><td>Lockup horizontal</td><td>160 px de large</td><td>PNG · SVG</td><td>Sous 160 px, supprimer le texte d'accompagnement</td></tr>
+      <tr><td>Favicon / App icon</td><td>16 × 16 px</td><td>ICO · PNG</td><td>Monogramme sur fond charcoal</td></tr>
+      <tr><td>Impression offset</td><td>15 mm de hauteur</td><td>EPS · PDF</td><td>Contours à 0,25 pt minimum</td></tr>
+      <tr><td>Broderie / Gravure</td><td>20 mm de hauteur</td><td>Vectoriel</td><td>Supprimer le filet intérieur en dessous de 20 mm</td></tr>
+    </tbody>
+  </table>
+
+  <!-- Ce qu'il ne faut pas faire -->
+  <div class="ssub">À ne pas faire</div>
+  <div class="donts">
+    <div class="dont">
+      <div class="dont-prev">
+        <svg width="56" height="68" viewBox="0 0 100 122" style="opacity:.5;filter:blur(1px);">
+          <path d="M3,3 L97,3 L97,74 Q97,112 50,119 Q3,112 3,74 Z" fill="none" stroke="#B8890A" stroke-width="1.5"/>
+          <text x="50" y="72" font-family="'DM Serif Display',Georgia,serif" font-size="30" fill="#1B1B18" text-anchor="middle">MIGC</text>
+        </svg>
+      </div>
+      <div class="dont-lbl">Ne pas flouter ni altérer</div>
+      <div class="dont-sub">Le logo est toujours net et non transformé.</div>
+    </div>
+    <div class="dont">
+      <div class="dont-prev">
+        <svg width="56" height="68" viewBox="0 0 100 122" style="transform:rotate(18deg);">
+          <path d="M3,3 L97,3 L97,74 Q97,112 50,119 Q3,112 3,74 Z" fill="none" stroke="#B8890A" stroke-width="1.5"/>
+          <line x1="3" y1="32" x2="97" y2="32" stroke="#B8890A" stroke-width="1" opacity=".5"/>
+          <text x="50" y="25" font-family="'DM Sans',sans-serif" font-size="8" fill="#B8890A" text-anchor="middle" letter-spacing="3">MMA</text>
+          <text x="50" y="72" font-family="'DM Serif Display',Georgia,serif" font-size="30" fill="#1B1B18" text-anchor="middle">MIGC</text>
+        </svg>
+      </div>
+      <div class="dont-lbl">Ne pas faire pivoter</div>
+      <div class="dont-sub">Le blason est toujours à la verticale, pointe en bas.</div>
+    </div>
+    <div class="dont">
+      <div class="dont-prev">
+        <svg width="56" height="68" viewBox="0 0 100 122" style="transform:scaleX(1.4);">
+          <path d="M3,3 L97,3 L97,74 Q97,112 50,119 Q3,112 3,74 Z" fill="none" stroke="#B8890A" stroke-width="1.5"/>
+          <text x="50" y="72" font-family="'DM Serif Display',Georgia,serif" font-size="30" fill="#1B1B18" text-anchor="middle">MIGC</text>
+        </svg>
+      </div>
+      <div class="dont-lbl">Ne pas déformer</div>
+      <div class="dont-sub">Les proportions sont fixes. Redimensionner de façon uniforme.</div>
+    </div>
+    <div class="dont">
+      <div class="dont-prev">
+        <svg width="56" height="68" viewBox="0 0 100 122">
+          <path d="M3,3 L97,3 L97,74 Q97,112 50,119 Q3,112 3,74 Z" fill="none" stroke="#E24B4A" stroke-width="1.5"/>
+          <text x="50" y="72" font-family="'DM Serif Display',Georgia,serif" font-size="30" fill="#E24B4A" text-anchor="middle">MIGC</text>
+        </svg>
+      </div>
+      <div class="dont-lbl">Ne pas changer la couleur</div>
+      <div class="dont-sub">Uniquement or #B8890A, blanc, ou noir charcoal.</div>
+    </div>
+    <div class="dont">
+      <div class="dont-prev" style="background:#5A5A54;">
+        <svg width="56" height="68" viewBox="0 0 100 122">
+          <path d="M3,3 L97,3 L97,74 Q97,112 50,119 Q3,112 3,74 Z" fill="none" stroke="#B8890A" stroke-width="1.5"/>
+          <text x="50" y="72" font-family="'DM Serif Display',Georgia,serif" font-size="30" fill="#F7F6F2" text-anchor="middle">MIGC</text>
+        </svg>
+      </div>
+      <div class="dont-lbl">Ne pas placer sur fond coloré</div>
+      <div class="dont-sub">Uniquement sur charcoal, ivoire, blanc ou or.</div>
+    </div>
+    <div class="dont">
+      <div class="dont-prev">
+        <svg width="56" height="68" viewBox="0 0 100 122" style="opacity:.2;">
+          <path d="M3,3 L97,3 L97,74 Q97,112 50,119 Q3,112 3,74 Z" fill="none" stroke="#B8890A" stroke-width="1.5"/>
+          <text x="50" y="72" font-family="'DM Serif Display',Georgia,serif" font-size="30" fill="#1B1B18" text-anchor="middle">MIGC</text>
+        </svg>
+        <svg width="56" height="68" viewBox="0 0 100 122" style="position:absolute;opacity:.2;margin-left:-30px;">
+          <path d="M3,3 L97,3 L97,74 Q97,112 50,119 Q3,112 3,74 Z" fill="none" stroke="#B8890A" stroke-width="1.5"/>
+          <text x="50" y="72" font-family="'DM Serif Display',Georgia,serif" font-size="30" fill="#1B1B18" text-anchor="middle">MIGC</text>
+        </svg>
+      </div>
+      <div class="dont-lbl">Ne pas utiliser en filigrane</div>
+      <div class="dont-sub">Le logo n'est pas un motif décoratif. Il identifie.</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══ 02 — COULEURS ═══ -->
+<section id="couleurs">
+<div class="inner">
+  <div class="sec-head">
+    <div class="sec-num">02 — Couleurs</div>
+    <h2 class="sec-title">Palette institutionnelle</h2>
+    <p class="sec-lead">Trois registres : signature (or + charcoal), neutres (ivoire → ardoise), et sémantique (certification, alerte, information). L'or est la couleur exclusive du MIGC — elle ne partage aucun support avec d'autres organisations.</p>
+  </div>
+
+  <!-- Palette signature -->
+  <div class="color-system">
+    <div>
+      <div class="cg-title">Couleurs signature</div>
+      <div class="swatches">
+        <div class="sw" style="background:#B8890A;">
+          <div class="sw-lbl" style="color:#5C4604;">Or MIGC<br>#B8890A</div>
+        </div>
+        <div class="sw" style="background:#8B6A06;">
+          <div class="sw-lbl" style="color:#3A2C02;">Or foncé<br>#8B6A06</div>
+        </div>
+        <div class="sw" style="background:#D4A828;">
+          <div class="sw-lbl" style="color:#7A5A04;">Or clair<br>#D4A828</div>
+        </div>
+        <div class="sw" style="background:#F5EDD8;">
+          <div class="sw-lbl" style="color:#8B6A06;">Or pâle<br>#F5EDD8</div>
+        </div>
+        <div class="sw" style="background:#1B1B18;flex:2;">
+          <div class="sw-lbl" style="color:#8A8A82;">Charcoal<br>#1B1B18</div>
+        </div>
+        <div class="sw" style="background:#2A2A26;">
+          <div class="sw-lbl" style="color:#8A8A82;">Encre<br>#2A2A26</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Neutres -->
+    <div>
+      <div class="cg-title">Neutres</div>
+      <div class="color-cards">
+        <div class="cc"><div class="cc-sw" style="background:#F7F6F2;border-bottom:1px solid #EDECEA;"></div><div class="cc-info"><div class="cc-name">Ivoire</div><div class="cc-hex">#F7F6F2</div><div class="cc-role">Fond documents, certifications</div></div></div>
+        <div class="cc"><div class="cc-sw" style="background:#EDECEA;"></div><div class="cc-info"><div class="cc-name">Crème</div><div class="cc-hex">#EDECEA</div><div class="cc-role">Séparateurs, bordures</div></div></div>
+        <div class="cc"><div class="cc-sw" style="background:#C4C3BC;"></div><div class="cc-info"><div class="cc-name">Brume</div><div class="cc-hex">#C4C3BC</div><div class="cc-role">Éléments désactivés</div></div></div>
+        <div class="cc"><div class="cc-sw" style="background:#8A8A82;"></div><div class="cc-info"><div class="cc-name">Argent</div><div class="cc-hex">#8A8A82</div><div class="cc-role">Texte secondaire</div></div></div>
+        <div class="cc"><div class="cc-sw" style="background:#5A5A54;"></div><div class="cc-info"><div class="cc-name">Ardoise</div><div class="cc-hex">#5A5A54</div><div class="cc-role">Corps de texte léger</div></div></div>
+      </div>
+    </div>
+
+    <!-- Sémantique -->
+    <div>
+      <div class="cg-title">Couleurs sémantiques — grades & statuts</div>
+      <div class="semantic">
+        <div class="sem">
+          <div class="sem-role" style="color:#1A5C34;">Certification · Valide</div>
+          <div class="sem-dots">
+            <div class="dot" style="background:#1A5C34;"></div>
+            <div class="dot" style="background:#F0FBF4;border:1px solid rgba(30,107,58,.2);"></div>
+          </div>
+          <div class="cc-hex">#1A5C34 · #F0FBF4</div>
+          <div class="sem-desc" style="margin-top:6px;">Grade certifié, vérification réussie, statut actif</div>
+        </div>
+        <div class="sem">
+          <div class="sem-role" style="color:#7A4A08;">Attention · En cours</div>
+          <div class="sem-dots">
+            <div class="dot" style="background:#B8890A;"></div>
+            <div class="dot" style="background:#FCF8EE;border:1px solid rgba(184,137,10,.2);"></div>
+          </div>
+          <div class="cc-hex">#B8890A · #FCF8EE</div>
+          <div class="sem-desc" style="margin-top:6px;">Grade en validation, certification en cours, révision</div>
+        </div>
+        <div class="sem">
+          <div class="sem-role" style="color:#7A1A1A;">Alerte · Refus</div>
+          <div class="sem-dots">
+            <div class="dot" style="background:#7A1A1A;"></div>
+            <div class="dot" style="background:#FBF0F0;border:1px solid rgba(122,26,26,.2);"></div>
+          </div>
+          <div class="cc-hex">#7A1A1A · #FBF0F0</div>
+          <div class="sem-desc" style="margin-top:6px;">Grade suspendu, signalement, disqualification</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══ 03 — TYPOGRAPHIE ═══ -->
+<section id="typographie">
+<div class="inner">
+  <div class="sec-head">
+    <div class="sec-num">03 — Typographie</div>
+    <h2 class="sec-title">Système typographique</h2>
+    <p class="sec-lead">Deux familles complémentaires : DM Serif Display pour les titres et la signalétique, DM Sans pour les corps de texte et les interfaces. JetBrains Mono pour les données, codes et identifiants.</p>
+  </div>
+
+  <!-- DM Serif Display -->
+  <div class="type-block">
+    <div class="type-hd">
+      <span class="type-name">DM Serif Display — Titres & identité</span>
+      <span class="type-meta">Serif italique · Charcoal · Or</span>
+    </div>
+    <div class="type-body">
+      <div style="font-family:var(--serif);font-size:52px;color:var(--charcoal);letter-spacing:-.01em;line-height:1.1;margin-bottom:16px;">
+        MIGC — Le standard mondial du MMA
+      </div>
+      <div class="type-block" style="border:none;border-top:1px solid var(--cream);border-radius:0;margin:0;">
+        <div class="type-body" style="padding:0;padding-top:16px;">
+          <div class="scale-row">
+            <div class="scale-lbl">Display · 52 px / 400</div>
+            <div style="font-family:var(--serif);font-size:52px;color:var(--charcoal);line-height:1;">MIGC</div>
+          </div>
+          <div class="scale-row">
+            <div class="scale-lbl">H1 · 36 px / 400</div>
+            <div style="font-family:var(--serif);font-size:36px;color:var(--charcoal);">Gouvernance mondiale</div>
+          </div>
+          <div class="scale-row">
+            <div class="scale-lbl">H2 · 26 px / 400</div>
+            <div style="font-family:var(--serif);font-size:26px;color:var(--charcoal);">Certification de grade</div>
+          </div>
+          <div class="scale-row">
+            <div class="scale-lbl">H3 · 20 px / 400</div>
+            <div style="font-family:var(--serif);font-size:20px;color:var(--charcoal);">Commission Technique & Grading</div>
+          </div>
+          <div class="scale-row">
+            <div class="scale-lbl">Accent or · 18 px</div>
+            <div style="font-family:var(--serif);font-size:18px;color:var(--gold);">G3 — Ceinture rouge</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DM Sans -->
+  <div class="type-block">
+    <div class="type-hd">
+      <span class="type-name">DM Sans — Corps de texte & interface</span>
+      <span class="type-meta">Sans-serif · 300 / 400 / 500 / 600</span>
+    </div>
+    <div class="type-body">
+      <div class="scale-row">
+        <div class="scale-lbl">Corps principal · 14/400</div>
+        <div style="font-size:14px;color:var(--ink);max-width:520px;">Le MIGC établit un système de certification des grades universel pour le MMA mondial — professionnel, semi-professionnel, amateur et loisir.</div>
+      </div>
+      <div class="scale-row">
+        <div class="scale-lbl">Lead · 16/400</div>
+        <div style="font-size:16px;color:var(--slate);max-width:480px;">Première organisation à délivrer un passeport sportif international reconnu pour les arts martiaux mixtes.</div>
+      </div>
+      <div class="scale-row">
+        <div class="scale-lbl">Label · 10/600 spaced</div>
+        <div style="font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);">Mixed Martial Arts International Grading Council</div>
+      </div>
+      <div class="scale-row">
+        <div class="scale-lbl">Small · 11/500</div>
+        <div style="font-size:11px;font-weight:500;color:var(--slate);">Genève, Suisse · Association Art. 60–79 CC · Fondé 2025</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JetBrains Mono -->
+  <div class="type-block">
+    <div class="type-hd">
+      <span class="type-name">JetBrains Mono — Données & codes</span>
+      <span class="type-meta">Monospace · 400 / 500</span>
+    </div>
+    <div class="type-body">
+      <div class="scale-row">
+        <div class="scale-lbl">ID combattant</div>
+        <div style="font-family:var(--mono);font-size:13px;color:var(--ink);">MIGC-FR-BSD-2026-00001</div>
+      </div>
+      <div class="scale-row">
+        <div class="scale-lbl">Score / Points</div>
+        <div style="font-family:var(--mono);font-size:20px;font-weight:500;color:var(--gold);">63 290 pts</div>
+      </div>
+      <div class="scale-row">
+        <div class="scale-lbl">Hash DSP</div>
+        <div style="font-family:var(--mono);font-size:11px;color:var(--silver);">0x4f2a1b8c9d3e7f01a2b4c5d6e7f8091a</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Règle de pairing -->
+  <div class="callout">
+    <strong>Règle de cohabitation</strong>
+    DM Serif Display uniquement pour les titres, noms de grade, et la signalétique institutionnelle. Ne jamais utiliser DM Serif pour les corps de texte ou les interfaces. DM Sans est la police par défaut de tous les documents, emails, et applications. JetBrains Mono pour toute donnée chiffrée, identifiant, hash ou code de certification.
+  </div>
+</div>
+</section>
+
+<!-- ═══ 04 — GRADES ═══ -->
+<section id="grades">
+<div class="inner">
+  <div class="sec-head">
+    <div class="sec-num">04 — Grades & Niveaux</div>
+    <h2 class="sec-title">Identité visuelle des grades</h2>
+    <p class="sec-lead">Le système de grades MIGC s'articule en 9 niveaux codifiés G1 à G9, avec une progression chromatique linéaire allant du blanc au rouge carmin. Chaque grade possède une couleur officielle, un nombre de pips et un nom de niveau.</p>
+  </div>
+
+  <!-- Échelle des grades -->
+  <div class="grade-scale">
+    <div class="gs-step" style="background:#FDFCF8;">
+      <div class="gs-name">G1</div>
+      <div class="gs-lbl">Blanc</div>
+      <div class="gs-pips"><div class="pip on"></div><div class="pip"></div><div class="pip"></div></div>
+    </div>
+    <div class="gs-step" style="background:#FFF8E8;">
+      <div class="gs-name" style="color:#8B6A06;">G2</div>
+      <div class="gs-lbl">Or</div>
+      <div class="gs-pips"><div class="pip on"></div><div class="pip on"></div><div class="pip"></div></div>
+    </div>
+    <div class="gs-step" style="background:#FFF0D8;">
+      <div class="gs-name" style="color:#8B4A06;">G3</div>
+      <div class="gs-lbl">Orange</div>
+      <div class="gs-pips"><div class="pip on"></div><div class="pip on"></div><div class="pip on"></div></div>
+    </div>
+    <div class="gs-step" style="background:#FBE8D8;">
+      <div class="gs-name" style="color:#7A3A0A;">G4</div>
+      <div class="gs-lbl">Saumon</div>
+      <div class="gs-pips"><div class="pip on"></div><div class="pip on"></div><div class="pip on"></div></div>
+    </div>
+    <div class="gs-step" style="background:#FAD8D8;">
+      <div class="gs-name" style="color:#7A1A1A;">G5</div>
+      <div class="gs-lbl">Rouge clair</div>
+      <div class="gs-pips"><div class="pip on"></div><div class="pip on"></div><div class="pip on"></div></div>
+    </div>
+    <div class="gs-step" style="background:#F4B0B0;">
+      <div class="gs-name" style="color:#6A1010;">G6</div>
+      <div class="gs-lbl">Rouge</div>
+      <div class="gs-pips"><div class="pip on"></div><div class="pip on"></div><div class="pip on"></div></div>
+    </div>
+    <div class="gs-step" style="background:#EB8888;">
+      <div class="gs-name" style="color:#5A0A0A;">G7</div>
+      <div class="gs-lbl">Rouge vif</div>
+      <div class="gs-pips"><div class="pip on"></div><div class="pip on"></div><div class="pip on"></div></div>
+    </div>
+    <div class="gs-step" style="background:#CC4444;">
+      <div class="gs-name" style="color:#fff;">G8</div>
+      <div class="gs-lbl" style="color:rgba(255,255,255,.7);">Carmin</div>
+      <div class="gs-pips"><div class="pip" style="background:rgba(255,255,255,.4)"></div><div class="pip" style="background:rgba(255,255,255,.4)"></div><div class="pip" style="background:rgba(255,255,255,.8)"></div></div>
+    </div>
+    <div class="gs-step" style="background:#8B1A1A;">
+      <div class="gs-name" style="color:#FFD4D4;">G9</div>
+      <div class="gs-lbl" style="color:rgba(255,200,200,.7);">Grand Maître</div>
+      <div class="gs-pips"><div class="pip" style="background:rgba(255,255,255,.6)"></div><div class="pip" style="background:rgba(255,255,255,.6)"></div><div class="pip" style="background:rgba(255,255,255,.9)"></div></div>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:24px;">
+    <strong>Principe chromatique</strong>
+    La progression du blanc (G1) vers le rouge carmin (G9) est linéaire et exclusive. Ces couleurs sont les seules couleurs de grade officielles MIGC — aucune substitution n'est autorisée. Les certifications papier reproduisent la couleur du grade en bande latérale gauche sur fond ivoire.
+  </div>
+
+  <!-- Certif mock -->
+  <div class="ssub">Certification de grade — gabarit</div>
+  <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:4px;">
+    <!-- G3 exemple -->
+    <div style="border:1px solid #FAD0A8;border-left:4px solid #D4700A;border-radius:6px;padding:20px 24px;background:#FDFCF8;width:240px;">
+      <div style="display:flex;align-items:center;gap:10px;padding-bottom:12px;border-bottom:1px solid var(--cream);margin-bottom:12px;">
+        <svg width="22" height="26" viewBox="0 0 100 122">
+          <path d="M3,3 L97,3 L97,74 Q97,112 50,119 Q3,112 3,74 Z" fill="none" stroke="#D4700A" stroke-width="2"/>
+          <line x1="3" y1="32" x2="97" y2="32" stroke="#D4700A" stroke-width="1.2" opacity=".5"/>
+          <text x="50" y="25" font-family="'DM Sans',sans-serif" font-size="8" fill="#D4700A" text-anchor="middle" letter-spacing="3" font-weight="500">MMA</text>
+          <text x="50" y="72" font-family="'DM Serif Display',Georgia,serif" font-size="30" fill="#2A2A26" text-anchor="middle" letter-spacing="1">MIGC</text>
+        </svg>
+        <div>
+          <div style="font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:#8A8A82;font-weight:500;">Certificat de grade</div>
+          <div style="font-family:var(--serif);font-size:13px;color:var(--charcoal);letter-spacing:.04em;">MIGC</div>
+        </div>
+      </div>
+      <div style="text-align:center;padding:4px 0 8px;">
+        <div style="font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:#8A8A82;margin-bottom:4px;">Grade certifié</div>
+        <div style="font-family:var(--serif);font-size:36px;color:#D4700A;letter-spacing:.04em;line-height:1;">G3</div>
+        <div style="font-size:11px;font-weight:600;color:var(--charcoal);letter-spacing:.08em;margin-top:2px;">ORANGE</div>
+        <div style="font-size:9px;color:#8A8A82;margin-top:12px;letter-spacing:.06em;line-height:1.6;">Benoît Saint Denis<br>MIGC-FR-BSD-2026-00001<br>12 Mars 2026</div>
+      </div>
+    </div>
+    <!-- G7 exemple -->
+    <div style="border:1px solid #E08080;border-left:4px solid #EB4444;border-radius:6px;padding:20px 24px;background:#FDFCF8;width:240px;">
+      <div style="display:flex;align-items:center;gap:10px;padding-bottom:12px;border-bottom:1px solid var(--cream);margin-bottom:12px;">
+        <svg width="22" height="26" viewBox="0 0 100 122">
+          <path d="M3,3 L97,3 L97,74 Q97,112 50,119 Q3,112 3,74 Z" fill="none" stroke="#EB4444" stroke-width="2"/>
+          <line x1="3" y1="32" x2="97" y2="32" stroke="#EB4444" stroke-width="1.2" opacity=".5"/>
+          <text x="50" y="25" font-family="'DM Sans',sans-serif" font-size="8" fill="#EB4444" text-anchor="middle" letter-spacing="3" font-weight="500">MMA</text>
+          <text x="50" y="72" font-family="'DM Serif Display',Georgia,serif" font-size="30" fill="#2A2A26" text-anchor="middle" letter-spacing="1">MIGC</text>
+        </svg>
+        <div>
+          <div style="font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:#8A8A82;font-weight:500;">Certificat de grade</div>
+          <div style="font-family:var(--serif);font-size:13px;color:var(--charcoal);letter-spacing:.04em;">MIGC</div>
+        </div>
+      </div>
+      <div style="text-align:center;padding:4px 0 8px;">
+        <div style="font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:#8A8A82;margin-bottom:4px;">Grade certifié</div>
+        <div style="font-family:var(--serif);font-size:36px;color:#C03030;letter-spacing:.04em;line-height:1;">G7</div>
+        <div style="font-size:11px;font-weight:600;color:var(--charcoal);letter-spacing:.08em;margin-top:2px;">ROUGE VIF</div>
+        <div style="font-size:9px;color:#8A8A82;margin-top:12px;letter-spacing:.06em;line-height:1.6;">Ciryl Gane<br>MIGC-FR-CG-2026-00188<br>12 Mars 2026</div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══ 05 — APPLICATIONS ═══ -->
+<section id="applications">
+<div class="inner">
+  <div class="sec-head">
+    <div class="sec-num">05 — Applications</div>
+    <h2 class="sec-title">Déclinaisons officielles</h2>
+    <p class="sec-lead">Toutes les applications du logo MIGC — digitales, imprimées, et physiques — respectent les règles de la présente charte. Ces gabarits sont normatifs.</p>
+  </div>
+
+  <div class="app-grid">
+
+    <!-- DSP Badge -->
+    <div class="app-card">
+      <div class="ac-hd">DSP — Digital Sport Passport · Badge</div>
+      <div class="ac-bd">
+        <div class="badge-num">
+          <div style="display:flex;align-items:center;gap:10px;padding-bottom:10px;border-bottom:1px solid rgba(184,137,10,.2);margin-bottom:10px;">
+            <svg width="24" height="29" viewBox="0 0 100 122">
+              <path d="M3,3 L97,3 L97,74 Q97,112 50,119 Q3,112 3,74 Z" fill="none" stroke="#B8890A" stroke-width="2"/>
+              <line x1="3" y1="32" x2="97" y2="32" stroke="#B8890A" stroke-width="1.2" opacity=".5"/>
+              <text x="50" y="25" font-family="'DM Sans',sans-serif" font-size="8" fill="#B8890A" text-anchor="middle" letter-spacing="3" font-weight="500">MMA</text>
+              <text x="50" y="72" font-family="'DM Serif Display',Georgia,serif" font-size="30" fill="#F7F6F2" text-anchor="middle" letter-spacing="1">MIGC</text>
+            </svg>
+            <div>
+              <div style="font-size:8px;color:var(--gold);letter-spacing:.16em;text-transform:uppercase;font-weight:500;">Passeport Sportif</div>
+              <div style="font-family:var(--serif);font-size:14px;color:var(--ivory);letter-spacing:.04em;">MIGC</div>
+            </div>
+            <div style="margin-left:auto;font-family:var(--mono);font-size:11px;font-weight:500;color:var(--gold);background:rgba(184,137,10,.1);border:1px solid rgba(184,137,10,.3);padding:2px 8px;border-radius:4px;">G3</div>
+          </div>
+          <div style="font-size:13px;font-weight:600;color:var(--ivory);">Benoît Saint Denis</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.4);margin-top:2px;font-family:var(--mono);">63 290 pts · Vérifié · 2026</div>
+          <div style="font-size:9px;color:rgba(255,255,255,.25);margin-top:2px;font-family:var(--mono);">MIGC-FR-BSD-2026-00001</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Email header -->
+    <div class="app-card">
+      <div class="ac-hd">Email · En-tête officiel</div>
+      <div class="ac-bd">
+        <div style="width:260px;border:1px solid var(--cream);border-radius:6px;overflow:hidden;">
+          <div style="background:var(--charcoal);padding:14px 18px;display:flex;align-items:center;gap:12px;">
+            <svg width="22" height="26" viewBox="0 0 100 122">
+              <path d="M3,3 L97,3 L97,74 Q97,112 50,119 Q3,112 3,74 Z" fill="none" stroke="#B8890A" stroke-width="2"/>
+              <line x1="3" y1="32" x2="97" y2="32" stroke="#B8890A" stroke-width="1.2" opacity=".5"/>
+              <text x="50" y="25" font-family="'DM Sans',sans-serif" font-size="8" fill="#B8890A" text-anchor="middle" letter-spacing="3" font-weight="500">MMA</text>
+              <text x="50" y="72" font-family="'DM Serif Display',Georgia,serif" font-size="30" fill="#F7F6F2" text-anchor="middle" letter-spacing="1">MIGC</text>
+            </svg>
+            <div>
+              <div style="font-family:var(--serif);font-size:16px;color:var(--ivory);letter-spacing:.04em;">MIGC</div>
+              <div style="font-size:8px;color:var(--gold);letter-spacing:.14em;text-transform:uppercase;font-weight:500;">International Grading Council</div>
+            </div>
+            <div style="margin-left:auto;font-size:8px;color:rgba(255,255,255,.3);letter-spacing:.1em;">GENÈVE</div>
+          </div>
+          <div style="padding:14px 18px;background:#FDFCF8;">
+            <div style="height:6px;background:var(--cream);border-radius:3px;margin-bottom:7px;width:78%;"></div>
+            <div style="height:6px;background:var(--cream);border-radius:3px;margin-bottom:7px;width:92%;"></div>
+            <div style="height:6px;background:var(--cream);border-radius:3px;width:61%;"></div>
+            <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--cream);display:flex;align-items:center;gap:8px;">
+              <svg width="12" height="14" viewBox="0 0 100 122">
+                <path d="M3,3 L97,3 L97,74 Q97,112 50,119 Q3,112 3,74 Z" fill="none" stroke="#8A8A82" stroke-width="2"/>
+                <text x="50" y="72" font-family="'DM Serif Display',Georgia,serif" font-size="36" fill="#5A5A54" text-anchor="middle">MIGC</text>
+              </svg>
+              <div style="font-size:9px;color:#8A8A82;line-height:1.5;">contact@migc.sport · migc.sport<br>Route de Ferney, Genève CH-1202</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Letterhead -->
+    <div class="app-card">
+      <div class="ac-hd">Papier à en-tête officiel</div>
+      <div class="ac-bd">
+        <div style="width:200px;border:1px solid var(--cream);border-radius:4px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06);">
+          <div style="background:var(--charcoal);padding:16px 18px;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <svg width="18" height="22" viewBox="0 0 100 122">
+                <path d="M3,3 L97,3 L97,74 Q97,112 50,119 Q3,112 3,74 Z" fill="none" stroke="#B8890A" stroke-width="2.5"/>
+                <line x1="3" y1="32" x2="97" y2="32" stroke="#B8890A" stroke-width="1.5" opacity=".5"/>
+                <text x="50" y="25" font-family="'DM Sans',sans-serif" font-size="8" fill="#B8890A" text-anchor="middle" letter-spacing="3" font-weight="500">MMA</text>
+                <text x="50" y="72" font-family="'DM Serif Display',Georgia,serif" font-size="30" fill="#F7F6F2" text-anchor="middle" letter-spacing="1">MIGC</text>
+              </svg>
+              <div>
+                <div style="font-family:var(--serif);font-size:14px;color:var(--ivory);letter-spacing:.04em;">MIGC</div>
+                <div style="font-size:7px;color:var(--gold);letter-spacing:.16em;text-transform:uppercase;font-weight:500;margin-top:2px;">Grading Council</div>
+              </div>
+              <div style="margin-left:auto;font-size:7px;color:rgba(255,255,255,.25);letter-spacing:.1em;text-align:right;">Genève<br>2026</div>
+            </div>
+          </div>
+          <div style="padding:14px 16px;background:#FDFCF8;">
+            <div style="height:5px;background:var(--cream);border-radius:2px;margin-bottom:5px;width:90%;"></div>
+            <div style="height:5px;background:var(--cream);border-radius:2px;margin-bottom:5px;width:72%;"></div>
+            <div style="height:5px;background:var(--cream);border-radius:2px;margin-bottom:14px;width:84%;"></div>
+            <div style="height:5px;background:var(--cream);border-radius:2px;margin-bottom:5px;width:96%;"></div>
+            <div style="height:5px;background:var(--cream);border-radius:2px;margin-bottom:5px;width:80%;"></div>
+            <div style="height:5px;background:var(--cream);border-radius:2px;width:66%;"></div>
+            <div style="margin-top:16px;padding-top:10px;border-top:1px solid var(--cream);font-size:7px;color:#8A8A82;line-height:1.6;font-family:var(--mono);">
+              MIGC · Genève · Art. 60–79 CC CH<br>
+              MIGC-DOC-2026-0042
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Favicon -->
+    <div class="app-card">
+      <div class="ac-hd">Icône application & Favicon</div>
+      <div class="ac-bd" style="gap:20px;flex-wrap:wrap;">
+        <div style="display:flex;gap:16px;align-items:flex-end;">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:7px;">
+            <div style="width:64px;height:64px;background:var(--charcoal);border-radius:16px;display:flex;align-items:center;justify-content:center;">
+              <svg width="34" height="41" viewBox="0 0 100 122">
+                <path d="M3,3 L97,3 L97,74 Q97,112 50,119 Q3,112 3,74 Z" fill="none" stroke="#B8890A" stroke-width="2"/>
+                <line x1="3" y1="32" x2="97" y2="32" stroke="#B8890A" stroke-width="1.2" opacity=".5"/>
+                <text x="50" y="25" font-family="'DM Sans',sans-serif" font-size="8" fill="#B8890A" text-anchor="middle" letter-spacing="3" font-weight="500">MMA</text>
+                <text x="50" y="72" font-family="'DM Serif Display',Georgia,serif" font-size="30" fill="#F7F6F2" text-anchor="middle" letter-spacing="1">MIGC</text>
+              </svg>
+            </div>
+            <div style="font-size:9.5px;color:var(--silver);">64 px</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:7px;">
+            <div style="width:40px;height:40px;background:var(--charcoal);border-radius:10px;display:flex;align-items:center;justify-content:center;">
+              <svg width="22" height="26" viewBox="0 0 100 122">
+                <path d="M3,3 L97,3 L97,74 Q97,112 50,119 Q3,112 3,74 Z" fill="none" stroke="#B8890A" stroke-width="2.5"/>
+                <line x1="3" y1="32" x2="97" y2="32" stroke="#B8890A" stroke-width="1.5" opacity=".5"/>
+                <text x="50" y="72" font-family="'DM Serif Display',Georgia,serif" font-size="30" fill="#F7F6F2" text-anchor="middle" letter-spacing="1">MIGC</text>
+              </svg>
+            </div>
+            <div style="font-size:9.5px;color:var(--silver);">40 px</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:7px;">
+            <div style="width:26px;height:26px;background:var(--charcoal);border-radius:6px;display:flex;align-items:center;justify-content:center;">
+              <svg width="14" height="17" viewBox="0 0 100 122">
+                <path d="M3,3 L97,3 L97,74 Q97,112 50,119 Q3,112 3,74 Z" fill="none" stroke="#B8890A" stroke-width="3"/>
+                <text x="50" y="74" font-family="'DM Serif Display',Georgia,serif" font-size="36" fill="#F7F6F2" text-anchor="middle">MIGC</text>
+              </svg>
+            </div>
+            <div style="font-size:9.5px;color:var(--silver);">26 px</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:7px;">
+            <div style="width:16px;height:16px;background:var(--gold);border-radius:3px;display:flex;align-items:center;justify-content:center;">
+              <span style="font-family:var(--serif);font-size:7px;color:white;letter-spacing:.02em;">MG</span>
+            </div>
+            <div style="font-size:9.5px;color:var(--silver);">16 px</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</section>
+
+<!-- ═══ 06 — PHOTOGRAPHIE ═══ -->
+<section id="photo">
+<div class="inner">
+  <div class="sec-head">
+    <div class="sec-num">06 — Photographie & Ton visuel</div>
+    <h2 class="sec-title">Direction artistique</h2>
+    <p class="sec-lead">La direction photographique du MIGC reflète la même dualité que son logo : autorité institutionnelle et réalité du combat. Deux registres coexistent, chacun avec ses règles.</p>
+  </div>
+
+  <div class="photo-rules">
+    <div class="photo-card">
+      <div class="ph-hd" style="color:var(--charcoal);">Registre institutionnel</div>
+      <div class="ph-bd">
+        <strong>Quand l'utiliser :</strong> documents officiels, communications gouvernance, partenaires, presse institutionnelle.<br><br>
+        <ul>
+          <li>Portraits de 3/4, fond neutre sombre ou clair</li>
+          <li>Éclairage naturel, directionnel</li>
+          <li>Traitement photo : contraste élevé, légère désaturation</li>
+          <li>Cadrage centré, regard caméra</li>
+          <li>Tenue formelle ou tenue de sport propre</li>
+          <li>Aucun filtre coloré, aucune surexposition</li>
+        </ul>
+      </div>
+    </div>
+    <div class="photo-card">
+      <div class="ph-hd" style="color:var(--charcoal);">Registre compétition</div>
+      <div class="ph-bd">
+        <strong>Quand l'utiliser :</strong> communications publiques, DSP, site web, réseaux sociaux, événements.<br><br>
+        <ul>
+          <li>Action photographique, instant de vérité</li>
+          <li>Grain permis, dynamisme recherché</li>
+          <li>Traitement : noir & blanc ou léger virage chaud</li>
+          <li>Cadrage libre, diagonale, profondeur de champ réduite</li>
+          <li>Sueur, effort, concentration — pas violence gratuite</li>
+          <li>Bannir : filtres Instagram, surexposition, teinte rouge</li>
+        </ul>
+      </div>
+    </div>
+    <div class="photo-card">
+      <div class="ph-hd" style="color:var(--green,#1A5C34);">À privilégier</div>
+      <div class="ph-bd">
+        <ul>
+          <li>Visages expressifs, regard fort</li>
+          <li>Gestuelle technique identifiable (garde, grappling)</li>
+          <li>Contexte cage / tatami / dojo reconnaissable</li>
+          <li>Diversité géographique représentée</li>
+          <li>Mixité femmes / hommes équilibrée</li>
+          <li>Tous niveaux : amateur, pro — pas que les stars</li>
+        </ul>
+      </div>
+    </div>
+    <div class="photo-card">
+      <div class="ph-hd" style="color:#7A1A1A;">À éviter absolument</div>
+      <div class="ph-bd">
+        <ul>
+          <li>Blessures apparentes, sang visible</li>
+          <li>Positions de soumission humiliantes</li>
+          <li>Gestes ou symboles provocateurs</li>
+          <li>Logos de compétiteurs visibles sans accord</li>
+          <li>Photos de stock génériques</li>
+          <li>Traitement "cage fight" ultra-saturé rouge/bleu</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Traitement superposition logo -->
+  <div class="ssub">Superposition du logo sur photographie</div>
+  <div class="grid2">
+    <div style="border-radius:10px;overflow:hidden;border:1px solid var(--cream);">
+      <div style="background:#2A2A26;height:120px;position:relative;display:flex;align-items:flex-end;padding:14px;">
+        <div style="position:absolute;top:14px;left:14px;display:flex;align-items:center;gap:8px;">
+          <svg width="22" height="26" viewBox="0 0 100 122">
+            <path d="M3,3 L97,3 L97,74 Q97,112 50,119 Q3,112 3,74 Z" fill="none" stroke="#B8890A" stroke-width="2"/>
+            <line x1="3" y1="32" x2="97" y2="32" stroke="#B8890A" stroke-width="1.2" opacity=".5"/>
+            <text x="50" y="25" font-family="'DM Sans',sans-serif" font-size="8" fill="#B8890A" text-anchor="middle" letter-spacing="3" font-weight="500">MMA</text>
+            <text x="50" y="72" font-family="'DM Serif Display',Georgia,serif" font-size="30" fill="#F7F6F2" text-anchor="middle" letter-spacing="1">MIGC</text>
+          </svg>
+          <div style="font-family:var(--serif);font-size:14px;color:var(--ivory);letter-spacing:.04em;">MIGC</div>
+        </div>
+        <div style="font-size:8px;color:rgba(255,255,255,.3);letter-spacing:.1em;">Fond sombre · contraste suffisant ✓</div>
+      </div>
+      <div style="padding:10px 14px;font-size:11px;color:var(--slate);">Logo version ivoire sur zone sombre de la photo. Ajouter un fondu sombre si nécessaire (opacity 0.5 → 0).</div>
+    </div>
+    <div style="border-radius:10px;overflow:hidden;border:1px solid var(--cream);">
+      <div style="background:#B8B8B0;height:120px;position:relative;display:flex;align-items:flex-end;padding:14px;">
+        <div style="position:absolute;top:14px;left:14px;background:var(--charcoal);border-radius:4px;padding:6px 10px;display:flex;align-items:center;gap:8px;">
+          <svg width="18" height="22" viewBox="0 0 100 122">
+            <path d="M3,3 L97,3 L97,74 Q97,112 50,119 Q3,112 3,74 Z" fill="none" stroke="#B8890A" stroke-width="2.5"/>
+            <text x="50" y="72" font-family="'DM Serif Display',Georgia,serif" font-size="30" fill="#F7F6F2" text-anchor="middle" letter-spacing="1">MIGC</text>
+          </svg>
+          <div style="font-family:var(--serif);font-size:13px;color:var(--ivory);letter-spacing:.04em;">MIGC</div>
+        </div>
+        <div style="font-size:8px;color:rgba(0,0,0,.4);letter-spacing:.1em;">Fond ambigu → pilule charcoal ✓</div>
+      </div>
+      <div style="padding:10px 14px;font-size:11px;color:var(--slate);">Sur fond ambigu ou clair, encapsuler le logo dans un pilule charcoal. Jamais le logo nu sur fond gris ou beige.</div>
+    </div>
+  </div>
+</div>
+</section>
+
+</div><!-- /page-body -->
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="brand-footer">
+  <div class="bf-left">
+    <svg width="24" height="29" viewBox="0 0 100 122">
+      <path d="M3,3 L97,3 L97,74 Q97,112 50,119 Q3,112 3,74 Z" fill="none" stroke="#B8890A" stroke-width="1.5"/>
+      <line x1="3" y1="32" x2="97" y2="32" stroke="#B8890A" stroke-width="1" opacity=".5"/>
+      <text x="50" y="25" font-family="'DM Sans',sans-serif" font-size="8" fill="#B8890A" text-anchor="middle" letter-spacing="3" font-weight="500">MMA</text>
+      <text x="50" y="72" font-family="'DM Serif Display',Georgia,serif" font-size="30" fill="#F7F6F2" text-anchor="middle" letter-spacing="1">MIGC</text>
+    </svg>
+    <div class="bf-text">
+      <strong>Charte Graphique MIGC — v1.0</strong>
+      Mixed Martial Arts International Grading Council · Genève · 2026<br>
+      Opérateur : Sport7 Labs SARL · Document confidentiel
+    </div>
+  </div>
+  <div class="bf-ver">MIGC-BRAND-v1.0-2026</div>
+</footer>
+
+<script>
+const links = document.querySelectorAll('.nav-link');
+const sections = document.querySelectorAll('section[id]');
+const obs = new IntersectionObserver(e => {
+  e.forEach(en => {
+    if(en.isIntersecting){
+      links.forEach(l => l.classList.remove('on'));
+      const a = document.querySelector(`.nav-link[href="#${en.target.id}"]`);
+      if(a) a.classList.add('on');
+    }
+  });
+}, {threshold:.2});
+sections.forEach(s => obs.observe(s));
+</script>
+
+</body>
+</html>

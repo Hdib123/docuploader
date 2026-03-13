@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BSD · Simulation Fonds Retraite MIGC v8</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600;700;900&family=Barlow:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:#0D1B2E; --navy-mid:#162236; --navy-card:#1C2D42; --navy-deep:#080F1A;
+  --gold:#C4952A; --gold-lt:#D9AE56; --gold-pale:#FDF5E6; --gold-dark:#7A5C00;
+  --green:#1F6B30; --green-lt:#E6F4EA; --green-brt:#3DAA58;
+  --red:#C0392B; --orange:#D4700A;
+  --grey:#8A9AB0; --grey-lt:#F2F4F7; --white:#F8FAFC;
+  --mono:'JetBrains Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--navy);color:var(--white);font-family:'Barlow',sans-serif;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;}
+.page{max-width:1280px;margin:0 auto;padding:0 24px 60px;}
+
+/* TOPBAR */
+.topbar{background:var(--navy-deep);border-bottom:1px solid rgba(196,149,42,.25);padding:8px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.topbar-brand{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:.12em;color:var(--gold);text-transform:uppercase;}
+.topbar-meta{font-family:var(--mono);font-size:11px;color:var(--grey);}
+.topbar-badge{background:rgba(196,149,42,.15);border:1px solid rgba(196,149,42,.35);color:var(--gold-lt);font-family:var(--mono);font-size:10px;padding:2px 10px;border-radius:2px;margin-left:16px;letter-spacing:.06em;}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#060C18 0%,#0D1B2E 50%,#14243A 100%);border-bottom:2px solid var(--gold);padding:44px 0 0;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(-45deg,transparent 0,transparent 40px,rgba(196,149,42,.02) 40px,rgba(196,149,42,.02) 41px);}
+.hero::after{content:'';position:absolute;right:0;top:0;bottom:0;width:40%;background:linear-gradient(90deg,transparent,rgba(196,149,42,.03));}
+.hero-inner{max-width:1280px;margin:0 auto;padding:0 32px;display:grid;grid-template-columns:1fr 340px;gap:48px;align-items:start;position:relative;z-index:1;}
+.fighter-eyebrow{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:600;letter-spacing:.22em;color:var(--gold);text-transform:uppercase;margin-bottom:12px;}
+.fighter-name{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:92px;line-height:.9;letter-spacing:-.02em;text-transform:uppercase;}
+.fighter-name .first{color:var(--white);}
+.fighter-name .last{color:var(--gold);}
+.fighter-sub{margin-top:18px;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:400;letter-spacing:.2em;color:rgba(138,154,176,.8);text-transform:uppercase;}
+.fighter-record{display:flex;gap:28px;margin-top:28px;padding-bottom:32px;}
+.fr-stat .val{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:30px;color:var(--gold-lt);}
+.fr-stat .lbl{font-size:10.5px;font-weight:600;color:var(--grey);letter-spacing:.1em;text-transform:uppercase;margin-top:1px;}
+
+.hero-kpis{display:flex;flex-direction:column;gap:6px;padding-top:4px;}
+.kpi-card{background:rgba(255,255,255,.04);border:1px solid rgba(196,149,42,.18);border-left:3px solid var(--gold);padding:14px 18px;border-radius:3px;}
+.kpi-card.primary{background:rgba(196,149,42,.07);border-color:rgba(196,149,42,.4);}
+.kpi-card .kc-label{font-size:10px;font-weight:700;letter-spacing:.16em;color:var(--gold);text-transform:uppercase;margin-bottom:5px;}
+.kpi-card .kc-value{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:34px;color:var(--white);line-height:1;}
+.kpi-card .kc-value.green{color:var(--green-brt);}
+.kpi-card .kc-value.gold{color:var(--gold-lt);font-size:24px;}
+.kpi-card .kc-sub{font-size:11px;color:var(--grey);margin-top:4px;}
+
+/* SECTIONS */
+.section{margin-top:40px;}
+.section-head{display:flex;align-items:baseline;gap:14px;margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid rgba(196,149,42,.25);}
+.snum{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:12px;color:var(--gold);letter-spacing:.16em;background:rgba(196,149,42,.1);border:1px solid rgba(196,149,42,.25);padding:2px 8px;border-radius:2px;}
+.stitle{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:22px;letter-spacing:.04em;text-transform:uppercase;color:var(--white);}
+.ssub{font-size:12px;color:var(--grey);margin-left:auto;}
+
+/* SOURCE CARDS */
+.sources-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:14px;}
+.src{background:var(--navy-card);border:1px solid rgba(255,255,255,.07);border-top:3px solid;padding:15px 13px 13px;border-radius:3px;transition:transform .15s;}
+.src:hover{transform:translateY(-2px);}
+.src.a{border-top-color:var(--gold);}
+.src.b{border-top-color:#5B8FD4;}
+.src.c{border-top-color:var(--green-brt);}
+.src.d{border-top-color:#CC9944;}
+.src.e{border-top-color:#8A7FCC;}
+.src.f{border-top-color:#44BBAA;}
+.src-code{font-family:'Barlow Condensed',sans-serif;font-size:10.5px;font-weight:700;letter-spacing:.18em;color:var(--grey);text-transform:uppercase;}
+.src-name{font-size:12px;font-weight:600;color:var(--white);margin-top:3px;line-height:1.35;}
+.src-pts{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:34px;line-height:1;margin:10px 0 2px;}
+.src.a .src-pts{color:var(--gold);}
+.src.b .src-pts{color:#5B8FD4;}
+.src.c .src-pts{color:var(--green-brt);}
+.src.d .src-pts{color:#CC9944;}
+.src.e .src-pts{color:#9988DD;}
+.src.f .src-pts{color:#44BBAA;}
+.src-unit{font-size:10.5px;color:var(--grey);}
+.src-pct{font-family:var(--mono);font-size:11px;font-weight:600;margin-top:7px;}
+.src.a .src-pct{color:var(--gold-lt);}
+.src.b .src-pct{color:#7AADEE;}
+.src.c .src-pct{color:#6EC882;}
+.src.d .src-pct{color:#DDAA66;}
+.src.e .src-pct{color:#BBAAFF;}
+.src.f .src-pct{color:#66DDCC;}
+.src-desc{font-size:10.5px;color:rgba(138,154,176,.7);margin-top:8px;line-height:1.55;border-top:1px solid rgba(255,255,255,.05);padding-top:8px;}
+.bar-track{height:3px;background:rgba(255,255,255,.07);border-radius:2px;margin-top:10px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:2px;}
+.src.a .bar-fill{background:var(--gold);}
+.src.b .bar-fill{background:#5B8FD4;}
+.src.c .bar-fill{background:var(--green-brt);}
+.src.d .bar-fill{background:#CC9944;}
+.src.e .bar-fill{background:#9988DD;}
+.src.f .bar-fill{background:#44BBAA;}
+
+/* TOTAL BAND */
+.total-band{background:linear-gradient(90deg,var(--navy-mid),rgba(22,34,54,.8));border:1px solid rgba(196,149,42,.3);border-left:4px solid var(--gold);padding:18px 24px;border-radius:3px;display:flex;align-items:center;justify-content:space-between;}
+.tb-left{}
+.tb-label{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.14em;color:var(--gold);text-transform:uppercase;margin-bottom:4px;}
+.tb-total{font-family:'Barlow Condensed',sans-serif;font-size:44px;font-weight:900;color:var(--gold-lt);line-height:1;}
+.tb-right{text-align:right;}
+.tb-palier{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:var(--white);}
+.tb-rente{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:900;color:var(--green-brt);margin-top:2px;}
+.tb-note{font-size:12px;color:var(--grey);margin-top:4px;}
+
+/* TABLES */
+.tbl-wrap{overflow-x:auto;border-radius:4px;border:1px solid rgba(255,255,255,.07);}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+thead tr{background:var(--navy-deep);}
+thead th{padding:10px 12px;text-align:left;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--grey);text-transform:uppercase;border-bottom:1px solid rgba(196,149,42,.2);white-space:nowrap;}
+thead th.r{text-align:right;}
+tbody tr{border-bottom:1px solid rgba(255,255,255,.04);transition:background .1s;}
+tbody tr:hover{background:rgba(255,255,255,.025);}
+tbody tr.phase{background:#050C16;}
+tbody tr.phase td{padding:6px 12px;font-family:'Barlow Condensed',sans-serif;font-size:11.5px;font-weight:700;letter-spacing:.12em;color:var(--gold);text-transform:uppercase;border-bottom:1px solid rgba(196,149,42,.12);}
+tbody tr.subtotal td{background:rgba(255,255,255,.025);font-weight:600;color:var(--gold-lt);border-top:1px solid rgba(196,149,42,.15);padding:8px 12px;}
+tbody tr.grandtotal td{background:var(--navy-deep);font-weight:700;color:var(--gold-lt);border-top:1px solid rgba(196,149,42,.3);padding:10px 12px;}
+tbody td{padding:8px 12px;color:rgba(248,250,252,.82);vertical-align:middle;}
+tbody td.r{text-align:right;font-family:var(--mono);font-size:12px;}
+tbody td.pts{text-align:right;font-family:var(--mono);font-size:13px;font-weight:600;color:var(--gold-lt);}
+tbody td.dim{color:var(--grey)!important;}
+tbody tr.bsd td{background:rgba(196,149,42,.06);font-weight:600;}
+tbody tr.bsd td:first-child{border-left:3px solid var(--gold);}
+
+.badge{display:inline-block;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.05em;padding:2px 8px;border-radius:2px;min-width:28px;text-align:center;}
+.w{background:rgba(31,107,48,.2);color:#50C060;border:1px solid rgba(31,107,48,.3);}
+.l{background:rgba(192,57,43,.2);color:#E06050;border:1px solid rgba(192,57,43,.25);}
+.nc{background:rgba(138,154,176,.12);color:var(--grey);border:1px solid rgba(138,154,176,.18);}
+.pb{font-family:var(--mono);font-size:11px;font-weight:600;padding:2px 6px;border-radius:2px;background:rgba(196,149,42,.1);color:var(--gold);border:1px solid rgba(196,149,42,.2);}
+.pb6{background:rgba(196,149,42,.2);color:var(--gold-lt);border-color:var(--gold);}
+.pb5{background:rgba(196,149,42,.14);}
+
+/* PB REF GRID */
+.pb-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:20px;}
+.pb-card{background:var(--navy-card);border:1px solid rgba(255,255,255,.06);padding:13px 10px;border-radius:3px;text-align:center;border-top:2px solid rgba(255,255,255,.08);}
+.pb-card.p4{border-top-color:#997733;}
+.pb-card.p5{border-top-color:var(--gold);}
+.pb-card.p6{border-top-color:var(--gold-lt);background:rgba(196,149,42,.05);}
+.pb-n{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:21px;color:var(--gold-lt);}
+.pb-r{font-family:var(--mono);font-size:9.5px;color:var(--grey);margin:3px 0;}
+.pb-m{font-size:10.5px;font-weight:600;color:rgba(196,149,42,.65);}
+.pb-v{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:17px;color:var(--green-brt);margin-top:5px;}
+.pb-d{font-family:'Barlow Condensed',sans-serif;font-size:13px;color:var(--red);}
+.pb-o{font-size:9.5px;color:var(--grey);margin-top:6px;line-height:1.4;}
+
+/* PALIERS TRACK */
+.paliers-track{display:flex;gap:6px;margin-bottom:14px;}
+.ps{flex:1;background:var(--navy-card);border:1px solid rgba(255,255,255,.06);border-top:3px solid rgba(255,255,255,.08);padding:14px 10px;border-radius:3px;text-align:center;}
+.ps.passed{border-top-color:rgba(61,170,88,.4);}
+.ps.current{background:rgba(31,107,48,.1);border-color:rgba(61,170,88,.5);border-top-color:var(--green-brt);}
+.ps.future{opacity:.5;}
+.ps .pc{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:13px;letter-spacing:.1em;color:var(--grey);}
+.ps.current .pc{color:var(--green-brt);}
+.ps .pn{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;color:var(--white);margin:3px 0;}
+.ps .ps2{font-family:var(--mono);font-size:10.5px;color:var(--grey);}
+.ps .pr{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:21px;margin-top:8px;color:var(--white);}
+.ps.current .pr{color:var(--green-brt);}
+.ps .pst{font-size:10px;font-weight:700;letter-spacing:.08em;margin-top:6px;padding:2px 8px;border-radius:2px;display:inline-block;}
+.ps.passed .pst{background:rgba(61,170,88,.12);color:rgba(61,170,88,.8);border:1px solid rgba(61,170,88,.2);}
+.ps.current .pst{background:rgba(61,170,88,.2);color:var(--green-brt);border:1px solid rgba(61,170,88,.4);}
+.ps.future .pst{background:rgba(138,154,176,.08);color:var(--grey);border:1px solid rgba(138,154,176,.15);}
+
+.prog-wrap{margin:14px 0 20px;}
+.prog-label{display:flex;justify-content:space-between;margin-bottom:6px;font-size:11.5px;color:var(--grey);}
+.prog-track{height:7px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--green-brt));border-radius:4px;}
+.prog-marks{display:flex;justify-content:space-between;margin-top:5px;font-family:var(--mono);font-size:10px;color:rgba(138,154,176,.4);}
+
+/* DETAIL CARDS */
+.dcols2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.dcols3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+.dc{background:var(--navy-card);border:1px solid rgba(255,255,255,.06);border-radius:4px;overflow:hidden;}
+.dc-head{background:var(--navy-deep);padding:10px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,.05);}
+.dc-head .dct{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;letter-spacing:.06em;}
+.dc-head .dctot{font-family:var(--mono);font-size:14px;font-weight:600;color:var(--gold-lt);}
+.dc-note{padding:8px 14px;font-size:11.5px;color:var(--grey);background:rgba(0,0,0,.15);line-height:1.6;}
+
+/* STREAK */
+.streak-viz{display:flex;gap:4px;flex-wrap:wrap;margin:10px 0 6px;}
+.sd{width:26px;height:26px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:10px;font-weight:700;}
+.sd.w{background:rgba(31,107,48,.22);color:var(--green-brt);border:1px solid rgba(31,107,48,.35);}
+.sd.l{background:rgba(192,57,43,.18);color:#E06050;border:1px solid rgba(192,57,43,.25);}
+.sd.nc{background:rgba(138,154,176,.1);color:var(--grey);border:1px solid rgba(138,154,176,.18);}
+.sd.sep{width:14px;color:rgba(138,154,176,.3);font-size:16px;}
+.streak-lbl{font-size:11.5px;color:var(--grey);}
+
+/* COMPARISONS */
+.cmp-above{color:var(--green-brt);font-weight:600;}
+.cmp-close{color:var(--orange);font-weight:600;}
+.cmp-below{color:rgba(192,57,43,.85);}
+.cmp-ref{color:var(--gold-lt);font-weight:700;}
+td.cmp-vs{font-family:var(--mono);font-size:12px;}
+td.cmp-pal{font-size:12px;font-weight:600;}
+
+/* ACTIVATION BOX */
+.activation-box{background:rgba(31,107,48,.08);border:1px solid rgba(31,107,48,.28);border-left:4px solid var(--green-brt);padding:16px 20px;border-radius:3px;margin-top:14px;}
+.ab-title{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;color:var(--green-brt);margin-bottom:10px;}
+.ab-checks{display:flex;flex-wrap:wrap;gap:14px;font-size:12.5px;color:var(--white);}
+.ab-checks span::before{content:'✓ ';color:var(--green-brt);}
+.ab-note{margin-top:12px;font-size:12px;color:var(--grey);line-height:1.7;}
+
+/* FOOTER */
+.doc-footer{margin-top:52px;padding:16px 0;border-top:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-between;font-size:11px;color:rgba(138,154,176,.45);font-family:var(--mono);}
+
+@media(max-width:1100px){.sources-grid,.pb-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:768px){.fighter-name{font-size:60px}.sources-grid{grid-template-columns:repeat(2,1fr)}.paliers-track{flex-wrap:wrap}.hero-inner{grid-template-columns:1fr}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.hero-inner{animation:fadeUp .5s ease both}
+.section{animation:fadeUp .4s ease both}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div style="display:flex;align-items:center;gap:14px">
+    <span class="topbar-brand">MMA International Grading Council &middot; Fonds Retraite</span>
+    <span class="topbar-badge">SIMULATION OFFICIELLE v8</span>
+  </div>
+  <span class="topbar-meta">Confidentiel &middot; Sport7 Labs SARL &middot; Mars 2026</span>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="fighter-eyebrow">Simulation Fonds Retraite MIGC &mdash; Profil Combattant</div>
+      <div class="fighter-name">
+        <div class="first">Beno&icirc;t</div>
+        <div class="last">Saint Denis</div>
+      </div>
+      <div class="fighter-sub">&ldquo;God of War&rdquo; &nbsp;&middot;&nbsp; UFC Lightweight &nbsp;&middot;&nbsp; #5 Mondial &nbsp;&middot;&nbsp; N&eacute; le 18/12/1995</div>
+      <div class="fighter-record">
+        <div class="fr-stat"><div class="val">21</div><div class="lbl">Combats</div></div>
+        <div class="fr-stat"><div class="val">17-3-1</div><div class="lbl">V&nbsp;-&nbsp;D&nbsp;-&nbsp;NC</div></div>
+        <div class="fr-stat"><div class="val">30</div><div class="lbl">Ans</div></div>
+        <div class="fr-stat"><div class="val">#5</div><div class="lbl">UFC L&eacute;ger</div></div>
+        <div class="fr-stat"><div class="val">7</div><div class="lbl">Ans de carri&egrave;re</div></div>
+      </div>
+    </div>
+    <div class="hero-kpis">
+      <div class="kpi-card">
+        <div class="kc-label">Capital MIGC Total</div>
+        <div class="kc-value">63&thinsp;290</div>
+        <div class="kc-sub">points accumul&eacute;s &middot; Sources A&ndash;F certifi&eacute;s DSP</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kc-label">Palier Atteint</div>
+        <div class="kc-value gold">Palier 2 &mdash; &Eacute;chelon III</div>
+        <div class="kc-sub">Seuil : 50&thinsp;000 pts &middot; Prochain palier (P3) : 100&thinsp;000 pts</div>
+      </div>
+      <div class="kpi-card primary">
+        <div class="kc-label">Rente Garantie</div>
+        <div class="kc-value green">$2&thinsp;500<span style="font-size:20px;font-weight:400;color:var(--grey)">&nbsp;/&nbsp;mois</span></div>
+        <div class="kc-sub">&Agrave; VIE (d&egrave;s 55 ans) &nbsp;&middot;&nbsp; Activation Compl&egrave;te disponible d&egrave;s 45 ans</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="page">
+
+<!-- ── I. CAPITAL PAR SOURCE ── -->
+<div class="section">
+  <div class="section-head">
+    <span class="snum">I</span>
+    <span class="stitle">Capital Total &mdash; R&eacute;capitulatif par Source</span>
+    <span class="ssub">6 sources &middot; R&egrave;glement Fonds Retraite MIGC v8.0 &middot; Montants USD</span>
+  </div>
+
+  <div class="sources-grid">
+    <div class="src a">
+      <div class="src-code">Source A</div>
+      <div class="src-name">Points par Combat<br>Paliers de Bourse</div>
+      <div class="src-pts">36&thinsp;250</div>
+      <div class="src-unit">pts &middot; 57,3% du capital</div>
+      <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
+      <div class="src-pct">Source principale</div>
+      <div class="src-desc">PB1&rarr;PB6 selon bourse d&eacute;clar&eacute;e. Victoire ou D&eacute;faite uniquement. PB6 ($30K+) = 3&thinsp;000 pts/victoire.</div>
+    </div>
+    <div class="src b">
+      <div class="src-code">Source B</div>
+      <div class="src-name">Grades MIGC<br>Certifi&eacute;s DSP</div>
+      <div class="src-pts">2&thinsp;090</div>
+      <div class="src-unit">pts &middot; 3,3% du capital</div>
+      <div class="bar-track"><div class="bar-fill" style="width:5.7%"></div></div>
+      <div class="src-pct">+240 pts bonus annuels</div>
+      <div class="src-desc">CN 1er Dan : 1&thinsp;000 pts + 80 pts/an. Grades Blanc&rarr;Marron : 850 pts. Condition sine qua non d&rsquo;activation.</div>
+    </div>
+    <div class="src c">
+      <div class="src-code">Source C</div>
+      <div class="src-name">Ranking Mensuel<br>MIGC</div>
+      <div class="src-pts">18&thinsp;600</div>
+      <div class="src-unit">pts &middot; 29,4% du capital</div>
+      <div class="bar-track"><div class="bar-fill" style="width:51.3%"></div></div>
+      <div class="src-pct">Top10 = 400 pts/mois</div>
+      <div class="src-desc">Pr&eacute;sence mensuelle dans le classement. Bonuses pour continuit&eacute; 6M et 12M consec. 2022&ndash;2026.</div>
+    </div>
+    <div class="src d">
+      <div class="src-code">Source D</div>
+      <div class="src-name">Anciennet&eacute;<br>Professionnelle</div>
+      <div class="src-pts">4&thinsp;050</div>
+      <div class="src-unit">pts &middot; 6,4% du capital</div>
+      <div class="bar-track"><div class="bar-fill" style="width:11.2%"></div></div>
+      <div class="src-pct">7 ans actifs pro</div>
+      <div class="src-desc">500 pts/an avec multiplicateur progressif. &times;1,0 (ans 1&ndash;3) &rarr; &times;1,2 (4&ndash;6) &rarr; &times;1,5 (7&ndash;9).</div>
+    </div>
+    <div class="src e">
+      <div class="src-code">Source E</div>
+      <div class="src-name">Bonus<br>Extraordinaires</div>
+      <div class="src-pts">0</div>
+      <div class="src-unit">pts &middot; carri&egrave;re active</div>
+      <div class="bar-track"><div class="bar-fill" style="width:0%"></div></div>
+      <div class="src-pct">Jalons non encore atteints</div>
+      <div class="src-desc">S&eacute;rie 7V, 30e combat, champion 2 cat., Hall of Fame. Cumul possible en fin de carri&egrave;re.</div>
+    </div>
+    <div class="src f">
+      <div class="src-code">Source F</div>
+      <div class="src-name">Fid&eacute;lit&eacute;<br>&Eacute;cosyst&egrave;me</div>
+      <div class="src-pts">2&thinsp;300</div>
+      <div class="src-unit">pts &middot; 3,6% du capital</div>
+      <div class="bar-track"><div class="bar-fill" style="width:6.3%"></div></div>
+      <div class="src-pct">5 ans consec. valid&eacute;s</div>
+      <div class="src-desc">3 ans cons&eacute;cutifs : 800 pts &middot; 5 ans : 1&thinsp;500 pts. D&eacute;bloque l&rsquo;activation compl&egrave;te.</div>
+    </div>
+  </div>
+
+  <div class="total-band">
+    <div>
+      <div class="tb-label">Capital Total BSD &mdash; Sources A + B + C + D + E + F</div>
+      <div class="tb-total">63&thinsp;290 pts</div>
+    </div>
+    <div class="tb-right">
+      <div class="tb-palier">Palier 2 &mdash; &Eacute;chelon III &middot; Seuil : 50&thinsp;000 pts &#10003;</div>
+      <div class="tb-rente">$2&thinsp;500 / mois &agrave; vie</div>
+      <div class="tb-note">Prochain palier (P3 &Eacute;chelon IV) : 100&thinsp;000 pts &middot; Il manque 36&thinsp;710 pts</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── II. SOURCE A ── -->
+<div class="section">
+  <div class="section-head">
+    <span class="snum">II</span>
+    <span class="stitle">Source A &mdash; Points par Combat</span>
+    <span class="ssub">Paliers de Bourse PB1&ndash;PB6 &middot; 21 combats pro &middot; R&egrave;glement v8.0</span>
+  </div>
+
+  <div class="pb-grid">
+    <div class="pb-card"><div class="pb-n">PB1</div><div class="pb-r">$1K&ndash;$3K</div><div class="pb-m">&times;1 &middot; ~$50&ndash;150</div><div class="pb-v">500 V</div><div class="pb-d">250 D</div><div class="pb-o">Petites orgas r&eacute;gionales</div></div>
+    <div class="pb-card"><div class="pb-n">PB2</div><div class="pb-r">$3K&ndash;$6K</div><div class="pb-m">&times;2 &middot; ~$150&ndash;300</div><div class="pb-v">1&thinsp;000 V</div><div class="pb-d">500 D</div><div class="pb-o">KSW, Cage Warriors<br><strong>Brave CF</strong></div></div>
+    <div class="pb-card"><div class="pb-n">PB3</div><div class="pb-r">$6K&ndash;$10K</div><div class="pb-m">&times;3 &middot; ~$300&ndash;500</div><div class="pb-v">1&thinsp;500 V</div><div class="pb-d">750 D</div><div class="pb-o">PFL Europe, Rizin, LFA</div></div>
+    <div class="pb-card p4"><div class="pb-n">PB4</div><div class="pb-r">$10K&ndash;$16K</div><div class="pb-m">&times;4 &middot; ~$500&ndash;800</div><div class="pb-v">2&thinsp;000 V</div><div class="pb-d">1&thinsp;000 D</div><div class="pb-o">PFL, Bellator<br><strong>UFC d&eacute;butants</strong></div></div>
+    <div class="pb-card p5"><div class="pb-n">PB5</div><div class="pb-r">$16K&ndash;$30K</div><div class="pb-m">&times;5 &middot; ~$800&ndash;1&thinsp;500</div><div class="pb-v">2&thinsp;500 V</div><div class="pb-d">1&thinsp;250 D</div><div class="pb-o">ONE confirm&eacute;s<br><strong>UFC confirm&eacute;s</strong></div></div>
+    <div class="pb-card p6"><div class="pb-n">PB6</div><div class="pb-r">$30K+</div><div class="pb-m">&times;6 &middot; $1&thinsp;500&ndash;25K+</div><div class="pb-v">3&thinsp;000 V</div><div class="pb-d">1&thinsp;500 D</div><div class="pb-o"><strong>UFC stars</strong>, ONE champions<br>~3% des combattants</div></div>
+  </div>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>#</th><th>Organisation</th><th>Adversaire</th><th>M&eacute;thode</th><th>R&eacute;s.</th><th>Bourse estim&eacute;e</th><th>PB</th><th class="r">Pts Victoire</th><th class="r">Pts D&eacute;faite</th><th class="r">Points attribu&eacute;s</th></tr></thead>
+      <tbody>
+        <tr class="phase"><td colspan="10">Phase 1 &mdash; Organisations fran&ccedil;aises &middot; PB1</td></tr>
+        <tr><td>1</td><td>Lions FC 8</td><td>Marc Domont</td><td>TKO R1</td><td><span class="badge w">W</span></td><td class="dim" style="font-family:var(--mono);font-size:12px">$1&ndash;2K</td><td><span class="pb">PB1</span></td><td class="r dim">500</td><td class="r dim">&mdash;</td><td class="pts">500</td></tr>
+        <tr><td>2</td><td>Staredown 14</td><td>A. Szczepaniak</td><td>RNC R3</td><td><span class="badge w">W</span></td><td class="dim" style="font-family:var(--mono);font-size:12px">$1&ndash;2K</td><td><span class="pb">PB1</span></td><td class="r dim">500</td><td class="r dim">&mdash;</td><td class="pts">500</td></tr>
+        <tr><td>3</td><td>Troph&eacute;e de France</td><td>Antoine Bensimon</td><td>Guillotine R1</td><td><span class="badge w">W</span></td><td class="dim" style="font-family:var(--mono);font-size:12px">$1&ndash;2K</td><td><span class="pb">PB1</span></td><td class="r dim">500</td><td class="r dim">&mdash;</td><td class="pts">500</td></tr>
+        <tr><td>4</td><td>Europ. Beatdown 7</td><td>Ibragim Baisarov</td><td>Armbar R1</td><td><span class="badge w">W</span></td><td class="dim" style="font-family:var(--mono);font-size:12px">$1&ndash;2K</td><td><span class="pb">PB1</span></td><td class="r dim">500</td><td class="r dim">&mdash;</td><td class="pts">500</td></tr>
+        <tr class="subtotal"><td colspan="9">Sous-total Phase 1 &mdash; 4 victoires PB1</td><td class="pts">2&thinsp;000</td></tr>
+        <tr class="phase"><td colspan="10">Phase 2 &mdash; Brave CF &middot; PB2 &middot; NC = 0 pt</td></tr>
+        <tr><td>5</td><td>Brave CF 28</td><td>Pawel Kielek</td><td>Clash de t&ecirc;tes R2</td><td><span class="badge nc">NC</span></td><td class="dim" style="font-family:var(--mono);font-size:12px">$3&ndash;5K</td><td><span class="pb">PB2</span></td><td class="r dim">&mdash;</td><td class="r dim">&mdash;</td><td class="pts dim">0</td></tr>
+        <tr><td>6</td><td>Brave CF 34</td><td>Ivica Truscek</td><td>Kneebar R1</td><td><span class="badge w">W</span></td><td class="dim" style="font-family:var(--mono);font-size:12px">$3&ndash;5K</td><td><span class="pb">PB2</span></td><td class="r dim">1&thinsp;000</td><td class="r dim">&mdash;</td><td class="pts">1&thinsp;000</td></tr>
+        <tr><td>7</td><td>Brave CF 38</td><td>Mario Saeed</td><td>TKO R2</td><td><span class="badge w">W</span></td><td class="dim" style="font-family:var(--mono);font-size:12px">$3&ndash;5K</td><td><span class="pb">PB2</span></td><td class="r dim">1&thinsp;000</td><td class="r dim">&mdash;</td><td class="pts">1&thinsp;000</td></tr>
+        <tr><td>8</td><td>Brave CF 49</td><td>Luan Santiago</td><td>Arm Tri. R2</td><td><span class="badge w">W</span></td><td class="dim" style="font-family:var(--mono);font-size:12px">$3&ndash;5K</td><td><span class="pb">PB2</span></td><td class="r dim">1&thinsp;000</td><td class="r dim">&mdash;</td><td class="pts">1&thinsp;000</td></tr>
+        <tr><td>9</td><td>Brave CF 52</td><td>Arkaitz Ramos</td><td>Arm Tri. R1</td><td><span class="badge w">W</span></td><td class="dim" style="font-family:var(--mono);font-size:12px">$3&ndash;5K</td><td><span class="pb">PB2</span></td><td class="r dim">1&thinsp;000</td><td class="r dim">&mdash;</td><td class="pts">1&thinsp;000</td></tr>
+        <tr class="subtotal"><td colspan="9">Sous-total Phase 2 &mdash; 4V 1NC PB2</td><td class="pts">4&thinsp;000</td></tr>
+        <tr class="phase"><td colspan="10">Phase 3 &mdash; UFC &middot; PB4&rarr;PB5&rarr;PB6 selon bourse d&eacute;clar&eacute;e</td></tr>
+        <tr><td>10</td><td>UFC 267</td><td>E. Zaleski dos Santos</td><td>D&eacute;c. unanime</td><td><span class="badge l">L</span></td><td class="dim" style="font-family:var(--mono);font-size:12px">~$12K show</td><td><span class="pb pb5">PB4</span></td><td class="r dim">&mdash;</td><td class="r dim">1&thinsp;000</td><td class="pts">1&thinsp;000</td></tr>
+        <tr><td>11</td><td>UFC Fight Night</td><td>Niklas Stolze</td><td>RNC R2</td><td><span class="badge w">W</span></td><td class="dim" style="font-family:var(--mono);font-size:12px">~$24K S+V</td><td><span class="pb pb5">PB5</span></td><td class="r dim">2&thinsp;500</td><td class="r dim">&mdash;</td><td class="pts">2&thinsp;500</td></tr>
+        <tr><td>12</td><td>UFC Paris</td><td>Gabriel Miranda</td><td>TKO R2</td><td><span class="badge w">W</span></td><td class="dim" style="font-family:var(--mono);font-size:12px">~$30K+</td><td><span class="pb pb6">PB6</span></td><td class="r dim">3&thinsp;000</td><td class="r dim">&mdash;</td><td class="pts">3&thinsp;000</td></tr>
+        <tr><td>13</td><td>UFC Fight Night</td><td>Ismael Bonfim</td><td>RNC R1</td><td><span class="badge w">W</span></td><td class="dim" style="font-family:var(--mono);font-size:12px">~$32K+</td><td><span class="pb pb6">PB6</span></td><td class="r dim">3&thinsp;000</td><td class="r dim">&mdash;</td><td class="pts">3&thinsp;000</td></tr>
+        <tr><td>14</td><td>UFC Paris</td><td>Thiago Moises</td><td>TKO G&amp;P R2</td><td><span class="badge w">W</span></td><td class="dim" style="font-family:var(--mono);font-size:12px">~$40K+</td><td><span class="pb pb6">PB6</span></td><td class="r dim">3&thinsp;000</td><td class="r dim">&mdash;</td><td class="pts">3&thinsp;000</td></tr>
+        <tr><td>15</td><td>UFC 295</td><td>Matt Frevola</td><td>KO R1</td><td><span class="badge w">W</span></td><td class="dim" style="font-family:var(--mono);font-size:12px">~$40K+</td><td><span class="pb pb6">PB6</span></td><td class="r dim">3&thinsp;000</td><td class="r dim">&mdash;</td><td class="pts">3&thinsp;000</td></tr>
+        <tr><td>16</td><td>UFC 299</td><td>Dustin Poirier (#3)</td><td>KO R2</td><td><span class="badge l">L</span></td><td class="dim" style="font-family:var(--mono);font-size:12px">~$30K show</td><td><span class="pb pb6">PB6</span></td><td class="r dim">&mdash;</td><td class="r dim">1&thinsp;500</td><td class="pts">1&thinsp;500</td></tr>
+        <tr><td>17</td><td>UFC Paris</td><td>Renato Moicano (#11)</td><td>TKO Doc. R2</td><td><span class="badge l">L</span></td><td class="dim" style="font-family:var(--mono);font-size:12px">~$25K show</td><td><span class="pb pb5">PB5</span></td><td class="r dim">&mdash;</td><td class="r dim">1&thinsp;250</td><td class="pts">1&thinsp;250</td></tr>
+        <tr><td>18</td><td>UFC 315</td><td>Kyle Prepolec</td><td>Arm Tri. R2</td><td><span class="badge w">W</span></td><td class="dim" style="font-family:var(--mono);font-size:12px">~$50K+</td><td><span class="pb pb6">PB6</span></td><td class="r dim">3&thinsp;000</td><td class="r dim">&mdash;</td><td class="pts">3&thinsp;000</td></tr>
+        <tr><td>19</td><td>UFC Paris</td><td>Mauricio Ruffy (#14)</td><td>RNC R2</td><td><span class="badge w">W</span></td><td class="dim" style="font-family:var(--mono);font-size:12px">~$60K+</td><td><span class="pb pb6">PB6</span></td><td class="r dim">3&thinsp;000</td><td class="r dim">&mdash;</td><td class="pts">3&thinsp;000</td></tr>
+        <tr><td>20</td><td>UFC 322 MSG</td><td>Beneil Dariush</td><td>KO 0:16 R1</td><td><span class="badge w">W</span></td><td class="dim" style="font-family:var(--mono);font-size:12px">~$60K+</td><td><span class="pb pb6">PB6</span></td><td class="r dim">3&thinsp;000</td><td class="r dim">&mdash;</td><td class="pts">3&thinsp;000</td></tr>
+        <tr><td>21</td><td>UFC 325 Sydney</td><td>Dan Hooker (#6)</td><td>TKO Elbows R2</td><td><span class="badge w">W</span></td><td class="dim" style="font-family:var(--mono);font-size:12px">~$60K+</td><td><span class="pb pb6">PB6</span></td><td class="r dim">3&thinsp;000</td><td class="r dim">&mdash;</td><td class="pts">3&thinsp;000</td></tr>
+        <tr class="subtotal"><td colspan="9">Sous-total Phase 3 &mdash; 9V 3D UFC (PB4+PB5+PB6)</td><td class="pts">30&thinsp;250</td></tr>
+        <tr class="grandtotal"><td colspan="9">TOTAL SOURCE A &mdash; 21 combats &middot; 17V &middot; 3D &middot; 1NC</td><td class="pts" style="font-size:16px">36&thinsp;250</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ── III. SOURCES B,C,D,E,F ── -->
+<div class="section">
+  <div class="section-head">
+    <span class="snum">III</span>
+    <span class="stitle">Sources B, C, D, E, F &mdash; D&eacute;compte D&eacute;taill&eacute;</span>
+    <span class="ssub">Sources compl&eacute;mentaires &middot; R&egrave;glement MIGC v8.0</span>
+  </div>
+
+  <div class="dcols2">
+    <!-- SOURCE B -->
+    <div class="dc">
+      <div class="dc-head">
+        <span class="dct" style="color:#5B8FD4">Source B &mdash; Grades MIGC</span>
+        <span class="dctot">2&thinsp;090 pts</span>
+      </div>
+      <div class="dc-note">CN MIGC 1er Dan est la <strong style="color:var(--white)">condition sine qua non</strong> de l&rsquo;activation du plan retraite (sans grade, aucun palier ne peut &ecirc;tre d&eacute;clench&eacute;).</div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>Grade MIGC</th><th class="r">Pts obtention</th><th class="r">Bonus annuel</th><th>Condition bonus</th></tr></thead>
+        <tbody>
+          <tr><td>Blanc Niv.1</td><td class="r">50</td><td class="r dim">&mdash;</td><td class="dim" style="font-size:12px">Hypoth&egrave;se</td></tr>
+          <tr><td>Jaune Niv.2</td><td class="r">50</td><td class="r dim">&mdash;</td><td class="dim" style="font-size:12px">Hypoth&egrave;se</td></tr>
+          <tr><td>Orange Niv.3</td><td class="r">50</td><td class="r dim">&mdash;</td><td class="dim" style="font-size:12px">Hypoth&egrave;se</td></tr>
+          <tr><td>Bleu Niv.4</td><td class="r">150</td><td class="r dim">&mdash;</td><td class="dim" style="font-size:12px">Hypoth&egrave;se</td></tr>
+          <tr><td>Violet Niv.5</td><td class="r">150</td><td class="r dim">&mdash;</td><td class="dim" style="font-size:12px">Hypoth&egrave;se</td></tr>
+          <tr><td>Marron Niv.7</td><td class="r">400</td><td class="r dim">&mdash;</td><td class="dim" style="font-size:12px">Hypoth&egrave;se (CN Judo)</td></tr>
+          <tr style="background:rgba(91,143,212,.06)"><td><strong>CN MIGC 1er Dan &#9733;</strong></td><td class="r"><strong>1&thinsp;000</strong></td><td class="r" style="color:#5B8FD4">+80/an</td><td style="color:#5B8FD4;font-size:12px">1 combat Niv.I/an OU licence active</td></tr>
+          <tr style="background:rgba(91,143,212,.04)"><td>Bonus CN 1er Dan &times;3 ans</td><td class="r">240</td><td class="r dim">&mdash;</td><td class="dim" style="font-size:12px">3 &times; 80 pts/an (2023&ndash;2025)</td></tr>
+          <tr class="grandtotal"><td colspan="3">Total Source B</td><td class="pts">2&thinsp;090</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <!-- SOURCE C -->
+    <div class="dc">
+      <div class="dc-head">
+        <span class="dct" style="color:var(--green-brt)">Source C &mdash; Ranking Mensuel</span>
+        <span class="dctot">18&thinsp;600 pts</span>
+      </div>
+      <div class="dc-note">Top 30 = 100 pts/mois &middot; Top 20 = 200 pts/mois &middot; <strong style="color:var(--green-brt)">Top 10 = 400 pts/mois</strong> &middot; Champion = 700 pts/mois. Bonuses de continuit&eacute; : +900 pts (6M cons&eacute;cutifs Top10) &middot; +2&thinsp;200 pts (12M cons&eacute;cutifs Top10).</div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>P&eacute;riode</th><th>Dur&eacute;e</th><th>Position</th><th>Calcul</th><th class="r">Pts</th></tr></thead>
+        <tbody>
+          <tr><td>2022</td><td>Jun&ndash;D&eacute;c (7M)</td><td>Top 30</td><td class="dim" style="font-size:12px">7&times;100 + bonus 6M : +200</td><td class="pts">900</td></tr>
+          <tr><td>2023</td><td>Jan&ndash;Jun (6M)</td><td>Top 20</td><td class="dim" style="font-size:12px">6&times;200 + bonus 6M : +400</td><td class="pts">1&thinsp;600</td></tr>
+          <tr><td>2023</td><td>Jul&ndash;D&eacute;c (6M)</td><td>Top 10</td><td class="dim" style="font-size:12px">6&times;400 + bonus 6M : +900</td><td class="pts">3&thinsp;300</td></tr>
+          <tr><td>2023</td><td>Bonus 12M</td><td>Top 30&rarr;20 cons&eacute;cutif</td><td class="dim" style="font-size:12px">Bonus 12M consec. Top30 : +500</td><td class="pts">500</td></tr>
+          <tr><td>2024</td><td>Jan&ndash;F&eacute;v (2M)</td><td>Top 10</td><td class="dim" style="font-size:12px">2&times;400</td><td class="pts">800</td></tr>
+          <tr><td>2024</td><td>Mar&ndash;Ao&ucirc; (6M)</td><td>Top 20</td><td class="dim" style="font-size:12px">6&times;200 (apr&egrave;s 2 d&eacute;faites)</td><td class="pts">1&thinsp;200</td></tr>
+          <tr><td>2024</td><td>Sep&ndash;D&eacute;c (4M)</td><td>Top 10</td><td class="dim" style="font-size:12px">4&times;400</td><td class="pts">1&thinsp;600</td></tr>
+          <tr style="background:rgba(31,107,48,.05)"><td><strong>2025</strong></td><td>Jan&ndash;D&eacute;c (12M)</td><td><strong>Top 10 pleine ann&eacute;e</strong></td><td style="font-size:12px;color:var(--green-brt)">12&times;400 + 6M: +900 + 12M: +2&thinsp;200</td><td class="pts" style="color:var(--green-brt)">7&thinsp;900</td></tr>
+          <tr><td>2026</td><td>Jan&ndash;F&eacute;v (2M)</td><td>Top 10</td><td class="dim" style="font-size:12px">2&times;400</td><td class="pts">800</td></tr>
+          <tr class="grandtotal"><td colspan="4">Total Source C</td><td class="pts">18&thinsp;600</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+
+  <div class="dcols3" style="margin-top:12px">
+    <!-- SOURCE D -->
+    <div class="dc">
+      <div class="dc-head">
+        <span class="dct" style="color:#CC9944">Source D &mdash; Anciennet&eacute;</span>
+        <span class="dctot">4&thinsp;050 pts</span>
+      </div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>Tranche</th><th>Ans</th><th class="r">Pts/an</th><th class="r">Mult.</th><th class="r">Total</th></tr></thead>
+        <tbody>
+          <tr><td>Ans 1&ndash;3 <span class="dim">(2019&ndash;2021)</span></td><td class="r">3</td><td class="r">500</td><td class="r" style="font-family:var(--mono)">&times;1,0</td><td class="pts">1&thinsp;500</td></tr>
+          <tr><td>Ans 4&ndash;6 <span class="dim">(2022&ndash;2024)</span></td><td class="r">3</td><td class="r">500</td><td class="r" style="font-family:var(--mono)">&times;1,2</td><td class="pts">1&thinsp;800</td></tr>
+          <tr><td>Ann&eacute;e 7 <span class="dim">(2025)</span></td><td class="r">1</td><td class="r">500</td><td class="r" style="font-family:var(--mono)">&times;1,5</td><td class="pts">750</td></tr>
+          <tr><td colspan="4" class="dim" style="font-size:11.5px">Ans 10&ndash;12 : &times;2,0 &middot; 13+ : &times;3,0 (non atteints)</td><td class="pts dim">&mdash;</td></tr>
+          <tr class="grandtotal"><td colspan="4">Total D</td><td class="pts">4&thinsp;050</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <!-- SOURCE E -->
+    <div class="dc">
+      <div class="dc-head">
+        <span class="dct" style="color:#9988DD">Source E &mdash; Bonus Extraordinaires</span>
+        <span class="dctot" style="color:var(--grey)">0 pts (carri&egrave;re active)</span>
+      </div>
+      <div style="padding:12px 14px">
+        <div style="font-size:12.5px;font-weight:600;color:var(--white);margin-bottom:8px">S&eacute;quence de victoires cons&eacute;cutives Niveau I :</div>
+        <div class="streak-viz">
+          <div class="sd w">W</div><div class="sd w">W</div><div class="sd w">W</div><div class="sd w">W</div>
+          <div class="sd sep">&middot;</div>
+          <div class="sd nc">NC</div>
+          <div class="sd sep">&middot;</div>
+          <div class="sd w">W</div><div class="sd w">W</div><div class="sd w">W</div><div class="sd w">W</div>
+          <div class="sd sep">&middot;</div>
+          <div class="sd l">L</div>
+          <div class="sd sep">&middot;</div>
+          <div class="sd w">W</div><div class="sd w">W</div><div class="sd w">W</div><div class="sd w">W</div><div class="sd w">W</div>
+          <div class="sd l">L</div>
+        </div>
+        <div class="streak-lbl">Streak maximum actuel = <strong style="color:var(--white)">5 victoires cons&eacute;cutives</strong> (combats 11&ndash;15) &middot; Seuil bonus s&eacute;rie (7V) non encore atteint</div>
+        <table style="margin-top:10px"><thead><tr><th>&Eacute;v&eacute;nement d&eacute;clencheur</th><th class="r">Bonus</th><th>Statut</th></tr></thead>
+        <tbody>
+          <tr><td>S&eacute;rie 7V cons&eacute;cutives Niv.I</td><td class="r">800 pts</td><td class="dim" style="font-size:12px">Max 5V &mdash; non atteint</td></tr>
+          <tr><td>S&eacute;rie 12V cons&eacute;cutives Niv.I</td><td class="r">2&thinsp;000 pts</td><td class="dim" style="font-size:12px">Non atteint</td></tr>
+          <tr><td>30e combat certifi&eacute;</td><td class="r">1&thinsp;500 pts</td><td class="dim" style="font-size:12px">21 combats &mdash; non atteint</td></tr>
+          <tr><td>Champion 2 cat&eacute;gories</td><td class="r">3&thinsp;000 pts</td><td class="dim" style="font-size:12px">Non applicable</td></tr>
+          <tr><td>Fair-play (300 pts)</td><td class="r">300 pts</td><td class="dim" style="font-size:12px">&Agrave; la d&eacute;claration officielle de retraite</td></tr>
+          <tr class="grandtotal"><td colspan="2">Total E (carri&egrave;re active)</td><td class="pts dim">0</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+
+    <!-- SOURCE F -->
+    <div class="dc">
+      <div class="dc-head">
+        <span class="dct" style="color:#44BBAA">Source F &mdash; Fid&eacute;lit&eacute;</span>
+        <span class="dctot">2&thinsp;300 pts</span>
+      </div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>Palier continuit&eacute;</th><th class="r">Bonus</th><th>Avantage d&eacute;bloqu&eacute;</th></tr></thead>
+        <tbody>
+          <tr style="background:rgba(68,187,170,.05)"><td>3 ans cons&eacute;cutifs <span class="dim">(2019&ndash;2022)</span></td><td class="pts">800</td><td style="font-size:12px;color:#44BBAA">Activation partielle d&eacute;bloqu&eacute;e</td></tr>
+          <tr style="background:rgba(68,187,170,.05)"><td>5 ans cons&eacute;cutifs <span class="dim">(2019&ndash;2024)</span></td><td class="pts">1&thinsp;500</td><td style="font-size:12px;color:#44BBAA">Activation compl&egrave;te d&eacute;bloqu&eacute;e</td></tr>
+          <tr><td>10 ans cons&eacute;cutifs</td><td class="r dim">4&thinsp;000</td><td class="dim" style="font-size:12px">Non atteint &middot; Statut V&eacute;t&eacute;ran</td></tr>
+          <tr><td>15 ans cons&eacute;cutifs</td><td class="r dim">8&thinsp;000</td><td class="dim" style="font-size:12px">Non atteint &middot; Statut L&eacute;gende</td></tr>
+          <tr class="grandtotal"><td colspan="2">Total F</td><td class="pts">2&thinsp;300</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── IV. PALIERS ── -->
+<div class="section">
+  <div class="section-head">
+    <span class="snum">IV</span>
+    <span class="stitle">Paliers Fonds Retraite v8 &mdash; Positionnement BSD</span>
+    <span class="ssub">63&thinsp;290 pts &middot; Palier 2 &mdash; &Eacute;chelon III &middot; Prochain seuil : 100&thinsp;000 pts</span>
+  </div>
+
+  <div class="paliers-track">
+    <div class="ps passed"><div class="pc">P0</div><div class="pn">Solidarit&eacute;</div><div class="ps2">Conditions min.</div><div class="pr">$450&ndash;$1&thinsp;050</div><div class="pst">&#10003; D&eacute;pass&eacute;</div></div>
+    <div class="ps passed"><div class="pc">P1</div><div class="pn">&Eacute;chelon I</div><div class="ps2">25&thinsp;000 pts</div><div class="pr">$1&thinsp;800</div><div class="pst">&#10003; D&eacute;pass&eacute;</div></div>
+    <div class="ps current"><div class="pc">P2</div><div class="pn">&Eacute;chelon III</div><div class="ps2">50&thinsp;000 pts</div><div class="pr">$2&thinsp;500</div><div class="pst">&#9733; Palier actuel &mdash; 63&thinsp;290 pts</div></div>
+    <div class="ps future"><div class="pc">P3</div><div class="pn">&Eacute;chelon IV</div><div class="ps2">100&thinsp;000 pts</div><div class="pr">$4&thinsp;000</div><div class="pst">+36&thinsp;710 pts</div></div>
+    <div class="ps future"><div class="pc">P4</div><div class="pn">&Eacute;chelon V</div><div class="ps2">150&thinsp;000 pts</div><div class="pr">$7&thinsp;500</div><div class="pst">+86&thinsp;710 pts</div></div>
+    <div class="ps future"><div class="pc">P5</div><div class="pn">&Eacute;chelon VI</div><div class="ps2">250&thinsp;000+ pts</div><div class="pr">$12&thinsp;000</div><div class="pst">Palier maximum</div></div>
+  </div>
+
+  <div class="prog-wrap">
+    <div class="prog-label"><span>0 pts</span><span style="color:var(--green-brt)">BSD : 63&thinsp;290 pts &mdash; 25,3% vers le palier maximum</span><span>250&thinsp;000+ pts (P5)</span></div>
+    <div class="prog-track"><div class="prog-fill" style="width:25.3%"></div></div>
+    <div class="prog-marks"><span>P0</span><span>P1 &middot; 25K</span><span>P2 &middot; 50K &#8593;</span><span>P3 &middot; 100K</span><span>P4 &middot; 150K</span><span>P5 &middot; 250K+</span></div>
+  </div>
+
+  <div class="activation-box">
+    <div class="ab-title">Conditions d&rsquo;Activation &mdash; Toutes v&eacute;rifi&eacute;es (hypoth&egrave;se CN MIGC)</div>
+    <div class="ab-checks">
+      <span>5 ans actifs pro Niveau I</span>
+      <span>21 combats certifi&eacute;s (&ge;15)</span>
+      <span>36 mois class&eacute; Top 100 L&eacute;ger</span>
+      <span>CN MIGC 1er Dan (hypoth&egrave;se)</span>
+      <span>5 ans fid&eacute;lit&eacute; &eacute;cosyst&egrave;me</span>
+    </div>
+    <div class="ab-note">
+      <strong style="color:var(--white)">Retraite &agrave; VIE</strong> : activation directe &agrave; 55 ans &rarr; $2&thinsp;500/mois &agrave; vie imm&eacute;diatement.&nbsp;&nbsp;&middot;&nbsp;&nbsp;
+      <strong style="color:var(--white)">Activation Compl&egrave;te 20 ans</strong> : pr&eacute;-retraite d&egrave;s 45 ans &rarr; $1&thinsp;250/mois pendant 10 ans puis $2&thinsp;500/mois &agrave; vie d&egrave;s 55 ans.&nbsp;&nbsp;&middot;&nbsp;&nbsp;
+      Les montants sont revaloris&eacute;s +1,2%/an &agrave; partir de 2030.
+    </div>
+  </div>
+</div>
+
+<!-- ── V. COMPARAISONS ── -->
+<div class="section">
+  <div class="section-head">
+    <span class="snum">V</span>
+    <span class="stitle">Comparaisons &mdash; 15 Profils Roster UFC</span>
+    <span class="ssub">Estimation MIGC v8 appliqu&eacute;e &middot; M&ecirc;mes r&egrave;gles PB1&ndash;PB6</span>
+  </div>
+
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Combattant</th><th>Division</th><th>Carri&egrave;re</th><th>Combats</th><th>Classement max</th><th class="r">Pts MIGC (est.)</th><th>Palier v8</th><th>vs BSD</th></tr></thead>
+    <tbody>
+      <tr><td>Charles Oliveira &#127463;&#127479;</td><td>L&eacute;ger</td><td>16 ans (2008&rarr;)</td><td>50+</td><td>Champion, #1 P4P 12M</td><td class="r">~230K&ndash;280K</td><td class="cmp-pal">P4&ndash;P5 &middot; $7,5&ndash;12K</td><td class="cmp-vs cmp-above">&#9650; Au-dessus</td></tr>
+      <tr><td>Islam Makhachev &#127479;&#127482;</td><td>L&eacute;ger</td><td>10 ans (2015&rarr;)</td><td>28</td><td>Champion, #1 L&eacute;ger 30M</td><td class="r">~130K&ndash;160K</td><td class="cmp-pal">P3 &middot; $4&thinsp;000</td><td class="cmp-vs cmp-above">&#9650; Au-dessus</td></tr>
+      <tr><td>Dustin Poirier &#127482;&#127480;</td><td>L&eacute;ger</td><td>15 ans (2009&rarr;)</td><td>40+</td><td>Int&eacute;rim, Top5 36M+</td><td class="r">~160K&ndash;200K</td><td class="cmp-pal">P3&ndash;P4 &middot; $4&ndash;7,5K</td><td class="cmp-vs cmp-above">&#9650; Au-dessus</td></tr>
+      <tr><td>Max Holloway &#127482;&#127480;</td><td>Plume/L&eacute;ger</td><td>13 ans (2012&rarr;)</td><td>36+</td><td>Champion, Top3 P4P 36M+</td><td class="r">~220K&ndash;270K</td><td class="cmp-pal">P4&ndash;P5 &middot; $7,5&ndash;12K</td><td class="cmp-vs cmp-above">&#9650; Au-dessus</td></tr>
+      <tr><td>Arman Tsarukyan &#127462;&#127474;</td><td>L&eacute;ger</td><td>7 ans (2018&rarr;)</td><td>22</td><td>#1 contender, Top5 18M</td><td class="r">~55K&ndash;75K</td><td class="cmp-pal">P2 &middot; $2&thinsp;500</td><td class="cmp-vs cmp-close">&#8596; Proche</td></tr>
+      <tr><td>Justin Gaethje &#127482;&#127480;</td><td>L&eacute;ger</td><td>11 ans (2011&rarr;)</td><td>34</td><td>Int&eacute;rim, Top5 36M+</td><td class="r">~110K&ndash;140K</td><td class="cmp-pal">P3 &middot; $4&thinsp;000</td><td class="cmp-vs cmp-above">&#9650; Au-dessus</td></tr>
+      <tr><td>Renato Moicano &#127463;&#127479;</td><td>L&eacute;ger</td><td>12 ans (2013&rarr;)</td><td>35</td><td>Top 10, 24 mois</td><td class="r">~85K&ndash;110K</td><td class="cmp-pal">P3 &middot; $4&thinsp;000</td><td class="cmp-vs cmp-above">&#9650; Au-dessus</td></tr>
+      <tr><td>Mateusz Gamrot &#127477;&#127473;</td><td>L&eacute;ger</td><td>9 ans (2016&rarr;)</td><td>30</td><td>Top 10 L&eacute;ger 12M</td><td class="r">~60K&ndash;80K</td><td class="cmp-pal">P2 &middot; $2&thinsp;500</td><td class="cmp-vs cmp-close">&#8596; Proche</td></tr>
+      <tr class="bsd"><td>&#127919; Beno&icirc;t Saint Denis &#127467;&#127479;</td><td>L&eacute;ger</td><td>7 ans (2019&rarr;)</td><td>21</td><td>#5 UFC, Top10 ~24M</td><td class="r" style="color:var(--gold-lt)">63&thinsp;290</td><td class="cmp-pal" style="color:var(--gold-lt)">P2 &middot; $2&thinsp;500 &#9664;</td><td class="cmp-vs cmp-ref">&#9733; R&eacute;f&eacute;rence</td></tr>
+      <tr><td>Ilia Topuria &#127468;&#127466;</td><td>Plume</td><td>8 ans (2017&rarr;)</td><td>20</td><td>Champion Plume, Top5 P4P</td><td class="r">~80K&ndash;100K</td><td class="cmp-pal">P2&ndash;P3 &middot; $2,5&ndash;4K</td><td class="cmp-vs cmp-above">&#9650; Au-dessus</td></tr>
+      <tr><td>Paddy Pimblett &#127468;&#127463;</td><td>L&eacute;ger</td><td>9 ans (2017&rarr;)</td><td>23</td><td>Top 10 L&eacute;ger max 12M</td><td class="r">~40K&ndash;55K</td><td class="cmp-pal">P1&ndash;P2 &middot; $1,8&ndash;2,5K</td><td class="cmp-vs cmp-below">&#9660; En dessous</td></tr>
+      <tr><td>Nassourdine Imavov &#127467;&#127479;</td><td>Moyen</td><td>8 ans (2018&rarr;)</td><td>20</td><td>Top 10 Moyen 12M</td><td class="r">~35K&ndash;50K</td><td class="cmp-pal">P1&ndash;P2 &middot; $1,8&ndash;2,5K</td><td class="cmp-vs cmp-below">&#9660; En dessous</td></tr>
+      <tr><td>Sean O&rsquo;Malley &#127482;&#127480;</td><td>Coq</td><td>9 ans (2017&rarr;)</td><td>24</td><td>Champion, Top5 24M</td><td class="r">~75K&ndash;95K</td><td class="cmp-pal">P2 &middot; $2&thinsp;500</td><td class="cmp-vs cmp-above">&#9650; Au-dessus</td></tr>
+      <tr><td>Caio Borralho &#127463;&#127479;</td><td>Moyen</td><td>6 ans (2019&rarr;)</td><td>18</td><td>Top 5 Moyen 18M</td><td class="r">~45K&ndash;60K</td><td class="cmp-pal">P1&ndash;P2 &middot; $1,8&ndash;2,5K</td><td class="cmp-vs cmp-below">&#9660; En dessous</td></tr>
+      <tr><td>Mauricio Ruffy &#127463;&#127479;</td><td>L&eacute;ger</td><td>4 ans (2021&rarr;)</td><td>12</td><td>Top 15, 8M max</td><td class="r">~8K&ndash;15K</td><td class="cmp-pal">P0&ndash;P1 &middot; $450&ndash;1,8K</td><td class="cmp-vs cmp-below">&#9660; En dessous</td></tr>
+    </tbody>
+  </table></div>
+  <p style="margin-top:12px;font-size:12px;color:var(--grey);line-height:1.7">
+    <strong style="color:var(--white)">Note sur le positionnement de BSD :</strong> Malgr&eacute; son classement &eacute;lit&eacute; (#5 UFC L&eacute;ger), BSD n&rsquo;a que 7 ans de carri&egrave;re professionnelle. La Source D accorde un multiplicateur &times;2,0 d&egrave;s la 10e ann&eacute;e et &times;3,0 d&egrave;s la 13e ann&eacute;e, r&eacute;compensant structurellement la long&eacute;vit&eacute;. La poursuite de la carri&egrave;re sur 4 &agrave; 6 ans suppl&eacute;mentaires permettrait d&rsquo;atteindre le Palier 3 (&Eacute;chelon IV &mdash; $4&thinsp;000/mois).
+  </p>
+</div>
+
+<div class="doc-footer">
+  <span>Simulation confidentielle &middot; Sport7 Labs SARL &middot; MMA International Grading Council &middot; Canton de Gen&egrave;ve</span>
+  <span>R&egrave;glement Fonds Retraite MIGC v8.0 &middot; Mars 2026</span>
+</div>
+
+</div>
+</body>
+</html>

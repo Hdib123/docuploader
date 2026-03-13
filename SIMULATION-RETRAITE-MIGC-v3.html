@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulation Retraite MIGC v3 — Carrières longues 35–45 ans</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;600;700;800&family=Barlow+Condensed:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#1B2A4A;--navy-d:#0F1A2E;--navy-m:#243258;--gold:#C09236;--gold-l:#D4A84B;--off:#F5F4F0;--green:#1E5C2A;--red:#C0392B;--blue:#2A5298;--orange:#D35400;--pre:#F39C12;--full:#27AE60;--dir:#3498DB;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Barlow',sans-serif;background:var(--navy-d);color:var(--off);font-size:14px;line-height:1.5;}
+.header{background:var(--navy-d);border-bottom:3px solid var(--gold);padding:13px 48px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.header-org{font-family:'Bebas Neue';font-size:15px;color:var(--gold);letter-spacing:3px;}
+.header-tag{font-family:'IBM Plex Mono';font-size:10px;color:rgba(255,255,255,0.3);}
+.hero{padding:52px 48px 36px;background:linear-gradient(155deg,var(--navy-d) 0%,var(--navy-m) 100%);position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-200px;right:-200px;width:600px;height:600px;background:radial-gradient(circle,rgba(192,146,54,0.06) 0%,transparent 65%);border-radius:50%;}
+.hero-kicker{font-family:'IBM Plex Mono';font-size:11px;color:var(--gold);letter-spacing:3px;margin-bottom:12px;}
+.hero-title{font-family:'Bebas Neue';font-size:54px;line-height:0.95;color:#fff;letter-spacing:2px;}
+.hero-title span{color:var(--gold);}
+.hero-sub{font-family:'Barlow Condensed';font-size:16px;color:rgba(255,255,255,0.5);margin-top:10px;font-weight:600;letter-spacing:1px;}
+.badges{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;}
+.bd{border-radius:20px;padding:5px 13px;font-family:'Barlow Condensed';font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
+.bd.v3{background:rgba(192,146,54,0.25);color:var(--gold-l);border:1px solid rgba(192,146,54,0.4);}
+.bd.chg{background:rgba(39,174,96,0.2);color:#7FFFD0;border:1px solid rgba(39,174,96,0.3);}
+.bd.same{background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.35);border:1px solid rgba(255,255,255,0.1);}
+.hero-params{display:flex;gap:16px;margin-top:26px;flex-wrap:wrap;}
+.hp{border-radius:6px;padding:13px 17px;min-width:115px;}
+.hp.g{border:1px solid rgba(192,146,54,0.35);background:rgba(192,146,54,0.07);}
+.hp.gr{border:1px solid rgba(39,174,96,0.3);background:rgba(39,174,96,0.05);}
+.hp.or{border:1px solid rgba(243,156,18,0.35);background:rgba(243,156,18,0.06);}
+.hp.r{border:1px solid rgba(231,76,60,0.3);background:rgba(231,76,60,0.05);}
+.hp .lbl{font-family:'Barlow Condensed';font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:3px;}
+.hp .val{font-family:'Bebas Neue';font-size:30px;line-height:1;}
+.hp.g .val{color:var(--gold);}.hp.gr .val{color:#7FFFD0;}.hp.or .val{color:#F39C12;}.hp.r .val{color:#E74C3C;}
+.hp .sub{font-family:'Barlow Condensed';font-size:10px;color:rgba(255,255,255,0.3);margin-top:1px;}
+.wrap{max-width:1360px;margin:0 auto;padding:44px;}
+.section{margin-bottom:48px;}
+.s-title{font-family:'Bebas Neue';font-size:24px;color:var(--gold);letter-spacing:2px;border-bottom:1px solid rgba(192,146,54,0.3);padding-bottom:8px;margin-bottom:6px;}
+.s-sub{font-family:'Barlow Condensed';font-size:12px;color:rgba(255,255,255,0.3);letter-spacing:1px;margin-bottom:18px;}
+.divider{height:1px;background:linear-gradient(90deg,rgba(192,146,54,0.3),transparent);margin:34px 0;}
+.career-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:22px;}
+.cg{border-radius:6px;padding:18px 20px;}
+.cg.c1{background:rgba(39,174,96,0.07);border:1px solid rgba(39,174,96,0.2);}
+.cg.c2{background:rgba(243,156,18,0.07);border:1px solid rgba(243,156,18,0.2);}
+.cg.c3{background:rgba(231,76,60,0.07);border:1px solid rgba(231,76,60,0.2);}
+.cg-pct{font-family:'Bebas Neue';font-size:52px;line-height:1;}
+.cg.c1 .cg-pct{color:#27AE60;}.cg.c2 .cg-pct{color:#F39C12;}.cg.c3 .cg-pct{color:#E74C3C;}
+.cg-label{font-family:'Barlow Condensed';font-size:14px;font-weight:800;letter-spacing:1px;color:rgba(255,255,255,0.7);margin-top:4px;}
+.cg-ages{font-family:'IBM Plex Mono';font-size:12px;color:rgba(255,255,255,0.4);margin-top:6px;}
+.cg-impact{font-size:12.5px;color:rgba(255,255,255,0.55);line-height:1.6;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.07);}
+.cg-act{margin-top:8px;font-family:'IBM Plex Mono';font-size:11px;}
+.cg.c1 .cg-act{color:#7FFFD0;}.cg.c2 .cg-act{color:#F39C12;}.cg.c3 .cg-act{color:#E74C3C;}
+.tl-wrap{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:6px;padding:22px 24px;margin-bottom:18px;}
+.tl-title{font-family:'Barlow Condensed';font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:14px;}
+.tl-row{display:flex;align-items:center;gap:6px;margin-bottom:10px;}
+.tl-label{font-family:'Barlow Condensed';font-size:12px;font-weight:700;width:160px;color:rgba(255,255,255,0.5);}
+.tl-bar{flex:1;height:28px;display:flex;border-radius:4px;overflow:hidden;}
+.tl-seg{height:100%;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono';font-size:10px;padding:0 6px;white-space:nowrap;}
+.tl-anno{font-family:'IBM Plex Mono';font-size:10px;color:rgba(255,255,255,0.35);width:130px;text-align:right;}
+.phases{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px;}
+.ph{border-radius:6px;padding:14px 16px;}
+.ph .ph-n{font-family:'IBM Plex Mono';font-size:9px;color:rgba(255,255,255,0.25);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;}
+.ph .ph-y{font-family:'Bebas Neue';font-size:18px;line-height:1.1;}
+.ph .ph-d{font-size:11px;color:rgba(255,255,255,0.5);line-height:1.5;margin-top:5px;}
+.ph .ph-f{font-family:'IBM Plex Mono';font-size:10px;color:rgba(255,255,255,0.25);margin-top:5px;}
+.ph1{background:rgba(149,165,166,0.07);border-left:3px solid #95A5A6;}.ph1 .ph-y{color:#95A5A6;}
+.ph2{background:rgba(231,76,60,0.08);border-left:3px solid #E74C3C;}.ph2 .ph-y{color:#E74C3C;}
+.ph3{background:rgba(243,156,18,0.08);border-left:3px solid #F39C12;}.ph3 .ph-y{color:#F39C12;}
+.ph4{background:rgba(192,146,54,0.07);border-left:3px solid var(--gold);}.ph4 .ph-y{color:var(--gold);}
+.method-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px;}
+.mc{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:6px;padding:14px 16px;}
+.mc.c1{border-top:3px solid #E74C3C;}.mc.c2{border-top:3px solid #F39C12;}.mc.c3{border-top:3px solid #27AE60;background:rgba(39,174,96,0.05);}.mc.c4{border-top:3px solid #3498DB;}
+.mc-n{font-family:'Barlow Condensed';font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:3px;}
+.mc-r{font-family:'Bebas Neue';font-size:34px;line-height:1;}
+.mc.c1 .mc-r{color:#E74C3C;}.mc.c2 .mc-r{color:#F39C12;}.mc.c3 .mc-r{color:#27AE60;}.mc.c4 .mc-r{color:#3498DB;}
+.mc-d{font-size:11px;color:rgba(255,255,255,0.4);line-height:1.5;margin-top:6px;}
+.mc-tag{display:inline-block;background:rgba(39,174,96,0.15);border-radius:3px;padding:2px 6px;font-family:'Barlow Condensed';font-size:10px;color:#7FFFD0;letter-spacing:1px;margin-top:4px;}
+.chart-container{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:6px;padding:22px 26px;margin-bottom:18px;}
+.chart-title{font-family:'Barlow Condensed';font-size:13px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-bottom:16px;}
+.chart-row{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px;}
+.note{border-radius:4px;padding:12px 16px;font-size:13px;line-height:1.7;margin-bottom:13px;}
+.note.gold{background:rgba(192,146,54,0.07);border-left:4px solid var(--gold);color:rgba(255,255,255,0.75);}
+.note.green{background:rgba(30,92,42,0.10);border-left:4px solid var(--green);color:rgba(255,255,255,0.75);}
+.note.blue{background:rgba(42,82,152,0.10);border-left:4px solid var(--blue);color:rgba(255,255,255,0.75);}
+.note.orange{background:rgba(211,84,0,0.09);border-left:4px solid var(--orange);color:rgba(255,255,255,0.75);}
+.note strong{color:#fff;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.calc-box{background:rgba(192,146,54,0.05);border:1px solid rgba(192,146,54,0.18);border-radius:6px;padding:16px 20px;margin:14px 0;}
+.calc-box .f{font-family:'IBM Plex Mono';font-size:12.5px;color:var(--gold-l);line-height:2.1;}
+.kpi-row{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:24px;}
+.kpi{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:6px;padding:16px;text-align:center;}
+.kpi .num{font-family:'Bebas Neue';font-size:38px;line-height:1;color:var(--gold);}
+.kpi .num.g{color:#7FFFD0;}.kpi .num.b{color:#7EB8FF;}.kpi .num.o{color:#F39C12;}.kpi .num.r{color:#E74C3C;}
+.kpi .label{font-family:'Barlow Condensed';font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-top:3px;}
+.kpi .sub{font-size:10px;color:rgba(255,255,255,0.22);margin-top:2px;}
+.compare{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:22px;}
+.cv{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:6px;padding:14px 16px;}
+.cv-hd{font-family:'Barlow Condensed';font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid rgba(255,255,255,0.07);}
+.cv-row{display:flex;justify-content:space-between;margin-bottom:5px;font-size:12px;}
+.cv-k{color:rgba(255,255,255,0.45);}.cv-v{font-family:'IBM Plex Mono';font-weight:600;}
+.v1{color:rgba(255,255,255,0.35);}.v2{color:#F39C12;}.v3{color:#7FFFD0;}
+.table-wrap{overflow-x:auto;border-radius:6px;border:1px solid rgba(255,255,255,0.07);}
+table{width:100%;border-collapse:collapse;font-size:12px;}
+thead th{background:var(--navy-m);color:rgba(255,255,255,0.65);padding:9px 12px;font-family:'Barlow Condensed';font-weight:700;letter-spacing:1px;text-align:center;font-size:10px;text-transform:uppercase;border-bottom:2px solid rgba(192,146,54,0.3);}
+thead th:first-child{text-align:left;}
+tbody tr{border-bottom:1px solid rgba(255,255,255,0.04);}
+tbody tr:hover{background:rgba(255,255,255,0.03);}
+tbody td{padding:7px 12px;text-align:center;font-family:'IBM Plex Mono';font-size:11px;color:rgba(255,255,255,0.65);}
+tbody td:first-child{text-align:left;font-family:'Barlow Condensed';font-weight:700;font-size:12.5px;color:#fff;}
+.td-z{color:rgba(255,255,255,0.15)!important;}
+.ph-row td{font-family:'Barlow Condensed'!important;font-weight:700!important;font-size:10px!important;letter-spacing:1.5px;text-transform:uppercase;padding:5px 12px!important;}
+.tag{display:inline-block;border-radius:3px;padding:1px 7px;font-family:'Barlow Condensed';font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
+.tag.gr{background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.25);}
+.tag.r{background:rgba(231,76,60,0.2);color:#E74C3C;}
+.tag.y{background:rgba(243,156,18,0.2);color:#F39C12;}
+.tag.g{background:rgba(39,174,96,0.2);color:#7FFFD0;}
+.tag.gold{background:rgba(192,146,54,0.2);color:var(--gold);}
+.doc-footer{background:rgba(0,0,0,0.3);border-top:2px solid rgba(192,146,54,0.2);padding:13px 48px;text-align:center;font-family:'Barlow Condensed';font-size:10px;color:rgba(255,255,255,0.18);letter-spacing:1px;margin-top:36px;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <span class="header-org">Mixed Martial Arts International Grading Council</span>
+  <span class="header-tag">SIMULATION v3 · 5% FIGHT 40–45 ANS · 15% FIGHT 35–40 ANS · PRÉ-RET. 45 ANS · 50 ANS DE PROJECTION</span>
+</div>
+
+<div class="hero">
+  <div class="hero-kicker">Simulation Actuarielle MIGC v3 — Document de travail · Mars 2026</div>
+  <div class="hero-title">Flux Retraités — <span>Carrières Longues</span><br>Projection 50 ans</div>
+  <div class="hero-sub">5% du roster combat entre 40–45 ans · 15% entre 35–40 ans · Impact sur le timing d'activation</div>
+  <div class="badges">
+    <span class="bd v3">Version 3</span>
+    <span class="bd chg">✦ 5% carrières 40–45 ans</span>
+    <span class="bd chg">✦ 15% carrières 35–40 ans</span>
+    <span class="bd chg">✦ 1res activations An 11 (vs An 17 en v2)</span>
+    <span class="bd same">Taux qual. 10,6% inchangé</span>
+    <span class="bd same">Pré-ret. 45 ans · Retraite 55 ans</span>
+  </div>
+  <div class="hero-params">
+    <div class="hp g"><div class="lbl">Taux qualification</div><div class="val">10,6%</div><div class="sub">inchangé vs v2</div></div>
+    <div class="hp r"><div class="lbl">1re activation</div><div class="val">An 11</div><div class="sub">2036 — vétérans 40-45</div></div>
+    <div class="hp or"><div class="lbl">Carrières 40–45 ans</div><div class="val">5%</div><div class="sub">act. pré-ret. ~An 10</div></div>
+    <div class="hp or"><div class="lbl">Carrières 35–40 ans</div><div class="val">15%</div><div class="sub">act. pré-ret. ~An 15</div></div>
+    <div class="hp gr"><div class="lbl">Stock vivants An 50</div><div class="val">~1 970</div><div class="sub">bénéficiaires concurrents</div></div>
+    <div class="hp g"><div class="lbl">Prestations An 50</div><div class="val">$40,7M</div><div class="sub">par an</div></div>
+  </div>
+</div>
+
+<div class="wrap">
+
+<div class="section">
+  <div class="s-title">1. Impact des Carrières Longues sur le Timing d'Activation</div>
+  <div class="s-sub">Un fighter qui combat encore à 42 ans peut activer sa pré-retraite seulement 3 ans après son dernier combat</div>
+
+  <div class="career-grid">
+    <div class="cg c1">
+      <div class="cg-pct">80%</div>
+      <div class="cg-label">Carrière classique</div>
+      <div class="cg-ages">Fin de carrière : avant 35 ans · Début avg ~23 ans</div>
+      <div class="cg-impact">La majorité. Finissent à ~30 ans. Long délai d'attente avant la pré-retraite à 45 ans (~15 ans post-carrière). Ce segment domine le régime de croisière.</div>
+      <div class="cg-act">→ Activation pré-ret. avg : An 22 (2048)</div>
+    </div>
+    <div class="cg c2">
+      <div class="cg-pct">15%</div>
+      <div class="cg-label">Carrière prolongée</div>
+      <div class="cg-ages">Fin de carrière : 35–40 ans · Début avg ~30 ans</div>
+      <div class="cg-impact">Fighters ayant débuté tard ou prolongé leur activité. Finissent à ~37 ans. Délai avant 45 ans : seulement ~8 ans. Accélèrent sensiblement le démarrage des premières prestations.</div>
+      <div class="cg-act">→ Activation pré-ret. avg : An 15 (2041)</div>
+    </div>
+    <div class="cg c3">
+      <div class="cg-pct">5%</div>
+      <div class="cg-label">Vétérans actifs</div>
+      <div class="cg-ages">Fin de carrière : 40–45 ans · Début avg ~35 ans</div>
+      <div class="cg-impact">Élite qui combat encore à 40–44 ans (Mir, Henderson, Liddell, Couture-type). Finissent à ~42 ans. Activent la pré-retraite quasi immédiatement. Ce segment crée les toutes premières sorties du système.</div>
+      <div class="cg-act">→ Activation pré-ret. avg : An 10 (2036)</div>
+    </div>
+  </div>
+
+  <div class="tl-wrap">
+    <div class="tl-title">Timeline des activations par profil — vue comparative (depuis An 1 = 2026)</div>
+    <div class="tl-row">
+      <div class="tl-label" style="color:#27AE60;font-weight:700;">Classique 80%<br><small style="color:rgba(255,255,255,0.3);font-size:10px;">Fin ~30 ans</small></div>
+      <div class="tl-bar">
+        <div class="tl-seg" style="width:12%;background:rgba(149,165,166,0.2);color:rgba(255,255,255,0.4);">Carrière</div>
+        <div class="tl-seg" style="width:30%;background:rgba(149,165,166,0.07);color:rgba(255,255,255,0.2);font-size:9px;">Attente 30→45</div>
+        <div class="tl-seg" style="width:20%;background:rgba(243,156,18,0.3);color:#F39C12;">50% · 45–55</div>
+        <div class="tl-seg" style="width:38%;background:rgba(39,174,96,0.3);color:#7FFFD0;">100% · 55–75/vie</div>
+      </div>
+      <div class="tl-anno">1re act. An 22 (2048)</div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-label" style="color:#F39C12;font-weight:700;">Prolongée 15%<br><small style="color:rgba(255,255,255,0.3);font-size:10px;">Fin ~37 ans</small></div>
+      <div class="tl-bar">
+        <div class="tl-seg" style="width:22%;background:rgba(149,165,166,0.2);color:rgba(255,255,255,0.4);">Carrière</div>
+        <div class="tl-seg" style="width:15%;background:rgba(149,165,166,0.07);color:rgba(255,255,255,0.2);font-size:9px;">Attente 37→45</div>
+        <div class="tl-seg" style="width:20%;background:rgba(243,156,18,0.35);color:#F39C12;">50% · 45–55</div>
+        <div class="tl-seg" style="width:43%;background:rgba(39,174,96,0.3);color:#7FFFD0;">100% · 55–75/vie</div>
+      </div>
+      <div class="tl-anno">1re act. An 15 (2041)</div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-label" style="color:#E74C3C;font-weight:700;">Vétérans 5%<br><small style="color:rgba(255,255,255,0.3);font-size:10px;">Fin ~42 ans</small></div>
+      <div class="tl-bar">
+        <div class="tl-seg" style="width:28%;background:rgba(231,76,60,0.25);color:#E74C3C;font-weight:700;">Carrière jusqu'à 42</div>
+        <div class="tl-seg" style="width:6%;background:rgba(149,165,166,0.07);color:rgba(255,255,255,0.2);font-size:9px;">~3 ans</div>
+        <div class="tl-seg" style="width:20%;background:rgba(243,156,18,0.45);color:#F39C12;font-weight:700;">50% · 45–55</div>
+        <div class="tl-seg" style="width:46%;background:rgba(39,174,96,0.35);color:#7FFFD0;font-weight:700;">100% · 55–75/vie</div>
+      </div>
+      <div class="tl-anno" style="color:#E74C3C;font-weight:700;">1re act. An 10–11 (2035–2036)</div>
+    </div>
+  </div>
+
+  <div class="note orange">
+    <strong>Conséquence clé :</strong> Les vétérans (5%) qui finissent à 40–44 ans activent leur pré-retraite dès <strong>An 10–11 (2035–2036)</strong> — 6 ans plus tôt que la v2 (An 17). La zone morte réelle passe de 16 ans à <strong>~10 ans</strong>. Le volume reste très faible jusqu'à l'An 20 (≈30 bénéficiaires cumulés), mais c'est symboliquement et contractuellement important : les premiers versements démarrent dès 2036.
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="section">
+  <div class="s-title">2. Taux de Qualification — Inchangé à 10,62%</div>
+  <div class="method-grid">
+    <div class="mc c1"><div class="mc-n">C1 · 5 ans actifs Niv. I</div><div class="mc-r">59,5%</div><div class="mc-d">70% × 85% — inchangé</div></div>
+    <div class="mc c2"><div class="mc-n">C2 · 15 combats Niv. I</div><div class="mc-r">85,0%</div><div class="mc-d">2,1 combats/an min — inchangé</div></div>
+    <div class="mc c3"><div class="mc-n">C3 · 36 mois Top 100</div><div class="mc-r">40,0%</div><div class="mc-d">Tier 1-2-3 pré-sélectionnés<br><span class="mc-tag">↑ révisé en v2</span></div></div>
+    <div class="mc c4"><div class="mc-n">C4 · Ceinture Noire MIGC</div><div class="mc-r">52,5%</div><div class="mc-d">70% × 75% — inchangé</div></div>
+  </div>
+  <div class="calc-box">
+    <div class="f">
+      59,5% × 85,0% × 40,0% × 52,5% = <strong style="color:var(--gold-l);">10,62%</strong> → <strong style="color:var(--gold-l);">~91 qualifiés/an</strong> (régime stable)<br>
+      dont ~55 pré-retraités (60%) activant à 45 ans · dont ~36 retraités directs (40%) activant à 55 ans<br>
+      Distribution fin de carrière : <strong style="color:#27AE60;">80% avant 35 ans</strong> · <strong style="color:#F39C12;">15% entre 35–40 ans</strong> · <strong style="color:#E74C3C;">5% entre 40–45 ans</strong>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="section">
+  <div class="s-title">3. Les 4 Phases v3</div>
+  <div class="phases">
+    <div class="ph ph1"><div class="ph-n">Phase 1</div><div class="ph-y">An 1–10<br>2026–2035</div><div class="ph-d"><strong style="color:#95A5A6;">Accumulation pure.</strong> Zéro versement régulier. Même les vétérans (fin carrière ~42 ans) n'ont pas encore 45 ans. 10 ans de capitalisation pure.</div><div class="ph-f">0 bénéf./an</div></div>
+    <div class="ph ph2"><div class="ph-n">Phase 2</div><div class="ph-y">An 11–20<br>2036–2045</div><div class="ph-d"><strong style="color:#E74C3C;">Premières activations.</strong> Les vétérans actifs ayant fini à 40–44 ans en 2026 atteignent 45 ans. Flux très faible (0 → ~8/an) mais symboliquement le premier versement régulier existe.</div><div class="ph-f">0 → ~8 pré-ret./an</div></div>
+    <div class="ph ph3"><div class="ph-n">Phase 3</div><div class="ph-y">An 21–35<br>2046–2060</div><div class="ph-d"><strong style="color:#F39C12;">Montée en régime.</strong> Carrières 35–40 ans puis carrières classiques rejoignent. Flux monte de ~10 à ~55/an. Premières retraites directes An 27+.</div><div class="ph-f">~10 → ~55 pré + ~0 → ~17 dir.</div></div>
+    <div class="ph ph4"><div class="ph-n">Phase 4</div><div class="ph-y">An 36–50<br>2061–2075</div><div class="ph-d"><strong style="color:var(--gold);">Croisière stable.</strong> ~55 pré-retraites + ~36 retraites directes par an. Stock vivant ~1 970. Prestations ~$40,7M/an.</div><div class="ph-f">~91 nouveaux/an · stable</div></div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="section">
+  <div class="s-title">4. Visualisations</div>
+  <div class="chart-row">
+    <div class="chart-container"><div class="chart-title">Nouveaux bénéficiaires/an — pré-retraite vs retraite directe</div><canvas id="chartNew" height="280"></canvas></div>
+    <div class="chart-container"><div class="chart-title">Stock concurrent — 3 flux</div><canvas id="chartStock" height="280"></canvas></div>
+  </div>
+  <div class="chart-container"><div class="chart-title">Vue globale — Stock total & Prestations annuelles ($M)</div><canvas id="chartCombo" height="200"></canvas></div>
+</div>
+
+<div class="divider"></div>
+
+<div class="section">
+  <div class="s-title">5. Comparaison v1 / v2 / v3</div>
+  <div class="compare">
+    <div class="cv"><div class="cv-hd">v1 — Retraite 40 ans · C3=22%</div>
+      <div class="cv-row"><span class="cv-k">Taux qual.</span><span class="cv-v v1">5,8%</span></div>
+      <div class="cv-row"><span class="cv-k">1re activation</span><span class="cv-v v1">An 11 (2036)</span></div>
+      <div class="cv-row"><span class="cv-k">Zone morte</span><span class="cv-v v1">10 ans</span></div>
+      <div class="cv-row"><span class="cv-k">Stock An 50</span><span class="cv-v v1">~1 552</span></div>
+      <div class="cv-row"><span class="cv-k">Prestations An 50</span><span class="cv-v v1">~$37M</span></div>
+    </div>
+    <div class="cv"><div class="cv-hd" style="color:#F39C12;">v2 — Pré-ret. 45 ans · C3=40%</div>
+      <div class="cv-row"><span class="cv-k">Taux qual.</span><span class="cv-v v2">10,6%</span></div>
+      <div class="cv-row"><span class="cv-k">1re activation</span><span class="cv-v v2">An 17 (2042)</span></div>
+      <div class="cv-row"><span class="cv-k">Zone morte</span><span class="cv-v v2">16 ans</span></div>
+      <div class="cv-row"><span class="cv-k">Stock An 50</span><span class="cv-v v2">~2 000</span></div>
+      <div class="cv-row"><span class="cv-k">Prestations An 50</span><span class="cv-v v2">~$41M</span></div>
+    </div>
+    <div class="cv" style="border-color:rgba(39,174,96,0.25);background:rgba(39,174,96,0.03);"><div class="cv-hd" style="color:#7FFFD0;">v3 — Carrières longues 35–45 ans ✦</div>
+      <div class="cv-row"><span class="cv-k">Taux qual.</span><span class="cv-v v3">10,6%</span></div>
+      <div class="cv-row"><span class="cv-k">1re activation</span><span class="cv-v v3">An 11 (2036)</span></div>
+      <div class="cv-row"><span class="cv-k">Zone morte effective</span><span class="cv-v v3">~10 ans</span></div>
+      <div class="cv-row"><span class="cv-k">Stock An 50</span><span class="cv-v v3">~1 970</span></div>
+      <div class="cv-row"><span class="cv-k">Prestations An 50</span><span class="cv-v v3">~$40,7M</span></div>
+    </div>
+  </div>
+  <div class="note green">
+    <strong>Synthèse v3 :</strong> L'intégration des carrières longues avance le premier versement de <strong>6 ans</strong> (An 17 → An 11). Le flux reste négligeable jusqu'à l'An 20 (30 bénéficiaires cumulés). Le régime stable (An 36+) est quasi identique à la v2. Les prestations An 50 sont légèrement moindres ($40,7M vs $41M) — différence marginale. Le système est solvable à perpétuité dans les deux versions.
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="section">
+  <div class="s-title">6. Indicateurs Clés à Maturité</div>
+  <div class="kpi-row">
+    <div class="kpi"><div class="num r">An 11</div><div class="label">1re pré-retraite</div><div class="sub">2036 — vétérans 40–45 ans</div></div>
+    <div class="kpi"><div class="num o">~55</div><div class="label">Pré-retraités/an</div><div class="sub">régime stable An 36+</div></div>
+    <div class="kpi"><div class="num b">~36</div><div class="label">Retraités directs/an</div><div class="sub">activation à 55 ans</div></div>
+    <div class="kpi"><div class="num g">~91</div><div class="label">Nouveaux total/an</div><div class="sub">croisière stable</div></div>
+    <div class="kpi"><div class="num">~1 970</div><div class="label">Stock vivants An 50</div><div class="sub">bénéficiaires concurrents</div></div>
+    <div class="kpi"><div class="num">$40,7M</div><div class="label">Prestations/an An 50</div><div class="sub">avg $2 000/mois blended</div></div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="section">
+  <div class="s-title">7. Projection Année par Année — 50 ans</div>
+  <div class="s-sub">Hors dispositif historique (300 bénéficiaires distincts) · Pré-ret. = 50% · 10 ans · Retraite directe = 100% à vie (~23 ans)</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="text-align:left;">Année</th><th>Cal.</th><th>Phase</th>
+          <th>N. Pré-Ret.<br><small>45 ans</small></th>
+          <th>N. Ret. Directe<br><small>55 ans</small></th>
+          <th>Stock Pré<br><small>50%·10 ans</small></th>
+          <th>Stock Ex-Pré<br><small>100%·20 ans</small></th>
+          <th>Stock Directs<br><small>100%·23 ans</small></th>
+          <th style="color:var(--gold);">TOTAL</th>
+          <th style="color:var(--gold);">Presta/an</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+</div>
+
+</div>
+
+<div class="doc-footer">
+  Mixed Martial Arts International Grading Council · Sport7 Labs SARL · Canton de Genève · CONFIDENTIEL — v3 · Mars 2026<br>
+  Hypothèses : 6 000 fighters Tier 1-2-3 · Carrière 7 ans moy. · 5% fight 40–45 ans · 15% fight 35–40 ans · Pré-ret. 45 ans (50%) · Retraite 55 ans (20 ans ou à vie) · Qual. 10,62%
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+const ROSTER=6000,CAREER=7,SIM=50,PCT_PRE=0.60,PCT_DIR=0.40;
+const annual_new=ROSTER/CAREER;
+function normSeg(raw,target){const s=Object.values(raw).reduce((a,b)=>a+b,0);const r={};for(const[k,v]of Object.entries(raw))r[parseInt(k)]=v/s*target;return r;}
+const endAgeDist={...normSeg({26:.040,27:.080,28:.120,29:.160,30:.150,31:.130,32:.080,33:.064,34:.048},0.80),...normSeg({35:.030,36:.040,37:.040,38:.030,39:.020},0.15),...normSeg({40:.010,41:.015,42:.015,43:.010,44:.005},0.05)};
+const c1=0.595,c2=0.85,c3=0.40,c4=0.525,qual=c1*c2*c3*c4;
+function ramp(y){if(y<=0)return 0;const o=Math.min(1,y/6);const b=y>2?Math.min(1,(y-2)/4):0;return Math.min(1,y>2?Math.min(o,b):o*0.1);}
+const poolPre={},poolFull={};
+for(let cy=-50;cy<=SIM;cy++){const r=cy>0?ramp(cy):0;const eq=qual*r;for(const[ea,prob]of Object.entries(endAgeDist)){const ea2=parseInt(ea),sa=ea2-CAREER,n=annual_new*prob;const ap=cy+Math.max(5,45-sa);const af=cy+Math.max(5,55-sa);if(ap>=1&&ap<=SIM)poolPre[ap]=(poolPre[ap]||0)+n*eq*PCT_PRE;if(af>=1&&af<=SIM)poolFull[af]=(poolFull[af]||0)+n*eq*PCT_DIR;}}
+function sw(pool,dur,yr){let s=0;for(let y=Math.max(1,yr-dur+1);y<=yr;y++)s+=pool[y]||0;return s;}
+const data=[];
+for(let yr=1;yr<=SIM;yr++){const nbP=poolPre[yr]||0,nbF=poolFull[yr]||0;const stP=sw(poolPre,10,yr);const stAP=Object.keys(poolPre).filter(y=>{const yi=parseInt(y);return yi<=yr-10&&yi>=yr-10-20+1;}).reduce((s,y)=>s+(poolPre[y]||0),0);const stD=sw(poolFull,23,yr);const stT=stP+stAP+stD;const pr=(stP*.5*2000+stAP*2000+stD*2000)*12;data.push({yr,cal:2025+yr,nbP,nbF,stP,stAP,stD,stT,pr:pr/1e6});}
+const tb=document.getElementById('tableBody');
+const phOf=y=>y<=10?1:y<=20?2:y<=35?3:4;
+const phN={1:'Phase 1 — Accumulation pure (2026–2035)',2:'Phase 2 — Premières activations vétérans (2036–2045)',3:'Phase 3 — Montée en régime (2046–2060)',4:'Phase 4 — Croisière stable (2061–2075)'};
+const phB={1:'rgba(149,165,166,0.04)',2:'rgba(231,76,60,0.04)',3:'rgba(243,156,18,0.04)',4:'rgba(192,146,54,0.05)'};
+const phC={1:'#95A5A6',2:'#E74C3C',3:'#F39C12',4:'#C09236'};
+let lp=0;
+for(const d of data){const ph=phOf(d.yr);if(ph!==lp){const hr=document.createElement('tr');hr.classList.add('ph-row');hr.innerHTML=`<td colspan="10" style="color:${phC[ph]}!important;">${phN[ph]}</td>`;hr.style.background=phB[ph];tb.appendChild(hr);lp=ph;}
+const tr=document.createElement('tr');tr.style.background=phB[ph];
+const f=v=>v<0.05?'<span class="td-z">—</span>':v.toFixed(1);const fi=v=>v<0.05?'<span class="td-z">—</span>':Math.round(v);const fp=v=>v<0.01?'<span class="td-z">—</span>':`<strong>$${v.toFixed(1)}M</strong>`;
+const tag=ph===1?'<span class="tag gr">ZÉRO</span>':ph===2?'<span class="tag r">VÉTS.</span>':ph===3?'<span class="tag y">MONTÉE</span>':'<span class="tag gold">STABLE</span>';
+tr.innerHTML=`<td><strong>An ${d.yr}</strong></td><td>${d.cal}</td><td>${tag}</td><td style="color:#F39C12;font-weight:${d.nbP>0.05?700:400};">${f(d.nbP)}</td><td style="color:#7EB8FF;font-weight:${d.nbF>0.05?700:400};">${f(d.nbF)}</td><td style="color:#F39C12;">${fi(d.stP)}</td><td style="color:#7FFFD0;">${fi(d.stAP)}</td><td style="color:#7EB8FF;">${fi(d.stD)}</td><td style="color:var(--gold);font-weight:700;font-size:13px;">${fi(d.stT)}</td><td>${fp(d.pr)}</td>`;
+tb.appendChild(tr);}
+const labels=data.map(d=>d.cal);
+const bo={responsive:true,maintainAspectRatio:true,plugins:{legend:{labels:{color:'rgba(255,255,255,0.45)',font:{family:'Barlow Condensed',size:12},boxWidth:12}},tooltip:{backgroundColor:'rgba(15,26,46,0.95)',borderColor:'rgba(192,146,54,0.3)',borderWidth:1,titleFont:{family:'Barlow Condensed',size:13},bodyFont:{family:'IBM Plex Mono',size:11},titleColor:'#C09236',bodyColor:'rgba(255,255,255,0.8)'}},scales:{x:{ticks:{color:'rgba(255,255,255,0.25)',font:{family:'IBM Plex Mono',size:10},maxTicksLimit:10},grid:{color:'rgba(255,255,255,0.04)'}},y:{ticks:{color:'rgba(255,255,255,0.25)',font:{family:'IBM Plex Mono',size:10}},grid:{color:'rgba(255,255,255,0.05)'}}}};
+new Chart(document.getElementById('chartNew'),{type:'bar',data:{labels,datasets:[{label:'Nouveaux pré-retraités (45 ans)',data:data.map(d=>+d.nbP.toFixed(1)),backgroundColor:'rgba(243,156,18,0.65)',borderRadius:2,stack:'a'},{label:'Nouveaux retraités directs (55 ans)',data:data.map(d=>+d.nbF.toFixed(1)),backgroundColor:'rgba(41,128,185,0.65)',borderRadius:2,stack:'a'}]},options:bo});
+new Chart(document.getElementById('chartStock'),{type:'line',data:{labels,datasets:[{label:'Pré-retraités actifs (50%)',data:data.map(d=>d.stP.toFixed(0)),borderColor:'rgba(243,156,18,0.9)',backgroundColor:'rgba(243,156,18,0.07)',fill:true,borderWidth:2,tension:0.4,pointRadius:0},{label:'Ex-pré en retraite pleine',data:data.map(d=>d.stAP.toFixed(0)),borderColor:'rgba(39,174,96,0.9)',backgroundColor:'rgba(39,174,96,0.06)',fill:true,borderWidth:2,tension:0.4,pointRadius:0},{label:'Retraités directs (100%)',data:data.map(d=>d.stD.toFixed(0)),borderColor:'rgba(41,128,185,0.9)',backgroundColor:'rgba(41,128,185,0.04)',fill:true,borderWidth:2,tension:0.4,pointRadius:0}]},options:bo});
+const b3=JSON.parse(JSON.stringify(bo));b3.scales.y2={position:'right',ticks:{color:'rgba(255,255,255,0.25)',font:{family:'IBM Plex Mono',size:10}},grid:{display:false}};
+new Chart(document.getElementById('chartCombo'),{type:'bar',data:{labels,datasets:[{label:'Stock total concurrent',data:data.map(d=>Math.round(d.stT)),backgroundColor:data.map(d=>{const p=phOf(d.yr);return p===1?'rgba(149,165,166,0.25)':p===2?'rgba(231,76,60,0.35)':p===3?'rgba(243,156,18,0.4)':'rgba(192,146,54,0.55)';}),borderRadius:2,order:2},{label:'Prestations/an ($M)',data:data.map(d=>+d.pr.toFixed(1)),type:'line',borderColor:'rgba(192,146,54,0.9)',borderWidth:2.5,tension:0.4,pointRadius:0,yAxisID:'y2',order:1,backgroundColor:'transparent'}]},options:b3});
+</script>
+</body>
+</html>

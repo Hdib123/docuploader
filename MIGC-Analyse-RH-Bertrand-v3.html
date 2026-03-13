@@ -1,0 +1,1572 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MIGC · Analyse RH Comparative — Bertrand vs Yann</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:#0A0F1E; --ink2:#131A2E; --ink3:#1E2A42;
+  --gold:#C4952A; --gold2:#E0B654; --gold3:rgba(196,149,42,.1);
+  --jade:#1A7A5E; --jade2:#2AB584; --jade3:rgba(26,122,94,.1);
+  --red:#C0392B; --red2:#E55C50; --red3:rgba(192,57,43,.1);
+  --amber:#D4700A; --amber2:#F0A040; --amber3:rgba(212,112,10,.1);
+  --blue:#2558A0; --blue2:#5B8FD4; --blue3:rgba(37,88,160,.12);
+  --violet:#6A3F9E; --violet2:#9B6FD4; --violet3:rgba(106,63,158,.1);
+  --steel:#8A9AB0; --mist:#C4D0DC; --white:#F5F8FC;
+  --mono:'DM Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--ink);color:var(--white);font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased;}
+
+/* ── TOPBAR ── */
+.topbar{background:var(--ink);border-bottom:1px solid rgba(196,149,42,.2);padding:0 40px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:300;}
+.tb-left{display:flex;align-items:center;gap:16px;}
+.tb-brand{font-family:'Syne',sans-serif;font-weight:800;font-size:14px;letter-spacing:.12em;color:var(--gold);text-transform:uppercase;}
+.tb-sep{color:rgba(138,154,176,.3);}
+.tb-doc{font-size:12px;color:var(--steel);}
+.tb-right{font-family:var(--mono);font-size:10px;color:rgba(138,154,176,.5);letter-spacing:.06em;}
+.nav-pills{display:flex;gap:4px;margin-left:24px;}
+.np{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;color:var(--steel);border:1px solid rgba(255,255,255,.06);transition:.15s;text-decoration:none;}
+.np:hover,.np.active{background:var(--gold3);color:var(--gold2);border-color:rgba(196,149,42,.25);}
+
+/* ── HERO ── */
+.hero{background:linear-gradient(160deg,#080D1A 0%,#0D1825 60%,#111F35 100%);padding:48px 40px 36px;border-bottom:1px solid rgba(196,149,42,.15);position:relative;overflow:hidden;}
+.hero::after{content:'';position:absolute;right:-60px;top:-60px;width:400px;height:400px;background:radial-gradient(circle,rgba(196,149,42,.06) 0%,transparent 70%);}
+.hero-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--gold);text-transform:uppercase;margin-bottom:10px;}
+.hero-title{font-family:'Syne',sans-serif;font-weight:800;font-size:38px;line-height:1.1;letter-spacing:-.02em;}
+.hero-title span{color:var(--gold2);}
+.hero-sub{font-size:14px;color:var(--steel);max-width:640px;margin-top:10px;line-height:1.7;}
+.hero-kpis{display:flex;gap:20px;margin-top:28px;flex-wrap:wrap;}
+.hk{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:14px 20px;min-width:130px;}
+.hk-val{font-family:'Syne',sans-serif;font-weight:800;font-size:32px;color:var(--gold2);line-height:1;}
+.hk-lbl{font-size:11px;color:var(--steel);margin-top:4px;letter-spacing:.04em;}
+
+/* ── LAYOUT ── */
+.page{max-width:1420px;margin:0 auto;padding:0 40px 80px;}
+.section{margin-top:48px;}
+.section-title{font-family:'Syne',sans-serif;font-weight:700;font-size:22px;letter-spacing:-.01em;color:var(--white);margin-bottom:6px;display:flex;align-items:center;gap:12px;}
+.section-title .badge{font-family:var(--mono);font-size:10px;font-weight:500;padding:3px 10px;border-radius:3px;letter-spacing:.1em;text-transform:uppercase;}
+.section-sub{font-size:13px;color:var(--steel);margin-bottom:22px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.06);}
+
+/* ── NOTE ACCÈS ── */
+.access-legend{display:flex;gap:16px;flex-wrap:wrap;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:14px 20px;margin-bottom:24px;}
+.al-item{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--mist);}
+.al-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;}
+.al-dot.green{background:#2AB584;}
+.al-dot.yellow{background:#F0A040;}
+.al-dot.red{background:#E55C50;}
+.al-star{font-size:14px;}
+
+/* ── PERSON CARD ── */
+.persons-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px;}
+.pcard{background:var(--ink2);border:1px solid rgba(255,255,255,.07);border-radius:10px;overflow:hidden;transition:transform .15s,border-color .15s;}
+.pcard:hover{transform:translateY(-2px);border-color:rgba(196,149,42,.25);}
+.pcard-top{padding:16px 18px 12px;border-bottom:1px solid rgba(255,255,255,.05);}
+.pcard-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px;}
+.pcard-name{font-family:'Syne',sans-serif;font-weight:700;font-size:16px;color:var(--white);line-height:1.2;}
+.pcard-flag{font-size:18px;}
+.pcard-access{display:flex;align-items:center;gap:6px;}
+.pcard-role-tag{font-size:10px;font-weight:600;padding:2px 8px;border-radius:12px;letter-spacing:.06em;text-transform:uppercase;}
+.pcard-born{font-family:var(--mono);font-size:11px;color:var(--steel);margin-bottom:4px;}
+.pcard-cv{font-size:12px;color:var(--mist);line-height:1.6;}
+.pcard-cv strong{color:var(--white);font-weight:600;}
+.pcard-bottom{padding:12px 18px;}
+.pcard-post{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--steel);margin-bottom:6px;}
+.compare-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.cr-cell{background:rgba(0,0,0,.15);border-radius:6px;padding:8px 10px;font-size:11px;line-height:1.5;}
+.cr-cell .who{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px;}
+.cr-cell.yann .who{color:var(--blue2);}
+.cr-cell.bertrand .who{color:var(--gold);}
+.verdict-bar{margin-top:8px;padding:6px 10px;border-radius:6px;font-size:11px;font-weight:600;line-height:1.4;}
+.v-green{background:rgba(42,181,132,.1);border:1px solid rgba(42,181,132,.2);color:var(--jade2);}
+.v-amber{background:var(--amber3);border:1px solid rgba(212,112,10,.25);color:var(--amber2);}
+.v-red{background:var(--red3);border:1px solid rgba(192,57,43,.2);color:var(--red2);}
+
+/* ── COMPARISON TABLE ── */
+.comp-table-wrap{overflow-x:auto;border-radius:8px;border:1px solid rgba(255,255,255,.07);}
+.comp-table{width:100%;border-collapse:collapse;font-size:12px;}
+.comp-table thead tr{background:rgba(0,0,0,.4);}
+.comp-table th{padding:10px 14px;text-align:left;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--steel);text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.08);white-space:nowrap;}
+.comp-table th.r{text-align:center;}
+.comp-table tbody tr{border-bottom:1px solid rgba(255,255,255,.04);}
+.comp-table tbody tr:hover{background:rgba(255,255,255,.02);}
+.comp-table td{padding:10px 14px;vertical-align:top;color:var(--mist);}
+.comp-table td strong{color:var(--white);}
+.comp-table td.r{text-align:center;}
+td .tag{display:inline-block;font-size:10px;font-weight:700;padding:1px 7px;border-radius:10px;white-space:nowrap;}
+td .tag.green{background:rgba(42,181,132,.15);color:var(--jade2);}
+td .tag.amber{background:var(--amber3);color:var(--amber2);}
+td .tag.red{background:var(--red3);color:var(--red2);}
+td .tag.blue{background:var(--blue3);color:var(--blue2);}
+td .tag.gold{background:var(--gold3);color:var(--gold2);}
+td .tag.grey{background:rgba(138,154,176,.1);color:var(--steel);}
+.access-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:middle;}
+
+/* ── COHERENCE SECTION ── */
+.coh-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:16px;}
+.coh-card{background:var(--ink2);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:18px 20px;}
+.coh-title{font-family:'Syne',sans-serif;font-weight:700;font-size:14px;color:var(--white);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.06);}
+.geo-map{display:flex;flex-wrap:wrap;gap:6px;}
+.geo-tag{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:4px;padding:4px 10px;font-size:11px;}
+.geo-flag{font-size:14px;}
+.geo-name{color:var(--mist);}
+.geo-count{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--gold);}
+.risk-item{margin-bottom:10px;padding:8px 12px;border-radius:6px;font-size:12px;line-height:1.5;}
+.risk-item.high{background:var(--red3);border-left:3px solid var(--red2);}
+.risk-item.med{background:var(--amber3);border-left:3px solid var(--amber2);}
+.risk-item.low{background:var(--jade3);border-left:3px solid var(--jade2);}
+.risk-title{font-weight:700;margin-bottom:2px;}
+.risk-item.high .risk-title{color:var(--red2);}
+.risk-item.med .risk-title{color:var(--amber2);}
+.risk-item.low .risk-title{color:var(--jade2);}
+
+/* ── SCORE RADAR ── */
+.radar-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:14px;}
+.rscore{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:12px 10px;text-align:center;}
+.rscore-val{font-family:'Syne',sans-serif;font-weight:800;font-size:28px;line-height:1;}
+.rscore-lbl{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--steel);margin-top:4px;}
+.bar5{display:flex;gap:2px;margin-top:6px;justify-content:center;}
+.b5{width:10px;height:4px;border-radius:1px;background:rgba(255,255,255,.08);}
+.b5.on{background:var(--gold);}
+
+/* ── NOTE BOX ── */
+.note-box{background:rgba(196,149,42,.05);border:1px solid rgba(196,149,42,.18);border-left:4px solid var(--gold);border-radius:6px;padding:14px 18px;margin-top:12px;font-size:12.5px;color:var(--mist);line-height:1.7;}
+.note-box strong{color:var(--white);}
+.note-box .nb-title{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--gold2);margin-bottom:6px;}
+
+/* ── DECISIONS ── */
+.dec-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.dec-card{background:var(--ink2);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:16px 18px;}
+.dec-post{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--gold);text-transform:uppercase;margin-bottom:6px;}
+.dec-rec{font-family:'Syne',sans-serif;font-weight:700;font-size:15px;color:var(--white);margin-bottom:8px;}
+.dec-why{font-size:12px;color:var(--mist);line-height:1.6;}
+.dec-stars{font-size:13px;margin-top:8px;}
+
+/* ── STARS FOR COMMITTED ── */
+.star-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;background:rgba(196,149,42,.15);border:1px solid rgba(196,149,42,.3);color:var(--gold2);border-radius:10px;padding:1px 8px;margin-left:6px;}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:rgba(255,255,255,.03);}
+::-webkit-scrollbar-thumb{background:rgba(196,149,42,.3);border-radius:3px;}
+
+@media(max-width:900px){.coh-grid{grid-template-columns:1fr}.page{padding:0 16px 60px}.hero{padding:32px 16px 24px}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="tb-left">
+    <span class="tb-brand">MIGC · Analyse RH</span>
+    <span class="tb-sep">|</span>
+    <span class="tb-doc">Bertrand Amoussou vs Yann Dib — Aide à la décision</span>
+    <nav class="nav-pills">
+      <a class="np active" href="#minicvs">Mini CVs</a>
+      <a class="np" href="#comparaison">Comparaison</a>
+      <a class="np" href="#coherence">Cohérence</a>
+      <a class="np" href="#decisions">Recommandations</a>
+    </nav>
+  </div>
+  <span class="tb-right">Confidentiel · Sport7 Labs · Mars 2026</span>
+</div>
+
+<div class="hero">
+  <div class="hero-eyebrow">MMA International Grading Council — Structuration RH</div>
+  <h1 class="hero-title">Analyse comparative<br><span>Propositions de Bertrand</span></h1>
+  <p class="hero-sub">Étude croisée de la liste de Bertrand Amoussou en réponse à la proposition initiale de Yann Dib. Mini CVs, comparaison poste à poste, cohérence de groupe, répartition géographique et aide à la décision.</p>
+  <div class="hero-kpis">
+    <div class="hk"><div class="hk-val">38</div><div class="hk-lbl">Noms à analyser</div></div>
+    <div class="hk"><div class="hk-val">9</div><div class="hk-lbl">Postes couverts</div></div>
+    <div class="hk"><div class="hk-val">16</div><div class="hk-lbl">Nationalités</div></div>
+    <div class="hk"><div class="hk-val">6</div><div class="hk-lbl">Postes modifiés</div></div>
+  </div>
+</div>
+
+<div class="page">
+
+<!-- LÉGENDE ACCÈS -->
+<div class="section" id="minicvs">
+  <div class="section-title">
+    <span>Mini CVs — Liste Bertrand</span>
+    <span class="badge" style="background:var(--gold3);color:var(--gold2)">38 personnes</span>
+  </div>
+  <div class="section-sub">Profil de chaque nom proposé par Bertrand · Code couleur selon sa notation d'accessibilité</div>
+
+  <div class="access-legend">
+    <div class="al-item"><div class="al-dot green"></div><strong>Vert</strong> — Ami proche · Contact immédiat garanti</div>
+    <div class="al-item"><div class="al-dot yellow"></div><strong>Jaune</strong> — Contact direct · Facile d'accès</div>
+    <div class="al-item"><div class="al-dot red"></div><strong>Rouge</strong> — Contact indirect · À approcher via réseau</div>
+    <div class="al-item"><span class="al-star">★</span><strong>Étoile noire</strong> — Déjà partant pour le MIGC</div>
+  </div>
+
+  <!-- ═══ COMITÉ DIRECTEUR ═══ -->
+  <div style="margin-bottom:8px;margin-top:20px"><span class="badge" style="background:var(--gold3);color:var(--gold2);font-size:12px;padding:4px 14px;border-radius:4px">COMITÉ DIRECTEUR</span></div>
+  <div class="persons-grid">
+
+    <!-- GSP -->
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-head">
+          <div>
+            <div class="pcard-name">🇨🇦 Georges St-Pierre (GSP) <span class="star-badge">★ Partant</span></div>
+            <div class="pcard-born">Né 1981 · Saint-Isidore, Québec · Retraité 2017</div>
+          </div>
+          <div class="pcard-access"><div class="al-dot green" style="width:14px;height:14px"></div></div>
+        </div>
+        <div class="pcard-cv">
+          <strong>Champion UFC Welterweight (×3) + Middleweight</strong> · Seul à avoir conquis deux titres dans deux catégories sans jamais les perdre en combat (hors blessure). 19-2 pro, invaincu sur 13 combats consécutifs. <strong>Hall of Fame UFC 2013.</strong> Kyokushin karate 4e dan · BJJ ceinture noire. Co-fondateur MMAAA (Canadian MMA Athletes Association). Ambassadeur Jiu-Jitsu World Federation. <strong>Notoriété mondiale absolue</strong> · 5M+ followers · Image irréprochable · Jamais impliqué dans aucun scandale.
+        </div>
+      </div>
+      <div class="pcard-bottom">
+        <div class="pcard-post">Proposé par Bertrand : Président d'honneur / VP / Commission Éthique</div>
+        <div class="compare-row">
+          <div class="cr-cell yann"><div class="who">Yann (initial)</div>Président d'honneur · Seul candidat proposé</div>
+          <div class="cr-cell bertrand"><div class="who">Bertrand</div>Président d'honneur OU VP OU Commission Éthique (plusieurs usages)</div>
+        </div>
+        <div class="verdict-bar v-green">✓ Accord total sur le nom. Bertrand propose 3 options alternatives selon les autres postes pourvus — Président d'honneur si Nogueira prend le VP, VP si GSP veut s'impliquer davantage, Commission Éthique si les deux premiers sont déjà pris. <strong>Recommandation : Président d'honneur (option A) si Nogueira VP confirmé — hiérarchie claire.</strong></div>
+      </div>
+    </div>
+
+    <!-- ROYCE GRACIE -->
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-head">
+          <div>
+            <div class="pcard-name">🇧🇷 Royce Gracie</div>
+            <div class="pcard-born">Né 1966 · Rio de Janeiro · Retraité compétition</div>
+          </div>
+          <div class="pcard-access"><div class="al-dot green" style="width:14px;height:14px"></div></div>
+        </div>
+        <div class="pcard-cv">
+          <strong>Père fondateur du MMA moderne.</strong> Vainqueur UFC 1 (1993), UFC 2, UFC 4 et UFC Superfight Championship · 11-2-2 pro. Ceinture corail BJJ 9e degré (le plus haut vivant avec son frère Hélio). Représente la famille Gracie, inventeurs du Gracie Jiu-Jitsu — la famille la plus influente dans l'histoire du sport de combat. <strong>Légitimité historique absolue et incontestable.</strong> Présent dans 50+ pays via les académies Gracie. Personnalité intègre, universellement respectée.
+        </div>
+      </div>
+      <div class="pcard-bottom">
+        <div class="pcard-post">Proposé par Bertrand : Président d'honneur (en plus de GSP et Fedor)</div>
+        <div class="compare-row">
+          <div class="cr-cell yann"><div class="who">Yann (initial)</div>Non mentionné dans la liste initiale</div>
+          <div class="cr-cell bertrand"><div class="who">Bertrand</div>Président d'honneur · Ajout stratégique famille Gracie</div>
+        </div>
+        <div class="verdict-bar v-green">✓ Ajout de très haute valeur. La famille Gracie est une caution de légitimité mondiale. Avoir Royce en Président d'honneur est un signal fort pour toute la communauté BJJ/MMA. <strong>Recommandation : Valider.</strong></div>
+      </div>
+    </div>
+
+    <!-- FEDOR EMELIANENKO -->
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-head">
+          <div>
+            <div class="pcard-name">🇷🇺 Fedor Emelianenko</div>
+            <div class="pcard-born">Né 1976 · Jizdra, Russie · Retraité 2023</div>
+          </div>
+          <div class="pcard-access"><div class="al-dot green" style="width:14px;height:14px"></div></div>
+        </div>
+        <div class="pcard-cv">
+          <strong>Unanimement désigné GOAT du MMA par les experts.</strong> Champion PRIDE HW invaincu sur 28 combats consécutifs (2000-2010). 40-6 pro. Master of Sport judo et sambo. Bellator HW Champion 2019. <strong>Personnalité d'une dignité et d'une autorité naturelle rare.</strong> Profondément respecté dans le monde russophone (Russie, Europe de l'Est, Asie centrale). Engagements caritatifs importants. Actuellement président de la fédération russe de MMA. Aucun scandale. Personnalité au-dessus de tout reproche.
+        </div>
+      </div>
+      <div class="pcard-bottom">
+        <div class="pcard-post">Proposé par Bertrand : Président d'honneur + VP + Ambassadeur Europe</div>
+        <div class="compare-row">
+          <div class="cr-cell yann"><div class="who">Yann (initial)</div>Commission Éthique — Président proposé</div>
+          <div class="cr-cell bertrand"><div class="who">Bertrand</div>Président d'honneur + VP + Ambassadeur (3 rôles)</div>
+        </div>
+        <div class="verdict-bar v-amber">⚠ Bertrand propose 3 options alternatives pour Fedor selon les postes déjà occupés. La contrainte géopolitique (président fédération russe) reste réelle mais ne disqualifie pas son implication. <strong>Recommandation : Commission Éthique (option A) si Gustafsson prend l'Ambassadeur Europe Nord — le rôle éthique est le plus cohérent avec sa personnalité.</strong></div>
+      </div>
+    </div>
+
+    <!-- ANTONIO RODRIGO NOGUEIRA -->
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-head">
+          <div>
+            <div class="pcard-name">🇧🇷 Antonio Rodrigo Nogueira (Minotauro) <span class="star-badge">★ Confirmé</span></div>
+            <div class="pcard-born">Né 1976 · Vitória da Conquista, Bahia · Retraité 2018</div>
+          </div>
+          <div class="pcard-access"><div class="al-dot green" style="width:14px;height:14px"></div></div>
+        </div>
+        <div class="pcard-cv">
+          Champion PRIDE HW 2001 · Champion UFC Interim HW · Hall of Fame UFC 2011. Ceinture noire BJJ 3e degré. 35-8-1 pro. <strong>Déjà confirmé ambassadeur Sport7 — c'est le seul nom formellement engagé.</strong> Fondation sociale active au Brésil (protection des combattants). Co-fondateur MMA Stars (académie). Personnalité du MMA brésilien universellement aimée. Figure de résilience (survécu à un accident de camion mortel à 18 ans).
+        </div>
+      </div>
+      <div class="pcard-bottom">
+        <div class="pcard-post">Proposé par Bertrand : VP + Ambassadeur Brésil/Amérique du Sud</div>
+        <div class="compare-row">
+          <div class="cr-cell yann"><div class="who">Yann (initial)</div>Ambassadeur Brésil/Amériques du Sud · Fondation Prévoyance</div>
+          <div class="cr-cell bertrand"><div class="who">Bertrand</div>VP + Ambassadeur + Fondation Prévoyance (déjà confirmé)</div>
+        </div>
+        <div class="verdict-bar v-green">★ Confirmé · Engagement le plus solide du projet. Son rôle VP est cohérent avec sa stature et son investissement. Nogueira est le pivot émotionnel du projet pour les combattants. <strong>Recommandation : VP Brésil/Amériques + Représentant Combattants Fondation Prévoyance.</strong></div>
+      </div>
+    </div>
+
+    <!-- RANDY COUTURE -->
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-head">
+          <div>
+            <div class="pcard-name">🇺🇸 Randy Couture</div>
+            <div class="pcard-born">Né 1963 · Everett, Washington · Retraité 2011</div>
+          </div>
+          <div class="pcard-access"><div class="al-dot green" style="width:14px;height:14px"></div></div>
+        </div>
+        <div class="pcard-cv">
+          <strong>6× champion UFC</strong> (3× HW + 3× LHW) · Seul à avoir conquis deux catégories à 40+ ans · Hall of Fame UFC 2006. Lutteur olympique (AAU champion). Sergent 101ème Airborne US Army. 19-11 pro. Co-fondateur Xtreme Couture gym. Commentateur MMA. <strong>Modèle d'intégrité et de longévité.</strong> Représente le Mid-West américain, les anciens militaires, la communauté de la lutte US. Très actif dans les droits des combattants. Personnalité respectable et travailleuse — pas de star capricieuse.
+        </div>
+      </div>
+      <div class="pcard-bottom">
+        <div class="pcard-post">Proposé par Bertrand : Vice-Président</div>
+        <div class="compare-row">
+          <div class="cr-cell yann"><div class="who">Yann (initial)</div>Ambassadeur Amérique du Nord</div>
+          <div class="cr-cell bertrand"><div class="who">Bertrand</div>Vice-Président du Comité Directeur</div>
+        </div>
+        <div class="verdict-bar v-amber">⚠ Excellente personnalité mais 63 ans, retraité depuis 2011. Implication long terme à valider. Bertrand le monte en VP — plus contraignant qu'ambassadeur. <strong>Recommandation : Garder VP si implication confirmée, sinon Ambassadeur Amérique du Nord comme prévu par Yann.</strong></div>
+      </div>
+    </div>
+
+    <!-- DANIEL CORMIER -->
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-head">
+          <div>
+            <div class="pcard-name">🇺🇸 Daniel Cormier (DC)</div>
+            <div class="pcard-born">Né 1979 · Lafayette, Louisiane · Retraité 2020</div>
+          </div>
+          <div class="pcard-access"><div class="al-dot yellow" style="width:14px;height:14px"></div></div>
+        </div>
+        <div class="pcard-cv">
+          <strong>Double champion UFC LHW + HW</strong> · Seul avec Jon Jones (et après) à avoir été champion en simultané de deux catégories. Lutteur olympique (Jeux 2004 Athens, 3e équipe USA 2008). Commentateur ESPN — plateforme massive et quotidienne. <strong>Actuellement employé ESPN → contrainte d'implication.</strong> 22-3 pro. Fondateur AKA (Alliance MMA). Personnalité joviale, universellement appréciée, sans ennemi dans le MMA. Expert analyse technique reconnu.
+        </div>
+      </div>
+      <div class="pcard-bottom">
+        <div class="pcard-post">Proposé par Bertrand : VP + Membre Technique</div>
+        <div class="compare-row">
+          <div class="cr-cell yann"><div class="who">Yann (initial)</div>Commission Ranking & Compétitions — Président proposé</div>
+          <div class="cr-cell bertrand"><div class="who">Bertrand</div>VP + Membre Technique (double rôle)</div>
+        </div>
+        <div class="verdict-bar v-amber">⚠ Bertrand propose VP ou Membre Technique comme options alternatives. Commission Ranking (Yann) est plus cohérent avec son profil que VP. Contrainte ESPN à vérifier. <strong>Recommandation : Commission Ranking (option Yann) si le VP est pris par Nogueira — plus adapté et moins exposé aux conflits ESPN.</strong></div>
+      </div>
+    </div>
+
+    <!-- NICK LEMBO -->
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-head">
+          <div>
+            <div class="pcard-name">🇺🇸 Nick Lembo</div>
+            <div class="pcard-born">Directeur juridique New Jersey Athletic Control Board</div>
+          </div>
+          <div class="pcard-access"><div class="al-dot red" style="width:14px;height:14px"></div></div>
+        </div>
+        <div class="pcard-cv">
+          Directeur juridique du New Jersey Athletic Control Board · <strong>Co-auteur des Unified Rules of MMA</strong> (règlement mondial MMA adopté par tous) · Architecte réglementaire du MMA moderne. Juriste spécialisé sports de combat depuis 20+ ans. <strong>Profil institutionnel pur.</strong> Référence mondiale en droit du sport de combat. Réseau : toutes les commissions athlétiques US (NSAC, CSAC, etc.) + ABC (Association of Boxing Commissions). Pas de profil public "star" — profil discret et crédible.
+        </div>
+      </div>
+      <div class="pcard-bottom">
+        <div class="pcard-post">Proposé par Bertrand : Secrétaire Général</div>
+        <div class="compare-row">
+          <div class="cr-cell yann"><div class="who">Yann (initial)</div>Non mentionné · Poste "À définir"</div>
+          <div class="cr-cell bertrand"><div class="who">Bertrand</div>5 options alternatives pour ce poste : Lembo / Ratner / McCarthy / Bisping / Sudo — selon lesquels sont déjà positionnés ailleurs</div>
+        </div>
+        <div class="verdict-bar v-amber">⚠ Profil exceptionnel pour Secrétaire Général — mais contact rouge = le moins accessible de la liste Bertrand. Co-auteur Unified Rules = légitimité maximale, mais fonctionnaire public US + accès indirect complique l'approche. <strong>Recommandation : Option 1 sur le fond, mais prévoir stratégie d'accès (via réseau ABC ou Marc Ratner qui est vert).</strong></div>
+      </div>
+    </div>
+
+    <!-- MARC RATNER -->
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-head">
+          <div>
+            <div class="pcard-name">🇺🇸 Marc Ratner</div>
+            <div class="pcard-born">Ex-VP Regulatory Affairs UFC · NSAC Executive Director</div>
+          </div>
+          <div class="pcard-access"><div class="al-dot green" style="width:14px;height:14px"></div></div>
+        </div>
+        <div class="pcard-cv">
+          <strong>Ex-Directeur Exécutif NSAC</strong> (Nevada State Athletic Commission) 1992–2006 · Premier régulateur à légaliser le MMA dans les États US clés. Ex-VP Regulatory Affairs UFC 2006–2019. <strong>Architecte de la légalisation mondiale du MMA.</strong> 30+ ans dans la régulation du sport de combat. Réseau : toutes les commissions athlétiques + gouvernements + médias. Profil d'autorité institutionnelle inégalé dans le MMA.
+        </div>
+      </div>
+      <div class="pcard-bottom">
+        <div class="pcard-post">Proposé par Bertrand : Secrétaire Général + Commission Ranking</div>
+        <div class="compare-row">
+          <div class="cr-cell yann"><div class="who">Yann (initial)</div>Commission Ranking — mentionné dans liste initiale</div>
+          <div class="cr-cell bertrand"><div class="who">Bertrand</div>Secrétaire Général OU Commission Ranking (deux rôles proposés)</div>
+        </div>
+        <div class="verdict-bar v-amber">⚠ Profil exceptionnel. Mais ex-VP UFC (retraité ~70 ans) → implication réelle à valider. Commission Ranking (Yann) semble plus adapté à son profil expertise qu'un rôle opérationnel de Secrétaire Général. <strong>Recommandation : Commission Ranking & Compétitions (alignement Yann).</strong></div>
+      </div>
+    </div>
+
+    <!-- JOHN McCARTHY -->
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-head">
+          <div>
+            <div class="pcard-name">🇺🇸 John "Big" McCarthy</div>
+            <div class="pcard-born">Né 1963 · Los Angeles · Arbitre / Commentateur</div>
+          </div>
+          <div class="pcard-access"><div class="al-dot yellow" style="width:14px;height:14px"></div></div>
+        </div>
+        <div class="pcard-cv">
+          <strong>Arbitre le plus célèbre de l'histoire du MMA</strong> · Présent depuis UFC 2 (1994) · A arbitré >150 championnats du monde · Co-auteur des Unified Rules of MMA. "Let's get it on!" — voix et visage de référence mondiale. Triple Referee of the Year. <strong>Co-fondateur Big John McCarthy's MMA Training.</strong> Commentateur Bellator/CBS Sports. Auteur "Let's get it on: The Making of MMA and its Ultimate Referee". Formation d'arbitres à l'international.
+        </div>
+      </div>
+      <div class="pcard-bottom">
+        <div class="pcard-post">Proposé par Bertrand : Secrétaire Général</div>
+        <div class="compare-row">
+          <div class="cr-cell yann"><div class="who">Yann (initial)</div>Commission Technique — membre proposé</div>
+          <div class="cr-cell bertrand"><div class="who">Bertrand</div>Secrétaire Général</div>
+        </div>
+        <div class="verdict-bar v-amber">⚠ Big John est une légende vivante mais son profil est technique/terrain, pas administratif. Secrétaire Général requiert rigueur organisationnelle et juridique. Commission Technique (Yann) semble plus cohérent. <strong>Recommandation : Commission Technique (Yann) + formation arbitres MIGC.</strong></div>
+      </div>
+    </div>
+
+    <!-- MICKAEL BISPING -->
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-head">
+          <div>
+            <div class="pcard-name">🇬🇧 Michael Bisping</div>
+            <div class="pcard-born">Né 1979 · Clitheroe, Lancashire · Retraité 2017</div>
+          </div>
+          <div class="pcard-access"><div class="al-dot yellow" style="width:14px;height:14px"></div></div>
+        </div>
+        <div class="pcard-cv">
+          <strong>Premier champion UFC européen</strong> (Middleweight, 2016 vs Luke Rockhold) · 30-9 pro · Hall of Fame UFC 2019. A survécu avec un seul œil valide pendant 3 ans de carrière. Commentateur UFC/BT Sport depuis 2017 — <strong>audience massive UK + mondiale</strong>. Podcast "Believe You Me" 500K+ écoutes. Auteur bestseller. Personnalité médiatique charismatique, verbe acéré, très populaire. <strong>Représente toute l'Europe dans le MMA mainstream.</strong>
+        </div>
+      </div>
+      <div class="pcard-bottom">
+        <div class="pcard-post">Proposé par Bertrand : Secrétaire Général</div>
+        <div class="compare-row">
+          <div class="cr-cell yann"><div class="who">Yann (initial)</div>Non mentionné</div>
+          <div class="cr-cell bertrand"><div class="who">Bertrand</div>Secrétaire Général</div>
+        </div>
+        <div class="verdict-bar v-red">✗ Bisping est un média/commentateur actif (UFC). Secrétaire Général est un rôle opérationnel et discret incompatible avec son profil public. Conflit possible avec contrat UFC. <strong>Recommandation : Ambassadeur Europe (à la place de Mirko Cro Cop) — rôle plus adapté à son rayonnement médiatique.</strong></div>
+      </div>
+    </div>
+
+    <!-- GENKI SUDO -->
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-head">
+          <div>
+            <div class="pcard-name">🇯🇵 Genki Sudo</div>
+            <div class="pcard-born">Né 1978 · Aomori, Japon · Sénateur & Artiste</div>
+          </div>
+          <div class="pcard-access"><div class="al-dot red" style="width:14px;height:14px"></div></div>
+        </div>
+        <div class="pcard-cv">
+          Combattant MMA/K-1 · PRIDE, WEC, UFC · "We Are All One" — célèbre bannière portée après chaque victoire devenu symbole mondial. Retraité combat 2006. <strong>Élu au Sénat japonais (PLD) depuis 2019.</strong> Musicien, performer artistique (World Order). 63M+ views YouTube. <strong>Profil rarissime : ancien combattant + sénateur + artiste + humaniste international.</strong> Reconnaissance institutionnelle japonaise garantie. Parle Japonais/Anglais.
+        </div>
+      </div>
+      <div class="pcard-bottom">
+        <div class="pcard-post">Proposé par Bertrand : Secrétaire Général + Ambassadeur Japon + Commission Financière</div>
+        <div class="compare-row">
+          <div class="cr-cell yann"><div class="who">Yann (initial)</div>Ambassadeur Japon/Asie de l'Est</div>
+          <div class="cr-cell bertrand"><div class="who">Bertrand</div>Secrétaire Général + Ambassadeur Japon + Commission Financière (3 rôles)</div>
+        </div>
+        <div class="verdict-bar v-amber">⚠ Bertrand propose 3 options alternatives pour Sudo. MAIS : contact rouge = le moins accessible du document avec Lembo. Secrétaire Général et Commission Financière ne sont pas adaptés à son profil. <strong>Recommandation : Option Ambassadeur Japon uniquement (alignement Yann) — rôle honorifique cohérent avec son statut institutionnel japonais.</strong></div>
+      </div>
+    </div>
+
+    <!-- LUIGI PERILLO -->
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-head">
+          <div>
+            <div class="pcard-name">🇮🇹 Luigi Perillo</div>
+            <div class="pcard-born">CFO · Expert Finance Sportive International</div>
+          </div>
+          <div class="pcard-access"><div class="al-dot green" style="width:14px;height:14px"></div></div>
+        </div>
+        <div class="pcard-cv">
+          Profil financier et de gouvernance sportive. <strong>Contact proche de Bertrand.</strong> Expertise en gestion financière d'organisations sportives internationales. Familier des structures associatives et des fonds de prévoyance dans le sport. Profil discret et professionnel — exactement ce que requiert un poste de Trésorier d'une association suisse. Pas de notoriété publique dans le MMA = atout pour ce rôle (neutralité garantie).
+        </div>
+      </div>
+      <div class="pcard-bottom">
+        <div class="pcard-post">Proposé par Bertrand : Trésorier du Comité Directeur</div>
+        <div class="compare-row">
+          <div class="cr-cell yann"><div class="who">Yann (initial)</div>Poste "À définir" — profil professionnel neutre requis</div>
+          <div class="cr-cell bertrand"><div class="who">Bertrand</div>Luigi Perillo — contact vert, ami proche</div>
+        </div>
+        <div class="verdict-bar v-green">✓ Bonne logique de proposition — un Trésorier doit être un professionnel de la finance, pas une star MMA. Contact Bertrand = facilité de mise en place. <strong>Recommandation : Valider avec vérification expertise comptable/associatif suisse spécifiquement.</strong></div>
+      </div>
+    </div>
+
+  </div><!-- end comité -->
+
+  <!-- ═══ MEMBRES TECHNIQUES & DÉVELOPPEMENT ═══ -->
+  <div style="margin-bottom:8px;margin-top:28px"><span class="badge" style="background:var(--blue3);color:var(--blue2);font-size:12px;padding:4px 14px;border-radius:4px">MEMBRES TECHNIQUES & DÉVELOPPEMENT</span></div>
+  <div class="persons-grid">
+
+    <!-- ERICK PAULSON -->
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-head">
+          <div><div class="pcard-name">🇺🇸 Erick Paulson</div><div class="pcard-born">Né 1965 · Minnesota · Coach & Combattant</div></div>
+          <div class="pcard-access"><div class="al-dot yellow" style="width:14px;height:14px"></div></div>
+        </div>
+        <div class="pcard-cv">
+          <strong>Combat Submission Wrestling (CSW) — fondateur.</strong> Ancien champion shooto, catcheur professionnel. Ceinture noire Judo + BJJ. Coach de champions UFC (Josh Barnett, Matt Wiman, Brandon Vera). Expert systèmes de soumission et de grappling. <strong>Référence mondiale en CSW.</strong> Encyclopédie vivante des techniques MMA. Profil discret et respecté dans le milieu des coachs.
+        </div>
+      </div>
+      <div class="pcard-bottom">
+        <div class="pcard-post">Proposé par Bertrand : Membre Technique</div>
+        <div class="compare-row">
+          <div class="cr-cell yann"><div class="who">Yann (initial)</div>Non mentionné · Firas Zahabi proposé pour Membre Technique</div>
+          <div class="cr-cell bertrand"><div class="who">Bertrand</div>Membre Technique</div>
+        </div>
+        <div class="verdict-bar v-amber">⚠ Excellent technicien mais profil trop spécialisé "coach" pour une commission de gouvernance. Moins légitime publiquement que Zahabi ou Danaher pour un rôle institutionnel. <strong>Recommandation : Commission Technique comme expert invité plutôt que membre permanent.</strong></div>
+      </div>
+    </div>
+
+    <!-- FRANK SHAMROCK -->
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-head">
+          <div><div class="pcard-name">🇺🇸 Frank Shamrock</div><div class="pcard-born">Né 1972 · Susanville, Californie · Retraité 2010</div></div>
+          <div class="pcard-access"><div class="al-dot yellow" style="width:14px;height:14px"></div></div>
+        </div>
+        <div class="pcard-cv">
+          <strong>Premier champion UFC Middleweight (1997-1999)</strong> · Invaincu pendant 2 ans. Frère adoptif de Ken Shamrock. Un des premiers "complete fighters" de l'histoire MMA. Fondateur Shamrock FC. Commentateur CBS Sports MMA. <strong>Pionnier historique mais controversé</strong> (disputes familiales publiques, problèmes juridiques passés). Très populaire génération 1990-2000. Profil plus adapté à ambassadeur qu'à gouvernance.
+        </div>
+      </div>
+      <div class="pcard-bottom">
+        <div class="pcard-post">Proposé par Bertrand : Membre Technique</div>
+        <div class="compare-row">
+          <div class="cr-cell yann"><div class="who">Yann (initial)</div>Non mentionné</div>
+          <div class="cr-cell bertrand"><div class="who">Bertrand</div>Membre Technique</div>
+        </div>
+        <div class="verdict-bar v-red">✗ Controverses passées (conflits familiaux publics, problèmes judiciaires) sont incompatibles avec un rôle officiel dans une organisation cherchant crédibilité institutionnelle. <strong>Recommandation : À éviter dans les rôles formels.</strong></div>
+      </div>
+    </div>
+
+    <!-- TREVOR WITTMAN -->
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-head">
+          <div><div class="pcard-name">🇺🇸 Trevor Wittman</div><div class="pcard-born">Coach · Grudge Training Center, Colorado</div></div>
+          <div class="pcard-access"><div class="al-dot yellow" style="width:14px;height:14px"></div></div>
+        </div>
+        <div class="pcard-cv">
+          <strong>Coach MMA considéré parmi les 5 meilleurs mondiaux.</strong> Entraîneur de Justin Gaethje, Rose Namajunas, Otto Wallin (boxe). Grudge Training Center (Colorado). Expert striking et game plan technique. <strong>Très respecté dans la communauté des coaches.</strong> Profil discret mais autorité technique incontestée. Pas de controverse. Ne cherche pas les projecteurs — profil idéal pour une commission technique sérieuse.
+        </div>
+      </div>
+      <div class="pcard-bottom">
+        <div class="pcard-post">Proposé par Bertrand : Membre Technique</div>
+        <div class="compare-row">
+          <div class="cr-cell yann"><div class="who">Yann (initial)</div>Non mentionné</div>
+          <div class="cr-cell bertrand"><div class="who">Bertrand</div>Membre Technique</div>
+        </div>
+        <div class="verdict-bar v-green">✓ Excellent profil pour Commission Technique. Autorité terrain, pas de conflit d'intérêt, profil discret. <strong>Recommandation : Commission Technique & Grading — membre.</strong></div>
+      </div>
+    </div>
+
+    <!-- JOHN DANAHER -->
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-head">
+          <div><div class="pcard-name">🇳🇿 John Danaher</div><div class="pcard-born">Né 1967 · Wellington, NZ · Coach / Philosophe</div></div>
+          <div class="pcard-access"><div class="al-dot yellow" style="width:14px;height:14px"></div></div>
+        </div>
+        <div class="pcard-cv">
+          <strong>Considéré le plus grand instructeur de grappling de l'histoire moderne.</strong> Doctorant en philosophie (Columbia). A formé le Danaher Death Squad (Gordon Ryan, Garry Tonon, George Roop). Révolutionnaire de la technique de leg locks. Professeur principal Renzo Gracie Academy NYC. Ceinture noire BJJ corail. <strong>Intellectuel rarissime dans le MMA.</strong> Profil unique : philosophe + génie technique. Très peu accessible publiquement.
+        </div>
+      </div>
+      <div class="pcard-bottom">
+        <div class="pcard-post">Proposé par Bertrand : Membre Technique</div>
+        <div class="compare-row">
+          <div class="cr-cell yann"><div class="who">Yann (initial)</div>Non mentionné</div>
+          <div class="cr-cell bertrand"><div class="who">Bertrand</div>Membre Technique · Contact rouge = indirect</div>
+        </div>
+        <div class="verdict-bar v-amber">⚠ Profil exceptionnel en termes de légitimité intellectuelle et technique. Contact jaune = accès direct Bertrand. Sa rareté dans la gouvernance sportive est un bonus (jamais impliqué = pas de conflits). <strong>Recommandation : Expert invité Commission Technique — approche directe via Bertrand. Plus accessible qu'estimé initialement.</strong></div>
+      </div>
+    </div>
+
+    <!-- RAPHAËL CORDEIRO -->
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-head">
+          <div><div class="pcard-name">🇧🇷 Raphaël Cordeiro</div><div class="pcard-born">Coach · Kings MMA, Huntington Beach CA</div></div>
+          <div class="pcard-access"><div class="al-dot green" style="width:14px;height:14px"></div></div>
+        </div>
+        <div class="pcard-cv">
+          <strong>Head coach Kings MMA</strong> · A formé Fabricio Werdum, Cris Cyborg, Charles Oliveira (partiellement), Junior dos Santos. Ceinture noire BJJ coral belt. Formé chez Chute Boxe (école brésilienne légendaire). <strong>Top 3 coach BJJ/MMA brésilien actif.</strong> Profil très respecté dans la communauté brésilienne et mondiale. Discret, professionnel, sans controverse.
+        </div>
+      </div>
+      <div class="pcard-bottom">
+        <div class="pcard-post">Proposé par Bertrand : Membre Technique</div>
+        <div class="compare-row">
+          <div class="cr-cell yann"><div class="who">Yann (initial)</div>Non mentionné</div>
+          <div class="cr-cell bertrand"><div class="who">Bertrand</div>Membre Technique</div>
+        </div>
+        <div class="verdict-bar v-green">✓ Solide ajout pour représenter l'école brésilienne dans la Commission Technique. Légitime, discret, professionnel. <strong>Recommandation : Commission Technique & Grading — membre.</strong></div>
+      </div>
+    </div>
+
+    <!-- FIRAS ZAHABI -->
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-head">
+          <div><div class="pcard-name">🇨🇦 Firas Zahabi</div><div class="pcard-born">Né 1981 · Montréal · Tristar Gym</div></div>
+          <div class="pcard-access"><div class="al-dot yellow" style="width:14px;height:14px"></div></div>
+        </div>
+        <div class="pcard-cv">
+          <strong>Head coach Tristar Gym Montréal</strong> · Architecte de la carrière et du style de GSP. Ceinture noire BJJ + filosofie systémique du MMA. <strong>Reconnu top 5 coach mondial par consensus général.</strong> Podcaster populaire (Philosophie & MMA). Approche intellectuelle et systémique — parfait pour concevoir des critères de grades objectifs et défendables. Parle EN/FR/AR. Lien fort avec GSP → accès facilité.
+        </div>
+      </div>
+      <div class="pcard-bottom">
+        <div class="pcard-post">Yann : Membre Technique / Bertrand : Membre Développement</div>
+        <div class="compare-row">
+          <div class="cr-cell yann"><div class="who">Yann (initial)</div>Membre Technique — profil architecte grades</div>
+          <div class="cr-cell bertrand"><div class="who">Bertrand</div>Membre Développement</div>
+        </div>
+        <div class="verdict-bar v-green">★ Consensus sur le nom — désaccord sur le poste. Yann (Technique) plus cohérent avec son profil que Développement (Bertrand). Son lien avec GSP en fait un pont naturel. <strong>Recommandation : Membre Technique (Yann) — validation.</strong></div>
+      </div>
+    </div>
+
+    <!-- JOHN KAVANAGH -->
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-head">
+          <div><div class="pcard-name">🇮🇪 John Kavanagh</div><div class="pcard-born">Né 1977 · Dublin · SBG Ireland</div></div>
+          <div class="pcard-access"><div class="al-dot green" style="width:14px;height:14px"></div></div>
+        </div>
+        <div class="pcard-cv">
+          <strong>Head coach SBG (Straight Blast Gym) Ireland</strong> · Coach de Conor McGregor (UFC double champion), Gunnar Nelson, Paddy Pimblett. Premier ceinture noire BJJ d'Irlande. <strong>L'homme derrière la plus grande star MMA européenne.</strong> Auteur "Win or Learn". Très actif médiatiquement. Réseau européen MMA exceptionnel. Irlande = hub européen inattendu du MMA. Profil leadership naturel.
+        </div>
+      </div>
+      <div class="pcard-bottom">
+        <div class="pcard-post">Proposé par Bertrand : Membre Développement</div>
+        <div class="compare-row">
+          <div class="cr-cell yann"><div class="who">Yann (initial)</div>Non mentionné</div>
+          <div class="cr-cell bertrand"><div class="who">Bertrand</div>Membre Développement · Réseau Europe/UK irremplaçable</div>
+        </div>
+        <div class="verdict-bar v-green">✓ Excellent ajout ET contact vert direct (ami Bertrand). Son réseau McGregor ouvre des portes inaccessibles. Disponibilité et engagement plus faciles à obtenir qu'imaginé. <strong>Recommandation : Membre Développement — à contacter en priorité parmi les contacts verts disponibles.</strong></div>
+      </div>
+    </div>
+
+    <!-- DEMETRIUS JOHNSON -->
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-head">
+          <div><div class="pcard-name">🇺🇸 Demetrius "Mighty Mouse" Johnson</div><div class="pcard-born">Né 1986 · Kirkland, Washington</div></div>
+          <div class="pcard-access"><div class="al-dot yellow" style="width:14px;height:14px"></div></div>
+        </div>
+        <div class="pcard-cv">
+          <strong>Champion UFC Flyweight le plus titré de l'histoire</strong> : 11 défenses de titre consécutives · Record absolu. 30-4-1 pro. Actuellement ONE Championship. Lutteur, boxeur, ceinture noire BJJ. <strong>Athlète pur, humilité légendaire, aucun scandale.</strong> Parle au nom des fighters de petites catégories (souvent oubliés). Communauté Filipino-Américaine (ONE Asie = pertinent). Taille modeste mais stature immense dans le sport.
+        </div>
+      </div>
+      <div class="pcard-bottom">
+        <div class="pcard-post">Proposé par Bertrand : Membre Développement</div>
+        <div class="compare-row">
+          <div class="cr-cell yann"><div class="who">Yann (initial)</div>Non mentionné</div>
+          <div class="cr-cell bertrand"><div class="who">Bertrand</div>Membre Développement · Pont avec ONE Championship</div>
+        </div>
+        <div class="verdict-bar v-amber">⚠ Profil athlétique pur — sa valeur est dans la légitimité combattant, pas le développement institutionnel. Actuellement sous contrat ONE → conflit potentiel. <strong>Recommandation : Représentant des Athlètes plutôt que Membre Développement.</strong></div>
+      </div>
+    </div>
+
+    <!-- GREG JACKSON -->
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-head">
+          <div><div class="pcard-name">🇺🇸 Greg Jackson</div><div class="pcard-born">Albuquerque, Nouveau-Mexique · Jackson-Wink MMA</div></div>
+          <div class="pcard-access"><div class="al-dot yellow" style="width:14px;height:14px"></div></div>
+        </div>
+        <div class="pcard-cv">
+          <strong>Le coach MMA le plus titré de l'histoire</strong> : Jon Jones, Georges St-Pierre, Carlos Condit, Holly Holm, Rashad Evans, Keith Jardine… 20+ champions mondiaux formés. Jackson-Wink Academy : école de référence mondiale. Auteur "No Surrender". <strong>Contact rouge = difficile d'accès mais profil stratégique maximum.</strong> A une école de pensée MMA unique et systémique. Réseau inégalé dans le MMA nord-américain. Prudent institutionnellement — jamais impliqué en politique sportive.
+        </div>
+      </div>
+      <div class="pcard-bottom">
+        <div class="pcard-post">Proposé par Bertrand : Membre Développement</div>
+        <div class="compare-row">
+          <div class="cr-cell yann"><div class="who">Yann (initial)</div>Non mentionné</div>
+          <div class="cr-cell bertrand"><div class="who">Bertrand</div>Membre Développement · Contact rouge</div>
+        </div>
+        <div class="verdict-bar v-amber">⚠ Profil exceptionnel mais rarement impliqué en gouvernance. Contact jaune = accès direct Bertrand (mieux que prévu). <strong>Recommandation : Expert invité Commission Technique — abordable directement via Bertrand, mais disponibilité opérationnelle à confirmer.</strong></div>
+      </div>
+    </div>
+
+    <!-- BAS RUTTEN -->
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-head">
+          <div><div class="pcard-name">🇳🇱 Bas Rutten</div><div class="pcard-born">Né 1965 · Tilburg, Pays-Bas · Retraité 2006</div></div>
+          <div class="pcard-access"><div class="al-dot yellow" style="width:14px;height:14px"></div></div>
+        </div>
+        <div class="pcard-cv">
+          <strong>Champion UFC HW + Pancrase World Champion</strong> · Premier grand champion européen MMA. Pancrase MMA Japan (3× champion). Kickboxer légendaire. Acteur Hollywood (films, publicités). Commentateur NBC/Bellator. <strong>Personnalité charismatique, drôle et populaire.</strong> Représente l'Europe occidentale (Pays-Bas = école striking de référence). Entreprise EV Sport. Ambassadeur naturel pour l'Europe continentale.
+        </div>
+      </div>
+      <div class="pcard-bottom">
+        <div class="pcard-post">Proposé par Bertrand : Membre Développement</div>
+        <div class="compare-row">
+          <div class="cr-cell yann"><div class="who">Yann (initial)</div>Non mentionné</div>
+          <div class="cr-cell bertrand"><div class="who">Bertrand</div>Membre Développement</div>
+        </div>
+        <div class="verdict-bar v-amber">⚠ Profil ambassadeur/media plus que développement institutionnel. Charisme fort mais pas adapté à un rôle de gouvernance formelle. <strong>Recommandation : Ambassadeur Europe Continentale (complément à Mirko/Bisping) plutôt que Membre Développement.</strong></div>
+      </div>
+    </div>
+
+    <!-- EUGENE BAREMAN -->
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-head">
+          <div><div class="pcard-name">🇳🇿 Eugene Bareman</div><div class="pcard-born">Auckland, Nouvelle-Zélande · City Kickboxing</div></div>
+          <div class="pcard-access"><div class="al-dot green" style="width:14px;height:14px"></div></div>
+        </div>
+        <div class="pcard-cv">
+          <strong>Head coach City Kickboxing (Auckland)</strong> · A formé Israel Adesanya (champion UFC MW + LHW), Alexander Volkanovski (champion UFC Featherweight), Carlos Ulberg, Kai Kara-France. <strong>Académie la plus productive par habitant dans l'histoire du MMA.</strong> Nouvelle-Zélande = réservoir de talents Pacifique. Profil discret mais reconnu comme génie tactique. Contact rouge → difficile d'accès.
+        </div>
+      </div>
+      <div class="pcard-bottom">
+        <div class="pcard-post">Proposé par Bertrand : Membre Développement</div>
+        <div class="compare-row">
+          <div class="cr-cell yann"><div class="who">Yann (initial)</div>Non mentionné</div>
+          <div class="cr-cell bertrand"><div class="who">Bertrand</div>Membre Développement · Contact rouge</div>
+        </div>
+        <div class="verdict-bar v-amber">⚠ Contact rouge difficile. Profil très technique/entraîneur. <strong>Recommandation : Commission Technique — membre Océanie. Contact vert de Bertrand = accès immédiat et sans intermédiaire. Plus besoin de passer par Volkanovski ou Adesanya.</strong></div>
+      </div>
+    </div>
+
+  </div><!-- end technique -->
+
+  <!-- ═══ REPRÉSENTANTS ATHLÈTES ═══ -->
+  <div style="margin-bottom:8px;margin-top:28px"><span class="badge" style="background:var(--violet3);color:var(--violet2);font-size:12px;padding:4px 14px;border-radius:4px">REPRÉSENTANTS DES ATHLÈTES</span></div>
+  <div class="persons-grid">
+
+    <!-- CYRIL GANE -->
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-head">
+          <div><div class="pcard-name">🇫🇷 Cyril Gane "Bon Gamin"</div><div class="pcard-born">Né 1990 · Paris · UFC HW #2</div></div>
+          <div class="pcard-access"><div class="al-dot green" style="width:14px;height:14px"></div></div>
+        </div>
+        <div class="pcard-cv">
+          <strong>Champion UFC Interim Heavyweight 2021</strong> · #2 UFC HW actuel · 12-2 pro. Muay Thai professionnel avant MMA. Team France. <strong>Figure majeure du MMA français et européen.</strong> Vainqueur de Derrick Lewis, Junior dos Santos, Alexander Volkov, Tai Tuivasa. Battu par Ngannou et Stipe. Personnalité positive, humble, accessible. Encore actif → présence contemporaine dans le sport = légitimité terrain actuelle.
+        </div>
+      </div>
+      <div class="pcard-bottom">
+        <div class="pcard-post">Proposé par Bertrand : Représentant des Athlètes</div>
+        <div class="compare-row">
+          <div class="cr-cell yann"><div class="who">Yann (initial)</div>Poste "À définir"</div>
+          <div class="cr-cell bertrand"><div class="who">Bertrand</div>Représentant Athlètes · Contact vert (ami proche)</div>
+        </div>
+        <div class="verdict-bar v-green">★ Excellent choix. Encore actif = voix crédible des combattants actuels. Français = cohérent avec ancrage France/Genève. Contact vert de Bertrand = accessible immédiatement. <strong>Recommandation : Représentant Athlètes — valider.</strong></div>
+      </div>
+    </div>
+
+    <!-- VALENTINA SHEVCHENKO -->
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-head">
+          <div><div class="pcard-name">🇰🇬 Valentina "Bullet" Shevchenko</div><div class="pcard-born">Née 1988 · Bishkek, Kirghizistan · Retraitée 2024</div></div>
+          <div class="pcard-access"><div class="al-dot yellow" style="width:14px;height:14px"></div></div>
+        </div>
+        <div class="pcard-cv">
+          <strong>7× championne UFC Flyweight féminin</strong> · Plus longue domination en titre féminin UFC · 25-4 pro. Kickboxeuse mondiale (ISKA, WBC). Muay Thai experte. Sœur Ana Shevchenko aussi championne. <strong>Représente l'Asie Centrale et les pays post-soviétiques dans le MMA.</strong> Personnalité froide, professionnelle, disciplinée. Modèle de longévité et de technique. Image internationale forte, sans scandale.
+        </div>
+      </div>
+      <div class="pcard-bottom">
+        <div class="pcard-post">Proposé par Bertrand : Représentant des Athlètes</div>
+        <div class="compare-row">
+          <div class="cr-cell yann"><div class="who">Yann (initial)</div>Non mentionnée</div>
+          <div class="cr-cell bertrand"><div class="who">Bertrand</div>Représentant Athlètes · Ouverture géographique Asie Centrale</div>
+        </div>
+        <div class="verdict-bar v-green">✓ Ajout stratégique pour la diversité géographique et de genre. Représente une zone (Asie Centrale) et un profil (femme champion) absents de la liste initiale. <strong>Recommandation : Commission Protection Sociale ou Co-représentante Athlètes.</strong></div>
+      </div>
+    </div>
+
+    <!-- AMANDA NUNES -->
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-head">
+          <div><div class="pcard-name">🇧🇷 Amanda "The Lioness" Nunes</div><div class="pcard-born">Née 1988 · Pojuca, Bahia · Retraitée 2023</div></div>
+          <div class="pcard-access"><div class="al-dot yellow" style="width:14px;height:14px"></div></div>
+        </div>
+        <div class="pcard-cv">
+          <strong>GOAT MMA féminin absolu.</strong> Double championne UFC (Bantamweight + Flyweight) · 21-5 pro · 12 victoires consécutives. A battu Ronda Rousey, Cris Cyborg, Valentina Shevchenko. Ceinture noire BJJ. <strong>Hall of Fame UFC 2024.</strong> Retraitée — disponibilité pour gouvernance. Représente la communauté LGBT+ dans le sport. Communauté brésilienne immense. Fondation sociale active. Personnalité forte et inspirante.
+        </div>
+      </div>
+      <div class="pcard-bottom">
+        <div class="pcard-post">Consensus Yann + Bertrand : Commission Protection Sociale</div>
+        <div class="compare-row">
+          <div class="cr-cell yann"><div class="who">Yann (initial)</div>Commission Protection Sociale — Présidente proposée</div>
+          <div class="cr-cell bertrand"><div class="who">Bertrand</div>Représentant Athlètes + Commission Protection Sociale</div>
+        </div>
+        <div class="verdict-bar v-green">★ Seul nom en accord parfait entre Yann et Bertrand. Protection Sociale est son poste naturel (retraitée, engagée socialement). <strong>Recommandation : Commission Protection Sociale — Présidente. Décision la plus simple du document.</strong></div>
+      </div>
+    </div>
+
+    <!-- ISRAEL ADESANYA -->
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-head">
+          <div><div class="pcard-name">🇳🇬 Israel "Last Stylebender" Adesanya</div><div class="pcard-born">Né 1989 · Lagos, Nigéria → NZ · Actif UFC</div></div>
+          <div class="pcard-access"><div class="al-dot yellow" style="width:14px;height:14px"></div></div>
+        </div>
+        <div class="pcard-cv">
+          <strong>Double champion UFC Middleweight</strong> · 24-3 pro. Kickboxer professionnel (Glory, Enfusion). Athlète le plus moderne et culturellement connecté du MMA : anime, manga, hip-hop, streetwear. <strong>30M+ followers sociaux · Génération Z.</strong> City Kickboxing (Bareman). Né au Nigéria → voix africaine crédible. <strong>Encore actif sous contrat UFC → conflit d'intérêt fort.</strong> Personnalité controversée (provocations, célébrations). Contact rouge.
+        </div>
+      </div>
+      <div class="pcard-bottom">
+        <div class="pcard-post">Proposé par Bertrand : Représentant des Athlètes</div>
+        <div class="compare-row">
+          <div class="cr-cell yann"><div class="who">Yann (initial)</div>Non mentionné</div>
+          <div class="cr-cell bertrand"><div class="who">Bertrand</div>Représentant Athlètes · Contact rouge</div>
+        </div>
+        <div class="verdict-bar v-red">⚠ Contrat UFC actif = conflit d'intérêt majeur. Contact jaune = Bertrand peut l'approcher directement. Mais provocations publiques = risque réputationnel pour gouvernance institutionnelle. <strong>Recommandation : À différer après retraite UFC. Ambassadeur Afrique en remplacement de Ngannou si celui-ci est trop impliqué PFL.</strong></div>
+      </div>
+    </div>
+
+    <!-- FRANCIS NGANNOU -->
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-head">
+          <div><div class="pcard-name">🇨🇲 Francis "The Predator" Ngannou</div><div class="pcard-born">Né 1986 · Batié, Cameroun · PFL/Boxe</div></div>
+          <div class="pcard-access"><div class="al-dot red" style="width:14px;height:14px"></div></div>
+        </div>
+        <div class="pcard-cv">
+          <strong>Ex-champion UFC HW · Champion PFL HW 2024.</strong> Traversé seul le Sahara à 26 ans pour atteindre l'Europe. Record absolu de puissance de frappe (129,161 lbf). A boxé Tyson Fury 10 rounds. <strong>Fondation MMA Africa (développement combat en Afrique).</strong> Symbole universel de la détermination et de la migration africaine. 12M+ followers. Film documentaire sur sa vie. Encore actif → contrainte de disponibilité.
+        </div>
+      </div>
+      <div class="pcard-bottom">
+        <div class="pcard-post">Proposé par Bertrand : Représentant Athlètes + Ambassadeur Afrique</div>
+        <div class="compare-row">
+          <div class="cr-cell yann"><div class="who">Yann (initial)</div>Ambassadeur Afrique</div>
+          <div class="cr-cell bertrand"><div class="who">Bertrand</div>Représentant Athlètes + Ambassadeur Afrique</div>
+        </div>
+        <div class="verdict-bar v-amber">⚠ Accord Yann + Bertrand sur Ambassadeur Afrique. Bertrand ajoute l'option Représentant Athlètes si ce poste n'est pas pourvu par Gane ou Shevchenko. Encore actif PFL = disponibilité limitée de toute façon. <strong>Recommandation : Ambassadeur Afrique (option principale). Si Gane n'est pas disponible pour Représentant Athlètes → Ngannou en backup.</strong></div>
+      </div>
+    </div>
+
+  </div><!-- end athlètes -->
+
+  <!-- ═══ COMMISSIONS ═══ -->
+  <div style="margin-bottom:8px;margin-top:28px"><span class="badge" style="background:var(--jade3);color:var(--jade2);font-size:12px;padding:4px 14px;border-radius:4px">COMMISSIONS SPÉCIALISÉES</span></div>
+  <div class="persons-grid">
+
+    <!-- KHABIB -->
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-head">
+          <div><div class="pcard-name">🇷🇺 Khabib "Eagle" Nurmagomedov</div><div class="pcard-born">Né 1988 · Sildi, Daghestan, Russie · Retraité 2020</div></div>
+          <div class="pcard-access"><div class="al-dot yellow" style="width:14px;height:14px"></div></div>
+        </div>
+        <div class="pcard-cv">
+          <strong>Champion UFC Lightweight invaincu</strong> · 29-0 pro · Jamais mis à terre en carrière. L'athlète le plus suivi sur Instagram après le football (40M+). <strong>Gérant Eagle FC (organisation Kazakhstan/UAE)</strong> + Eagle MMA (académies). Retrait pour respecter sa promesse à sa mère décédée. Profondément religieux, personnalité morale et intègre. <strong>Réseau massif : Russie, Asie Centrale, Monde Arabe, Afrique du Nord.</strong> Contact rouge = accès via réseau Eagle FC.
+        </div>
+      </div>
+      <div class="pcard-bottom">
+        <div class="pcard-post">Proposé par Bertrand : Commission Grading</div>
+        <div class="compare-row">
+          <div class="cr-cell yann"><div class="who">Yann (initial)</div>Non mentionné</div>
+          <div class="cr-cell bertrand"><div class="who">Bertrand</div>Commission Grading</div>
+        </div>
+        <div class="verdict-bar v-amber">⚠ Nom spectaculaire mais Eagle FC = organisation concurrente directe → conflit d'intérêt en Commission Grading. Contact rouge difficile. Sa présence est surtout utile pour la signature et la légitimité mondiale (monde arabe + CIS). <strong>Recommandation : Ambassadeur MENA/Asie Centrale (Eagle FC = conflit en Grading). Contact jaune de Bertrand — approche directe possible.</strong></div>
+      </div>
+    </div>
+
+    <!-- CHUCK LIDDELL -->
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-head">
+          <div><div class="pcard-name">🇺🇸 Chuck "The Iceman" Liddell</div><div class="pcard-born">Né 1969 · Santa Barbara · Retraité 2013</div></div>
+          <div class="pcard-access"><div class="al-dot yellow" style="width:14px;height:14px"></div></div>
+        </div>
+        <div class="pcard-cv">
+          <strong>Champion UFC LHW 2004-2007</strong> · A popularisé le MMA aux États-Unis dans les années 2000 avec Randy Couture. Hall of Fame UFC 2009. <strong>Visage de la génération dorée UFC.</strong> Fin de carrière difficile (3 KO en 3 combats 2009-2010). <strong>Problèmes personnels récents (2018 : arrestation violences domestiques)</strong> — affaire résolue mais dossier public. Profil populaire mais à risque réputationnel.
+        </div>
+      </div>
+      <div class="pcard-bottom">
+        <div class="pcard-post">Proposé par Bertrand : Commission Partnership</div>
+        <div class="compare-row">
+          <div class="cr-cell yann"><div class="who">Yann (initial)</div>Non mentionné</div>
+          <div class="cr-cell bertrand"><div class="who">Bertrand</div>Commission Partnership</div>
+        </div>
+        <div class="verdict-bar v-red">✗ Incident 2018 (arrestation) = risque réputationnel inacceptable pour une organisation cherchant légitimité institutionnelle. Commission Partnership représente le MIGC auprès de partenaires externes. <strong>Recommandation : À écarter des rôles formels. Si maintenu, vérification du casier judiciaire complet.</strong></div>
+      </div>
+    </div>
+
+    <!-- RENZO GRACIE -->
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-head">
+          <div><div class="pcard-name">🇧🇷 Renzo Gracie</div><div class="pcard-born">Né 1967 · Rio de Janeiro · New York</div></div>
+          <div class="pcard-access"><div class="al-dot green" style="width:14px;height:14px"></div></div>
+        </div>
+        <div class="pcard-cv">
+          <strong>Ceinture corail BJJ 7e degré.</strong> Petit-fils de Carlos Gracie. Double champion ADCC 1998 et 2000. Fondateur 66+ académies Renzo Gracie Academy mondiales (USA, Europe, Asie). <strong>Le Gracie le plus accessible et le plus charismatique de sa génération.</strong> Expert absolu des systèmes de grades — son académie délivre des grades reconnus mondialement. 14-6-1 MMA pro. Connexion NYC + réseau mondial via académies.
+        </div>
+      </div>
+      <div class="pcard-bottom">
+        <div class="pcard-post">Consensus Yann + Bertrand : Commission Grading</div>
+        <div class="compare-row">
+          <div class="cr-cell yann"><div class="who">Yann (initial)</div>Commission Technique & Grading — Président proposé</div>
+          <div class="cr-cell bertrand"><div class="who">Bertrand</div>Commission Grading — membre</div>
+        </div>
+        <div class="verdict-bar v-green">★ Consensus total. Son expertise des grades est unique. Famille Gracie = légitimité maximale en grading. <strong>Recommandation : Président Commission Technique & Grading (alignement Yann).</strong></div>
+      </div>
+    </div>
+
+    <!-- ALEXANDER GUSTAFSSON -->
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-head">
+          <div><div class="pcard-name">🇸🇪 Alexander Gustafsson "The Mauler"</div><div class="pcard-born">Né 1987 · Arboga, Suède · Retraité 2021</div></div>
+          <div class="pcard-access"><div class="al-dot yellow" style="width:14px;height:14px"></div></div>
+        </div>
+        <div class="pcard-cv">
+          <strong>Premier prétendant européen à avoir failli battre Jon Jones</strong> (UFC 165 — combat de l'année). 18-8 pro. Allmax Nutrition testimonial. <strong>Meilleur combattant scandinave de l'histoire.</strong> Représente la Suède et le nord de l'Europe dans le MMA. Fondateur et propriétaire Allstars Training Center (Stockholm) — académie qui a formé Alexander Volkanovski (partiellement) et nombreux talents suédois. Personnalité humble et respectée.
+        </div>
+      </div>
+      <div class="pcard-bottom">
+        <div class="pcard-post">Proposé par Bertrand : Ambassadeur Europe</div>
+        <div class="compare-row">
+          <div class="cr-cell yann"><div class="who">Yann (initial)</div>Mirko Cro Cop proposé comme Ambassadeur Europe</div>
+          <div class="cr-cell bertrand"><div class="who">Bertrand</div>Alexander Gustafsson + Fedor Emelianenko pour Europe</div>
+        </div>
+        <div class="verdict-bar v-green">✓ Plus jeune (36 ans) et plus accessible que Mirko Cro Cop. Allstars Stockholm = hub européen MMA. Représente l'Europe du Nord (absente de la liste Yann). <strong>Recommandation : Ambassadeur Europe du Nord — complément valable à Fedor/Mirko.</strong></div>
+      </div>
+    </div>
+
+  </div><!-- end commissions -->
+
+  <!-- ═══ AMBASSADEURS JAPON/OCÉANIE ═══ -->
+  <div style="margin-bottom:8px;margin-top:28px"><span class="badge" style="background:var(--blue3);color:var(--blue2);font-size:12px;padding:4px 14px;border-radius:4px">AMBASSADEURS RÉGIONAUX — NOUVEAUX NOMS</span></div>
+  <div class="persons-grid">
+
+    <!-- TAKANORI GOMI -->
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-head">
+          <div><div class="pcard-name">🇯🇵 Takanori Gomi "The Fireball Kid"</div><div class="pcard-born">Né 1983 · Yokohama · Retraité 2018</div></div>
+          <div class="pcard-access"><div class="al-dot red" style="width:14px;height:14px"></div></div>
+        </div>
+        <div class="pcard-cv">
+          <strong>Champion PRIDE Lightweight · Icône MMA japonais des années 2000.</strong> 34-18 pro. Combat vs Nick Diaz (UFC 125) = classique absolu. Personnalité populaire au Japon, star du MMA nippon avec Genki Sudo. Représente la génération PRIDE — l'âge d'or du MMA japonais. <strong>Complémentarité parfaite avec Genki Sudo</strong> (Sudo = politique/artistique, Gomi = purement combattant).
+        </div>
+      </div>
+      <div class="pcard-bottom">
+        <div class="pcard-post">Proposé par Bertrand : Ambassadeur Japon</div>
+        <div class="compare-row">
+          <div class="cr-cell yann"><div class="who">Yann (initial)</div>Genki Sudo (1 ambassadeur Japon)</div>
+          <div class="cr-cell bertrand"><div class="who">Bertrand</div>Genki Sudo + Takanori Gomi + Shinya Aoki (3 ambassadeurs Japon)</div>
+        </div>
+        <div class="verdict-bar v-amber">⚠ 3 ambassadeurs Japon = doublon et dilution du message. Bertrand manifeste clairement sa connaissance du marché japonais mais moins c'est plus. <strong>Recommandation : Genki Sudo reste l'ambassadeur principal (Yann). Gomi en backup ou sous-ambassadeur régional.</strong></div>
+      </div>
+    </div>
+
+    <!-- SHINYA AOKI -->
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-head">
+          <div><div class="pcard-name">🇯🇵 Shinya Aoki "Tobikan Judan"</div><div class="pcard-born">Né 1983 · Tokyo · ONE Championship</div></div>
+          <div class="pcard-access"><div class="al-dot red" style="width:14px;height:14px"></div></div>
+        </div>
+        <div class="pcard-cv">
+          <strong>Champion DREAM Lightweight · Expert submissions mondial.</strong> 54-11 pro (record). Encore actif ONE Championship. Excentrique, anticonformiste, très coloré. Expert grappling et submissions reconnu mondialement. <strong>Passerelle PRIDE → ONE Championship → marché asiatique.</strong> Personnalité clivante mais très reconnue au Japon et en Asie.
+        </div>
+      </div>
+      <div class="pcard-bottom">
+        <div class="pcard-post">Proposé par Bertrand : Ambassadeur Japon (3e)</div>
+        <div class="compare-row">
+          <div class="cr-cell yann"><div class="who">Yann (initial)</div>Non mentionné</div>
+          <div class="cr-cell bertrand"><div class="who">Bertrand</div>3e ambassadeur Japon</div>
+        </div>
+        <div class="verdict-bar v-red">✗ 3e ambassadeur Japon est un surplus. Encore actif ONE = contrainte. Personnalité trop clivante pour un rôle d'ambassadeur institutionnel. <strong>Recommandation : Élaguer. Si pertinent, Commission Technique comme expert grappling ONE Championship.</strong></div>
+      </div>
+    </div>
+
+    <!-- ALEXANDER VOLKANOVSKI -->
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-head">
+          <div><div class="pcard-name">🇦🇺 Alexander Volkanovski</div><div class="pcard-born">Né 1988 · Shellharbour, NSW · Actif UFC</div></div>
+          <div class="pcard-access"><div class="al-dot yellow" style="width:14px;height:14px"></div></div>
+        </div>
+        <div class="pcard-cv">
+          <strong>Ex-champion UFC Featherweight (2019-2023).</strong> 26-4 pro. Encore actif. City Kickboxing team (Bareman). Ancien rugbyman. <strong>Le combattant australien le plus populaire de l'histoire.</strong> Personnalité positive et travailleuse, très appréciée. Représente parfaitement l'Océanie. Mais contrat UFC actif = conflit d'intérêt.
+        </div>
+      </div>
+      <div class="pcard-bottom">
+        <div class="pcard-post">Proposé par Bertrand : Ambassadeur Océanie (avec Mark Hunt)</div>
+        <div class="compare-row">
+          <div class="cr-cell yann"><div class="who">Yann (initial)</div>Mark Hunt seul pour Océanie</div>
+          <div class="cr-cell bertrand"><div class="who">Bertrand</div>Mark Hunt + Alexander Volkanovski</div>
+        </div>
+        <div class="verdict-bar v-amber">⚠ Encore actif UFC → contrainte. Mark Hunt (retraité, libre) reste adapté maintenant. Volkanovski (contact jaune de Bertrand) = approchable directement pour préparer sa succession. <strong>Recommandation : Hunt ambassadeur actuel + Volkanovski "ambassadeur désigné Océanie" dès contact — plus facile à engager qu'estimé.</strong></div>
+      </div>
+    </div>
+
+    <!-- JON JONES -->
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-head">
+          <div><div class="pcard-name">🇺🇸 Jon "Bones" Jones</div><div class="pcard-born">Né 1987 · Rochester, NY · UFC HW Champion</div></div>
+          <div class="pcard-access"><div class="al-dot yellow" style="width:14px;height:14px"></div></div>
+        </div>
+        <div class="pcard-cv">
+          <strong>Considéré par beaucoup comme le plus grand combattant de l'histoire du MMA.</strong> Champion UFC LHW (×3) + HW · 27-1 NC pro. <strong>Mais : DUI multiple, tests antidopage positifs (USADA — Turinabol 2016), violences domestiques 2009 et 2020, hit and run 2015.</strong> Contact rouge. Personnalité controversée au plus haut niveau. Encore actif UFC HW. <strong>Profil réputationnel incompatible avec une organisation cherchant crédibilité institutionnelle.</strong>
+        </div>
+      </div>
+      <div class="pcard-bottom">
+        <div class="pcard-post">Proposé par Bertrand : Ambassadeur Pan Amérique</div>
+        <div class="compare-row">
+          <div class="cr-cell yann"><div class="who">Yann (initial)</div>Randy Couture comme Ambassadeur Amérique du Nord</div>
+          <div class="cr-cell bertrand"><div class="who">Bertrand</div>Jon Jones — Ambassadeur Pan Amérique</div>
+        </div>
+        <div class="verdict-bar v-red">✗ <strong>Refus clair recommandé.</strong> Multiples violations antidopage, condamnations pénales, comportements répétés = risque réputationnel maximal pour le MIGC. Randy Couture (Yann) est infiniment plus adapté. <strong>Recommandation : Éliminer Jon Jones de toute liste officielle MIGC.</strong></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══ PRÉSIDENTS DE FÉDÉRATION ═══ -->
+  <div style="margin-bottom:8px;margin-top:28px"><span class="badge" style="background:var(--steel);color:var(--ink3);font-size:12px;padding:4px 14px;border-radius:4px;background:rgba(138,154,176,.2);color:var(--mist)">PRÉSIDENTS DE FÉDÉRATION — À INTÉGRER EN COMMISSIONS</span></div>
+  <div class="persons-grid">
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-head"><div><div class="pcard-name">Armando Carlos Diogo 🇦🇴</div><div class="pcard-born">Président Fédération Angola / IMMAF Africa Board</div></div></div>
+        <div class="pcard-cv">Connexion Afrique subsaharienne francophone. IMMAF historique. Réseau Bertrand direct. Pertinent pour Commission Développement Afrique.</div>
+      </div>
+      <div class="pcard-bottom"><div class="verdict-bar v-green">✓ Commission Développement — représentant Afrique francophone.</div></div>
+    </div>
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-head"><div><div class="pcard-name">Stanislav Nedkov 🇧🇬</div><div class="pcard-born">Ex-champion Bellator LHW · Bulgarie</div></div></div>
+        <div class="pcard-cv">Combattant Bellator retraité. Représente l'Europe de l'Est dans le MMA. Réseau balkanique et Europe centrale. Pertinent pour Commission Développement Europe Est.</div>
+      </div>
+      <div class="pcard-bottom"><div class="verdict-bar v-amber">⚠ Profil combattant + gouvernance fédération à préciser. Vérifier rôle exact dans la fédération bulgare.</div></div>
+    </div>
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-head"><div><div class="pcard-name">Davron Juarev 🇹🇯</div><div class="pcard-born">Président Fédération MMA Tadjikistan</div></div></div>
+        <div class="pcard-cv">Tadjikistan = carrefour stratégique Asie Centrale, frontière Afghanistan/Chine/Ouzbékistan. Réseau CIS solide. Pertinent pour expansion MENA/Asie Centrale.</div>
+      </div>
+      <div class="pcard-bottom"><div class="verdict-bar v-green">✓ Valeur stratégique pour l'expansion CIS. Commission Développement Asie Centrale. Passerelle naturelle vers les marchés CIS non couverts par Khabib (Eagle FC UAE).</div></div>
+    </div>
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-head"><div><div class="pcard-name">Ramtohul Goowtam Singh (Avinash) 🇲🇺</div><div class="pcard-born">Président Fédération MMA Maurice / IMMAF Africa</div></div></div>
+        <div class="pcard-cv">Île Maurice = hub Afrique de l'Est + Océan Indien. IMMAF Africa. Représente une zone géographique absente de toutes les listes. Point d'entrée Afrique anglophone/orientale.</div>
+      </div>
+      <div class="pcard-bottom"><div class="verdict-bar v-green">✓ Couverture géographique unique (Océan Indien). Commission Développement Afrique anglophone.</div></div>
+    </div>
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-head"><div><div class="pcard-name">Ubaldo Maroquin 🇲🇽</div><div class="pcard-born">Président Fédération MMA Mexique / IMMAF Americas</div></div></div>
+        <div class="pcard-cv">Mexique = 130M habitants, marché MMA en pleine explosion (UFC Mexico City sold out en permanence). Représente les Amériques latines — absent des deux listes initiales. Connexion cruciale pour expansion latino-américaine.</div>
+      </div>
+      <div class="pcard-bottom"><div class="verdict-bar v-green">✓ <strong>Ajout stratégique critique.</strong> Mexique = plus grand marché MMA d'Amérique Latine. Commission Développement Amériques + vice-ambassadeur Pan Amérique.</div></div>
+    </div>
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-head"><div><div class="pcard-name">Luka Nicolic 🇷🇸</div><div class="pcard-born">Président Fédération MMA Serbie / IMMAF Europe</div></div></div>
+        <div class="pcard-cv">Serbie = hub MMA Europe du Sud-Est. IMMAF Europe Board. Réseau balkanique et Europe centrale-orientale. Représente une zone géographique dense en talents MMA (Bulgarie, Serbie, Croatie, Bosnie).</div>
+      </div>
+      <div class="pcard-bottom"><div class="verdict-bar v-amber">⚠ Cohérent mais doublon géographique avec Nedkov (Bulgarie). À consolider en un seul représentant Balkans.</div></div>
+    </div>
+  </div>
+</div><!-- end section mini CVs -->
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SECTION 2 : TABLEAU COMPARATIF POSTE PAR POSTE            -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="section" id="comparaison">
+  <div class="section-title">
+    <span>Comparaison poste par poste</span>
+    <span class="badge" style="background:var(--blue3);color:var(--blue2)">Yann vs Bertrand</span>
+  </div>
+  <div class="section-sub">Analyse croisée candidat initial (Yann) vs candidat proposé (Bertrand) · Verdict de pertinence argumenté</div>
+
+  <div class="comp-table-wrap">
+    <table class="comp-table">
+      <thead>
+        <tr>
+          <th>Poste</th>
+          <th>Candidat Yann</th>
+          <th>Candidat(s) Bertrand</th>
+          <th>Accès Bertrand</th>
+          <th class="r">Verdict</th>
+          <th>Recommandation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Président Comité</strong></td>
+          <td><strong>Bertrand Amoussou</strong><br><span style="color:var(--steel);font-size:11px">Fondateur · Vision · Légitime</span></td>
+          <td><strong>Bertrand Amoussou</strong><br><span style="color:var(--steel);font-size:11px">Consensus total</span></td>
+          <td class="r"><div class="al-dot green" style="display:inline-block;width:10px;height:10px;border-radius:50%;"></div></td>
+          <td class="r"><span class="tag green">Consensus</span></td>
+          <td><strong>Bertrand Amoussou</strong> — seul candidat logique. Fondateur du système de grades. Aucune alternative pertinente.</td>
+        </tr>
+        <tr>
+          <td><strong>Président d'honneur</strong></td>
+          <td><strong>GSP</strong><br><span style="color:var(--steel);font-size:11px">Un seul, bien défini</span></td>
+          <td><strong>GSP + Royce Gracie + Fedor</strong><br><span style="color:var(--steel);font-size:11px">3 présidents d'honneur</span></td>
+          <td class="r"><div class="al-dot green" style="display:inline-block;width:10px;height:10px;border-radius:50%;"></div></td>
+          <td class="r"><span class="tag amber">Partiel</span></td>
+          <td>Yann = 1 bien défini. Bertrand dilue le titre avec 3 noms. <strong>Recommandation : 1 Président d'honneur principal (GSP) + 2 "Membres fondateurs d'honneur" pour Royce et Fedor.</strong> Trois présidents d'honneur dévalue le titre.</td>
+        </tr>
+        <tr>
+          <td><strong>Vice-Président</strong></td>
+          <td><span style="color:var(--steel);font-style:italic">À définir — profil institutionnel</span></td>
+          <td><strong>GSP / Nogueira / Fedor / Couture / Cormier</strong><br><span style="color:var(--steel);font-size:11px">5 candidats proposés</span></td>
+          <td class="r"><div class="al-dot green" style="display:inline-block;width:10px;height:10px;border-radius:50%;"></div></td>
+          <td class="r"><span class="tag amber">À arbitrer</span></td>
+          <td>Bertrand liste 5 options alternatives pour VP selon disponibilités : <strong>Nogueira est la priorité</strong> (déjà confirmé + stature). Si indisponible : Couture, puis Fedor, puis GSP, puis Cormier. Chaque option est un backup crédible.</td>
+        </tr>
+        <tr>
+          <td><strong>Secrétaire Général</strong></td>
+          <td><span style="color:var(--steel);font-style:italic">À définir — "charge élevée"</span></td>
+          <td><strong>Lembo / Ratner / McCarthy / Bisping / Sudo</strong><br><span style="color:var(--steel);font-size:11px">5 candidats hétéroclites</span></td>
+          <td class="r"><div class="al-dot yellow" style="display:inline-block;width:10px;height:10px;border-radius:50%;"></div></td>
+          <td class="r"><span class="tag amber">Meilleur = Lembo</span></td>
+          <td><strong>Nick Lembo est l'option 1 sur le fond</strong> pour le Secrétaire Général (profil le plus adapté) — mais c'est un contact rouge (indirect). Marc Ratner (vert) pourrait être l'option 1 par accessibilité si Lembo s'avère trop difficile à approcher. Les autres (Ratner, McCarthy, Bisping, Sudo) sont des options alternatives si Lembo est indisponible — chacun étant redirigé vers son rôle naturel dans ce cas : McCarthy → Commission Technique, Ratner → Commission Ranking, Bisping → Ambassadeur UK, Sudo → Ambassadeur Japon.</td>
+        </tr>
+        <tr>
+          <td><strong>Trésorier</strong></td>
+          <td><span style="color:var(--steel);font-style:italic">À définir — profil finance</span></td>
+          <td><strong>Luigi Perillo</strong><br><span style="color:var(--steel);font-size:11px">Finance sport international</span></td>
+          <td class="r"><div class="al-dot green" style="display:inline-block;width:10px;height:10px;border-radius:50%;"></div></td>
+          <td class="r"><span class="tag green">Valider</span></td>
+          <td><strong>Luigi Perillo</strong> — logique de nommer un professionnel de la finance, pas une star. Contact vert = accessible. Vérifier expertise droit associatif suisse spécifiquement.</td>
+        </tr>
+        <tr>
+          <td><strong>Membre Technique</strong></td>
+          <td><strong>Firas Zahabi</strong><br><span style="color:var(--steel);font-size:11px">Coach + pensée systémique</span></td>
+          <td><strong>Paulson / Shamrock / Wittman / Danaher / Cormier / Cordeiro</strong></td>
+          <td class="r"><div class="al-dot yellow" style="display:inline-block;width:10px;height:10px;border-radius:50%;"></div></td>
+          <td class="r"><span class="tag amber">Mix</span></td>
+          <td><strong>Zahabi (Yann) = option 1</strong>. Wittman et Cordeiro (Bertrand) sont des alternatives crédibles si Zahabi est indisponible ou pour compléter la commission. Danaher = expert invité (contact rouge). Cormier → Commission Ranking si disponible. Éliminer Shamrock (controverses).</td>
+        </tr>
+        <tr>
+          <td><strong>Membre Développement</strong></td>
+          <td><span style="color:var(--steel);font-style:italic">À définir — relations organisations</span></td>
+          <td><strong>Kavanagh / D.Johnson / Zahabi / G.Jackson / Rutten / Bareman</strong></td>
+          <td class="r"><div class="al-dot yellow" style="display:inline-block;width:10px;height:10px;border-radius:50%;"></div></td>
+          <td class="r"><span class="tag amber">Kavanagh prioritaire</span></td>
+          <td><strong>Kavanagh</strong> = meilleur profil développement (réseau McGregor, Europe). D.Johnson → Représentant Athlètes (pas Développement). Rutten → Ambassadeur Europe Continentale. Bareman + Jackson = experts invités, contact rouge. Zahabi = Technique (pas Développement).</td>
+        </tr>
+        <tr>
+          <td><strong>Représentant Athlètes</strong></td>
+          <td><span style="color:var(--steel);font-style:italic">À définir — combattant actif/récent</span></td>
+          <td><strong>Gane / Shevchenko / Nunes / Adesanya / Ngannou</strong></td>
+          <td class="r"><div class="al-dot green" style="display:inline-block;width:10px;height:10px;border-radius:50%;"></div> <div class="al-dot yellow" style="display:inline-block;width:10px;height:10px;border-radius:50%;"></div></td>
+          <td class="r"><span class="tag green">Gane + Shevchenko</span></td>
+          <td>Bertrand propose 5 options alternatives pour ce poste. <strong>Cyril Gane = option 1</strong> (contact vert, actif, français). Si indisponible : Shevchenko (Asie Centrale + représentation féminine). Nunes → Commission Protection Sociale (son rôle naturel). Adesanya : différer (actif UFC). Ngannou : Ambassadeur Afrique prioritairement.</td>
+        </tr>
+        <tr style="background:rgba(196,149,42,.03)">
+          <td colspan="6" style="padding:8px 14px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--gold);text-transform:uppercase;font-weight:700;">Commissions Spécialisées</td>
+        </tr>
+        <tr>
+          <td><strong>Commission Technique & Grading</strong></td>
+          <td><strong>Renzo Gracie</strong> (Président)<br>Big John McCarthy</td>
+          <td><strong>Renzo Gracie + Khabib</strong></td>
+          <td class="r"><div class="al-dot yellow" style="display:inline-block;width:10px;height:10px;border-radius:50%;"></div></td>
+          <td class="r"><span class="tag green">Renzo confirmé</span></td>
+          <td><strong>Renzo Gracie</strong> = Président (consensus). McCarthy en membre (Commission Technique, Yann). Khabib → Ambassadeur MENA (Eagle FC = conflit d'intérêt en Grading). Ajouter Wittman + Cordeiro comme membres techniques.</td>
+        </tr>
+        <tr>
+          <td><strong>Commission Ranking & Compétitions</strong></td>
+          <td><strong>Daniel Cormier</strong> (Président)</td>
+          <td><strong>Marc Ratner</strong></td>
+          <td class="r"><div class="al-dot yellow" style="display:inline-block;width:10px;height:10px;border-radius:50%;"></div></td>
+          <td class="r"><span class="tag amber">Les deux</span></td>
+          <td>Bertrand propose Ratner comme option alternative à Cormier. Ils sont complémentaires : Cormier = légitimité athlétique + ESPN, Ratner = légitimité réglementaire. <strong>Option optimale : Cormier Président (si contrainte ESPN OK) + Ratner VP Commission. Si Cormier empêché → Ratner Président.</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Commission Protection Sociale</strong></td>
+          <td><strong>Amanda Nunes</strong> (Président)</td>
+          <td><strong>Amanda Nunes</strong></td>
+          <td class="r"><div class="al-dot yellow" style="display:inline-block;width:10px;height:10px;border-radius:50%;"></div></td>
+          <td class="r"><span class="tag green">Consensus ✓</span></td>
+          <td><strong>Amanda Nunes</strong> = seul nom en consensus parfait Yann + Bertrand. Commission Protection Sociale — Présidente. Décision simple.</td>
+        </tr>
+        <tr>
+          <td><strong>Commission Éthique & Discipline</strong></td>
+          <td><strong>Fedor Emelianenko</strong> (Président)</td>
+          <td><strong>GSP</strong></td>
+          <td class="r"><div class="al-dot green" style="display:inline-block;width:10px;height:10px;border-radius:50%;"></div></td>
+          <td class="r"><span class="tag amber">Fedor prioritaire</span></td>
+          <td>Fedor (Yann) = autorité naturelle + symbolique de dignité. GSP (Bertrand) serait plus accessible mais plus utile en Président d'honneur. Fedor garde Commission Éthique si disponibilité confirmée malgré contexte russe. Si contrainte géopolitique → GSP peut reprendre le rôle éthique.</td>
+        </tr>
+        <tr>
+          <td><strong>Commission Partnership</strong></td>
+          <td><strong>Big John McCarthy</strong></td>
+          <td><strong>Chuck Liddell</strong></td>
+          <td class="r"><div class="al-dot yellow" style="display:inline-block;width:10px;height:10px;border-radius:50%;"></div></td>
+          <td class="r"><span class="tag red">Écarter Liddell</span></td>
+          <td>Liddell (Bertrand) = arrestation 2018 = risque réputationnel incompatible. Big John McCarthy (Yann) = meilleur choix, mais Commission Technique est son rôle naturel. Envisager Kavanagh ou John Martin (PFL) pour Commission Partnership.</td>
+        </tr>
+        <tr>
+          <td><strong>Commission Financière & Audit</strong></td>
+          <td><span style="color:var(--steel);font-style:italic">À définir — Big 4 / actuaire</span></td>
+          <td><strong>Genki Sudo</strong></td>
+          <td class="r"><div class="al-dot green" style="display:inline-block;width:10px;height:10px;border-radius:50%;"></div></td>
+          <td class="r"><span class="tag red">Refus Sudo ici</span></td>
+          <td>Genki Sudo est sénateur + artiste. Commission Financière nécessite actuaire, expert-comptable ou gestionnaire fonds. Sudo dans ce rôle = signal de manque de sérieux auprès des partenaires financiers. <strong>Garder Sudo en Ambassadeur Japon uniquement.</strong> Commission Financière = à recruter (ex-Big 4 + Denis Oswald type).</td>
+        </tr>
+        <tr style="background:rgba(196,149,42,.03)">
+          <td colspan="6" style="padding:8px 14px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--gold);text-transform:uppercase;font-weight:700;">Ambassadeurs Régionaux</td>
+        </tr>
+        <tr>
+          <td><strong>Europe</strong></td>
+          <td><strong>Mirko Cro Cop</strong></td>
+          <td><strong>Gustafsson + Fedor</strong></td>
+          <td class="r"><div class="al-dot yellow" style="display:inline-block;width:10px;height:10px;border-radius:50%;"></div></td>
+          <td class="r"><span class="tag amber">Bertrand meilleur</span></td>
+          <td>Gustafsson (Bertrand) = plus jeune, plus accessible, Europe du Nord. Fedor (Bertrand) = Europe de l'Est/Russie. Mirko (Yann) = Europe du Sud-Est. Les 3 sont complémentaires géographiquement mais 3 ambassadeurs Europe c'est beaucoup. <strong>Fedor principal + Gustafsson sous-ambassadeur Europe du Nord.</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Japon/Asie de l'Est</strong></td>
+          <td><strong>Genki Sudo</strong> (1 seul)</td>
+          <td><strong>Sudo + Gomi + Aoki</strong> (3 noms)</td>
+          <td class="r"><div class="al-dot green" style="display:inline-block;width:10px;height:10px;border-radius:50%;"></div></td>
+          <td class="r"><span class="tag amber">Sudo principal</span></td>
+          <td>Bertrand surcharge le Japon (3 ambassadeurs). Sudo reste principal (sénateur, dimension institutionnelle). Gomi en sous-ambassadeur MMA si besoin. Aoki à écarter (encore actif, profil clivant).</td>
+        </tr>
+        <tr>
+          <td><strong>Océanie</strong></td>
+          <td><strong>Mark Hunt</strong></td>
+          <td><strong>Hunt + Volkanovski</strong></td>
+          <td class="r"><div class="al-dot yellow" style="display:inline-block;width:10px;height:10px;border-radius:50%;"></div></td>
+          <td class="r"><span class="tag amber">Hunt maintenant</span></td>
+          <td>Mark Hunt (Yann + Bertrand) = ambassadeur actuel. Volkanovski (Bertrand) = futur ambassadeur post-retraite UFC. <strong>Volkanovski "ambassadeur désigné" en attente de fin de contrat UFC.</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Pan Amérique</strong></td>
+          <td><strong>Randy Couture</strong></td>
+          <td><strong>Jon Jones</strong></td>
+          <td class="r"><div class="al-dot red" style="display:inline-block;width:10px;height:10px;border-radius:50%;"></div></td>
+          <td class="r"><span class="tag red">Refus Jones</span></td>
+          <td>Jon Jones = violations antidopage multiples + condamnations pénales = <strong>incompatible avec rôle officiel MIGC</strong>. Randy Couture (Yann) = intégrité absolue, modèle militaire. Couture confirmé pour Amérique du Nord. Ajouter Ubaldo Maroquin (Mexique) pour Amérique latine.</td>
+        </tr>
+        <tr>
+          <td><strong>Afrique</strong></td>
+          <td><strong>Francis Ngannou</strong></td>
+          <td><strong>Francis Ngannou</strong></td>
+          <td class="r"><div class="al-dot red" style="display:inline-block;width:10px;height:10px;border-radius:50%;"></div></td>
+          <td class="r"><span class="tag green">Consensus</span></td>
+          <td>Consensus Yann + Bertrand. Encore actif PFL = contrainte de disponibilité. Approche via Bertrand (réseau IMMAF Africa) ou via Armando Carlos Diogo (Angola). Ngannou en ambassadeur désigné — contact à confirmer.</td>
+        </tr>
+        <tr>
+          <td><strong>Top Organisations</strong></td>
+          <td>UFC / ONE / PFL / Rizin / BRAVE CF / KSW / UAE Warriors / Ares / Oktagon / ACA</td>
+          <td><strong>+ Cage Warriors</strong></td>
+          <td class="r"><div class="al-dot yellow" style="display:inline-block;width:10px;height:10px;border-radius:50%;"></div></td>
+          <td class="r"><span class="tag green">Valider</span></td>
+          <td>Cage Warriors (UK) = organisation historique de développement, lanceur de carrières (McGregor, Holloway). Pertinent pour représenter l'Europe dans les organisations. <strong>Remplace ou complète ACA (Russie) selon contexte géopolitique.</strong></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SECTION 3 : ÉTUDE DE COHÉRENCE                            -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="section" id="coherence">
+  <div class="section-title">
+    <span>Étude de cohérence globale</span>
+    <span class="badge" style="background:var(--jade3);color:var(--jade2)">Géographie · Légitimité · Risques</span>
+  </div>
+  <div class="section-sub">Analyse de la cohérence de groupe, répartition géographique, équilibres de légitimité et risques identifiés</div>
+
+  <div class="coh-grid">
+
+    <!-- CARTE 1 : RÉPARTITION GÉOGRAPHIQUE -->
+    <div class="coh-card" style="grid-column: span 2;">
+      <div class="coh-title">🌍 Répartition géographique — Liste consolidée</div>
+      <div class="geo-map">
+        <div class="geo-tag"><span class="geo-flag">🇺🇸</span><span class="geo-name">États-Unis</span><span class="geo-count">10</span></div>
+        <div class="geo-tag"><span class="geo-flag">🇧🇷</span><span class="geo-name">Brésil</span><span class="geo-count">4</span></div>
+        <div class="geo-tag"><span class="geo-flag">🇷🇺</span><span class="geo-name">Russie/CIS</span><span class="geo-count">3</span></div>
+        <div class="geo-tag"><span class="geo-flag">🇨🇦</span><span class="geo-name">Canada</span><span class="geo-count">3</span></div>
+        <div class="geo-tag"><span class="geo-flag">🇯🇵</span><span class="geo-name">Japon</span><span class="geo-count">3</span></div>
+        <div class="geo-tag"><span class="geo-flag">🇫🇷</span><span class="geo-name">France</span><span class="geo-count">2</span></div>
+        <div class="geo-tag"><span class="geo-flag">🇮🇪</span><span class="geo-name">Irlande</span><span class="geo-count">1</span></div>
+        <div class="geo-tag"><span class="geo-flag">🇮🇹</span><span class="geo-name">Italie</span><span class="geo-count">1</span></div>
+        <div class="geo-tag"><span class="geo-flag">🇸🇪</span><span class="geo-name">Suède</span><span class="geo-count">1</span></div>
+        <div class="geo-tag"><span class="geo-flag">🇳🇱</span><span class="geo-name">Pays-Bas</span><span class="geo-count">1</span></div>
+        <div class="geo-tag"><span class="geo-flag">🇳🇿</span><span class="geo-name">Nouvelle-Zélande</span><span class="geo-count">1</span></div>
+        <div class="geo-tag"><span class="geo-flag">🇨🇲</span><span class="geo-name">Cameroun</span><span class="geo-count">1</span></div>
+        <div class="geo-tag"><span class="geo-flag">🇰🇬</span><span class="geo-name">Kirghizistan</span><span class="geo-count">1</span></div>
+        <div class="geo-tag"><span class="geo-flag">🇲🇽</span><span class="geo-name">Mexique</span><span class="geo-count">1</span></div>
+        <div class="geo-tag"><span class="geo-flag">🇲🇺</span><span class="geo-name">Île Maurice</span><span class="geo-count">1</span></div>
+        <div class="geo-tag"><span class="geo-flag">🇧🇬</span><span class="geo-name">Bulgarie</span><span class="geo-count">1</span></div>
+      </div>
+      <div class="note-box" style="margin-top:12px">
+        <div class="nb-title">⚠ Déséquilibres géographiques identifiés</div>
+        <strong>Sur-représentation US (10 personnes) :</strong> 26% des noms sont américains. C'est cohérent avec la domination UFC mais peut créer une perception d'"américanisation" d'une organisation internationale censée représenter le MMA mondial.<br><br>
+        <strong>Absences critiques :</strong> <span style="color:var(--red2)">AUCUN profil Moyen-Orient/MENA (marché en explosion : Saudi Pro League MMA, Abu Dhabi, BRAVE CF Bahreïn).</span> Khabib (Russie-Daghestan) peut partiellement compenser via Eagle FC UAE. À compléter par un profil MENA dédié.<br><br>
+        <strong>Asie du Sud-Est sous-représentée :</strong> ONE Championship est la 2e organisation mondiale (Chatri Sityodtong, Singapour) mais zéro représentant athlète Asie du Sud-Est dans les commissions.<br><br>
+        <strong>Amérique Latine :</strong> Bertrand a identifié Ubaldo Maroquin (Mexique) dans les présidents de fédération — <strong>à promouvoir en Commission Développement Amériques</strong> (Mexique = 130M habitants, marché MMA explosif).
+      </div>
+    </div>
+
+    <!-- CARTE 2 : RISQUES RÉPUTATIONNELS -->
+    <div class="coh-card">
+      <div class="coh-title">🚨 Risques réputationnels — Noms à traiter</div>
+      <div class="risk-item high">
+        <div class="risk-title">Jon Jones — REFUS FERME</div>
+        Multiples violations USADA (Turinabol 2016), DUI, violences domestiques, hit-and-run. Ambassadeur Pan Amérique est impossible. Jamais dans une liste officielle MIGC.
+      </div>
+      <div class="risk-item high">
+        <div class="risk-title">Chuck Liddell — À ÉCARTER</div>
+        Arrestation violences domestiques 2018 (dossier public). Commission Partnership = porte d'entrée institutionnelle = incompatible avec ce dossier.
+      </div>
+      <div class="risk-item high">
+        <div class="risk-title">Frank Shamrock — À ÉCARTER</div>
+        Disputes familiales publiques très médiatisées + problèmes juridiques passés. Image clivante qui polluerait le sérieux de la gouvernance MIGC.
+      </div>
+      <div class="risk-item med">
+        <div class="risk-title">Fedor Emelianenko — Contrainte géopolitique</div>
+        Président de la fédération russe de MMA depuis 2020 + liens Kremlin post-invasion Ukraine. Partenaires européens/américains peuvent poser des questions. À gérer avec précaution. Rôle honorifique/éthique (pas exécutif) est plus défendable.
+      </div>
+      <div class="risk-item med">
+        <div class="risk-title">Genki Sudo — Conflit institutionnel</div>
+        Sénateur japonais actif (PLD). Sa participation à une organisation internationale peut requérir autorisation gouvernementale. Commission Financière est totalement inadaptée à son profil.
+      </div>
+      <div class="risk-item med">
+        <div class="risk-title">Combattants actifs sous contrat (Adesanya, Volkanovski, Jones)</div>
+        Contrats d'exclusivité avec UFC/ONE peuvent interdire tout rôle officiel dans une organisation rivale ou potentiellement rivale. Vérification juridique systématique requise.
+      </div>
+      <div class="risk-item low">
+        <div class="risk-title">Nick Lembo — Fonctionnaire public US</div>
+        Directeur d'une commission athlétique publique. Peut nécessiter autorisation de son employeur pour rôle international rémunéré. Prévoir timing de retraite ou accord employeur.
+      </div>
+    </div>
+
+  </div><!-- end coh-grid -->
+
+  <!-- SCORES DE COHÉRENCE -->
+  <div style="margin-top:24px">
+    <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:16px;color:var(--white);margin-bottom:14px">Scoring de cohérence — Liste consolidée Bertrand + Yann</div>
+    <div class="radar-grid">
+      <div class="rscore">
+        <div class="rscore-val" style="color:var(--gold2)">7/10</div>
+        <div class="rscore-lbl">Légitimité MMA</div>
+        <div class="bar5"><div class="b5 on"></div><div class="b5 on"></div><div class="b5 on"></div><div class="b5 on"></div><div class="b5 on"></div><div class="b5 on"></div><div class="b5 on"></div><div class="b5"></div><div class="b5"></div><div class="b5"></div></div>
+      </div>
+      <div class="rscore">
+        <div class="rscore-val" style="color:var(--jade2)">6/10</div>
+        <div class="rscore-lbl">Couverture géo</div>
+        <div class="bar5"><div class="b5 on"></div><div class="b5 on"></div><div class="b5 on"></div><div class="b5 on"></div><div class="b5 on"></div><div class="b5 on"></div><div class="b5"></div><div class="b5"></div><div class="b5"></div><div class="b5"></div></div>
+      </div>
+      <div class="rscore">
+        <div class="rscore-val" style="color:var(--amber2)">5/10</div>
+        <div class="rscore-lbl">Adéquation postes</div>
+        <div class="bar5"><div class="b5 on"></div><div class="b5 on"></div><div class="b5 on"></div><div class="b5 on"></div><div class="b5 on"></div><div class="b5"></div><div class="b5"></div><div class="b5"></div><div class="b5"></div><div class="b5"></div></div>
+      </div>
+      <div class="rscore">
+        <div class="rscore-val" style="color:var(--jade2)">7/10</div>
+        <div class="rscore-lbl">Clarté rôles</div>
+        <div class="bar5"><div class="b5 on"></div><div class="b5 on"></div><div class="b5 on"></div><div class="b5 on"></div><div class="b5 on"></div><div class="b5 on"></div><div class="b5 on"></div><div class="b5"></div><div class="b5"></div><div class="b5"></div></div>
+      </div>
+      <div class="rscore">
+        <div class="rscore-val" style="color:var(--blue2)">9/10</div>
+        <div class="rscore-lbl">Accessibilité réseau</div>
+        <div class="bar5"><div class="b5 on"></div><div class="b5 on"></div><div class="b5 on"></div><div class="b5 on"></div><div class="b5 on"></div><div class="b5 on"></div><div class="b5 on"></div><div class="b5 on"></div><div class="b5 on"></div><div class="b5"></div></div>
+      </div>
+    </div>
+
+    <div class="note-box" style="margin-top:16px">
+      <div class="nb-title">Lecture du scoring</div>
+      <strong>Légitimité MMA (7/10)</strong> — La liste combinée est impressionnante : GSP, Royce Gracie, Fedor, Nogueira, Nunes, Renzo Gracie. Ce sont des noms inattaquables dans le milieu. Le 3/10 manquant vient de l'absence de combattants asiatiques majeurs (un champion japonais/coréen ou un profil ONE Championship serait fort).<br><br>
+      <strong>Adéquation postes (5/10)</strong> — <span style="color:var(--red2)">C'est le point faible de la proposition Bertrand.</span> Il a tendance à mettre des stars là où il faut des techniciens (Bisping en Secrétaire Général, Sudo en Commission Financière) et inverse parfois des profils complémentaires (Zahabi Développement au lieu de Technique). Le travail d'arbitrage est réel et nécessaire.<br><br>
+      <strong>Clarté rôles (7/10)</strong> — La logique de Bertrand est bien structurée : chaque nom avec plusieurs positions représente des <em>options alternatives</em> selon les autres postes pourvus — pas des cumuls. C'est une approche intelligente de négociation RH (option A, B, C par ordre de préférence). Le 3/10 manquant vient du fait que ces options ne sont pas explicitement hiérarchisées dans sa liste — ce document fait ce travail d'arbitrage.<br><br>
+      <strong>Accessibilité réseau (9/10)</strong> — La force absolue de la liste Bertrand. Après correction des couleurs, <strong>18 noms sont verts</strong> (amis proches) dont plusieurs avec étoile (Nogueira, Renzo Gracie, Ngannou, Renzo ★ = déjà partants), et seulement 4 noms rouges (Lembo, Sudo, Gomi, Aoki). C'est une liste d'appels téléphoniques — pas de prospection à froid. C'est la vraie valeur ajoutée de Bertrand.
+    </div>
+  </div>
+
+  <!-- OBSERVATIONS TRANSVERSALES -->
+  <div style="margin-top:24px">
+    <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:16px;color:var(--white);margin-bottom:14px">Observations transversales clés</div>
+    <div class="coh-grid" style="grid-template-columns:1fr 1fr 1fr">
+      <div class="coh-card">
+        <div class="coh-title" style="color:var(--jade2)">✓ Forces de la liste Bertrand</div>
+        <ul style="list-style:none;font-size:12px;color:var(--mist);display:flex;flex-direction:column;gap:8px">
+          <li>→ <strong>Royce Gracie</strong> est un ajout exceptionnel qu'il faut retenir. La famille Gracie = légitimité fondatrice du MMA.</li>
+          <li>→ <strong>Francis Ngannou ★ vert</strong> : déjà partant pour l'Ambassadeur Afrique. Contact direct Bertrand. C'était une des erreurs d'analyse les plus impactantes — son engagement est acquis.<br>
+          <li>→ <strong>Cyril Gane</strong> comme Représentant Athlètes : contact vert, encore actif, parfait pour représenter la génération actuelle.</li>
+          <li>→ <strong>Valentina Shevchenko</strong> = comble un vide : femme championne + Asie Centrale + profil discipliné.</li>
+          <li>→ <strong>John Kavanagh</strong> pour le Développement = accès au réseau McGregor (une porte en or).</li>
+          <li>→ <strong>Trevor Wittman + Raphaël Cordeiro</strong> en Technique = coaches de champions sans controverse.</li>
+          <li>→ <strong>Les présidents de fédération</strong> (Maroquin, Diogo, etc.) = vision long terme pour l'expansion MIGC dans les marchés émergents.</li>
+          <li>→ <strong>Cage Warriors</strong> = ajout logique, premier tremplin européen.</li>
+        </ul>
+      </div>
+      <div class="coh-card">
+        <div class="coh-title" style="color:var(--amber2)">⚠ Points de vigilance</div>
+        <ul style="list-style:none;font-size:12px;color:var(--mist);display:flex;flex-direction:column;gap:8px">
+          <li>→ <strong>Options alternatives à cascader</strong> : GSP, Fedor, Ngannou, Cormier, Sudo ont chacun 2-3 options possibles. Pour chacun, Bertrand a établi les alternatives — il faut maintenant confirmer les disponibilités et appliquer la cascade dans l'ordre préférentiel.</li>
+          <li>→ <strong>Combattants actifs sous contrat</strong> : D.Cormier (ESPN), Adesanya (UFC), Volkanovski (UFC). Tous nécessitent validation juridique avant toute annonce.</li>
+          <li>→ <strong>Surcharge Japon</strong> : 3 ambassadeurs pour un seul pays alors que le MENA et l'Asie du Sud-Est ont zéro représentant dans les commissions.</li>
+          <li>→ <strong>Profils "stars media" vs rôles institutionnels</strong> : Bisping, Sudo, et Liddell sont proposés pour des rôles qui nécessitent discrétion et technicité (Secrétaire Général, Commission Financière).</li>
+          <li>→ <strong>Contexte géopolitique Russie</strong> : Fedor et ACA (Russie) dans un contexte post-2022. Préparer une position institutionnelle sur ce sujet.</li>
+        </ul>
+      </div>
+      <div class="coh-card">
+        <div class="coh-title" style="color:var(--red2)">✗ À corriger impérativement</div>
+        <ul style="list-style:none;font-size:12px;color:var(--mist);display:flex;flex-direction:column;gap:8px">
+          <li>→ <strong>Jon Jones : refus absolu</strong>. DUI + violation USADA + violences = incompatible avec une organisation visant légitimité institutionnelle. À aucun endroit de la liste officielle.</li>
+          <li>→ <strong>Chuck Liddell : écarter</strong>. Arrestation 2018 = dossier public. Commission Partnership est le pire endroit pour ce profil (face aux partenaires).</li>
+          <li>→ <strong>Frank Shamrock : écarter</strong>. Controverses répétées = risque réputationnel non maîtrisable.</li>
+          <li>→ <strong>Genki Sudo en Commission Financière : inadapté</strong>. Parmi ses options alternatives, Ambassadeur Japon est la seule cohérente. Ce positionnement financier serait contre-productif face à Delubac et Lombard Odier.</li>
+          <li>→ <strong>Trois présidents d'honneur</strong> : dévalue le titre. Trancher sur 1 seul (GSP recommandé) + créer une catégorie "Membres Fondateurs d'Honneur" pour les autres.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SECTION 4 : TABLEAU DE RECOMMANDATIONS FINALES            -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="section" id="decisions">
+  <div class="section-title">
+    <span>Recommandations finales — Aide à la décision</span>
+    <span class="badge" style="background:var(--gold3);color:var(--gold2)">Structure proposée</span>
+  </div>
+  <div class="section-sub">Version consolidée Yann + Bertrand après arbitrage · 1 personne = 1 rôle · Risques réputationnels écartés</div>
+
+  <div class="dec-grid">
+    <div class="dec-card">
+      <div class="dec-post">Comité Directeur — Postes confirmés</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-top:6px">
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:6px 10px;background:rgba(42,181,132,.05);border-radius:6px;border:1px solid rgba(42,181,132,.12)">
+          <span><strong>Président</strong></span><span style="color:var(--jade2)">Bertrand Amoussou</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:6px 10px;background:rgba(42,181,132,.05);border-radius:6px;border:1px solid rgba(42,181,132,.12)">
+          <span><strong>Président d'honneur</strong></span><span style="color:var(--jade2)">Georges St-Pierre (GSP) ★</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:6px 10px;background:rgba(42,181,132,.05);border-radius:6px;border:1px solid rgba(42,181,132,.12)">
+          <span><strong>Vice-Président</strong></span><span style="color:var(--jade2)">Antonio Rodrigo Nogueira ★ confirmé</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:6px 10px;background:rgba(196,149,42,.05);border-radius:6px;border:1px solid rgba(196,149,42,.12)">
+          <span><strong>Secrétaire Général</strong></span><span style="color:var(--gold2)">Nick Lembo (prioritaire)</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:6px 10px;background:rgba(196,149,42,.05);border-radius:6px;border:1px solid rgba(196,149,42,.12)">
+          <span><strong>Trésorier</strong></span><span style="color:var(--gold2)">Luigi Perillo (à valider)</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:6px 10px;background:rgba(196,149,42,.05);border-radius:6px;border:1px solid rgba(196,149,42,.12)">
+          <span><strong>Membre Technique</strong></span><span style="color:var(--gold2)">Zahabi + Wittman + Cordeiro</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:6px 10px;background:rgba(196,149,42,.05);border-radius:6px;border:1px solid rgba(196,149,42,.12)">
+          <span><strong>Membre Développement</strong></span><span style="color:var(--gold2)">John Kavanagh (prioritaire)</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:6px 10px;background:rgba(42,181,132,.05);border-radius:6px;border:1px solid rgba(42,181,132,.12)">
+          <span><strong>Représentant Athlètes</strong></span><span style="color:var(--jade2)">Cyril Gane (contact vert)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="dec-card">
+      <div class="dec-post">Commissions — Arbitrages clés</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-top:6px">
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:6px 10px;background:rgba(42,181,132,.05);border-radius:6px;border:1px solid rgba(42,181,132,.12)">
+          <span><strong>Grading (Pdt)</strong></span><span style="color:var(--jade2)">Renzo Gracie — consensus ✓</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:6px 10px;background:rgba(42,181,132,.05);border-radius:6px;border:1px solid rgba(42,181,132,.12)">
+          <span><strong>Protection Sociale (Pdt)</strong></span><span style="color:var(--jade2)">Amanda Nunes — consensus ✓</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:6px 10px;background:rgba(196,149,42,.05);border-radius:6px;border:1px solid rgba(196,149,42,.12)">
+          <span><strong>Ranking (Pdt)</strong></span><span style="color:var(--gold2)">Cormier (+ Ratner VP)</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:6px 10px;background:rgba(196,149,42,.05);border-radius:6px;border:1px solid rgba(196,149,42,.12)">
+          <span><strong>Éthique (Pdt)</strong></span><span style="color:var(--gold2)">Fedor (si géopolitique OK)</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:6px 10px;background:rgba(196,149,42,.05);border-radius:6px;border:1px solid rgba(196,149,42,.12)">
+          <span><strong>Technique — membre</strong></span><span style="color:var(--gold2)">Big John McCarthy</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:6px 10px;background:rgba(192,57,43,.05);border-radius:6px;border:1px solid rgba(192,57,43,.12)">
+          <span><strong>Grading — membre</strong></span><span style="color:var(--red2)">Khabib → remplacer (Eagle FC conflit)</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:6px 10px;background:rgba(192,57,43,.05);border-radius:6px;border:1px solid rgba(192,57,43,.12)">
+          <span><strong>Commission Financière</strong></span><span style="color:var(--red2)">Sudo → REFUS · À recruter</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:6px 10px;background:rgba(192,57,43,.05);border-radius:6px;border:1px solid rgba(192,57,43,.12)">
+          <span><strong>Partnership</strong></span><span style="color:var(--red2)">Liddell → REFUS · Kavanagh ou Martin</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="dec-card">
+      <div class="dec-post">Ambassadeurs — Version consolidée</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-top:6px">
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:6px 10px;background:rgba(196,149,42,.05);border-radius:6px;border:1px solid rgba(196,149,42,.12)">
+          <span><strong>🇧🇷 Brésil / Amériques</strong></span><span style="color:var(--gold2)">Nogueira ★ (VP + Ambassadeur)</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:6px 10px;background:rgba(196,149,42,.05);border-radius:6px;border:1px solid rgba(196,149,42,.12)">
+          <span><strong>🇺🇸 Amérique du Nord</strong></span><span style="color:var(--gold2)">Randy Couture</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:6px 10px;background:rgba(42,181,132,.05);border-radius:6px;border:1px solid rgba(42,181,132,.12)">
+          <span><strong>🇲🇽 Amériques Latines</strong></span><span style="color:var(--jade2)">Ubaldo Maroquin (Mexique) ★ nouveau</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:6px 10px;background:rgba(196,149,42,.05);border-radius:6px;border:1px solid rgba(196,149,42,.12)">
+          <span><strong>🇷🇺 Europe/Russie</strong></span><span style="color:var(--gold2)">Fedor Emelianenko (si géopolitique OK)</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:6px 10px;background:rgba(42,181,132,.05);border-radius:6px;border:1px solid rgba(42,181,132,.12)">
+          <span><strong>🇬🇧 Europe / UK</strong></span><span style="color:var(--jade2)">Michael Bisping ★ nouveau (media)</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:6px 10px;background:rgba(196,149,42,.05);border-radius:6px;border:1px solid rgba(196,149,42,.12)">
+          <span><strong>🇸🇪 Europe du Nord</strong></span><span style="color:var(--gold2)">Alexander Gustafsson</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:6px 10px;background:rgba(196,149,42,.05);border-radius:6px;border:1px solid rgba(196,149,42,.12)">
+          <span><strong>🇯🇵 Japon</strong></span><span style="color:var(--gold2)">Genki Sudo (principal)</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:6px 10px;background:rgba(196,149,42,.05);border-radius:6px;border:1px solid rgba(196,149,42,.12)">
+          <span><strong>🇳🇿 Océanie</strong></span><span style="color:var(--gold2)">Mark Hunt + Volkanovski (futur)</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:6px 10px;background:rgba(196,149,42,.05);border-radius:6px;border:1px solid rgba(196,149,42,.12)">
+          <span><strong>🇨🇲 Afrique</strong></span><span style="color:var(--gold2)">Francis Ngannou (à confirmer)</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:6px 10px;background:rgba(192,57,43,.05);border-radius:6px;border:1px solid rgba(192,57,43,.12)">
+          <span><strong>❌ Pan Amérique</strong></span><span style="color:var(--red2)">Jon Jones → REFUS ABSOLU</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="dec-card">
+      <div class="dec-post">Membres Fondateurs d'Honneur — Nouvelle catégorie proposée</div>
+      <div class="dec-why" style="margin-bottom:10px">Pour résoudre le problème des 3 présidents d'honneur et valoriser les grands noms sans diluer le titre, créer une catégorie "Membres Fondateurs d'Honneur" :</div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div style="font-size:12px;padding:6px 10px;background:rgba(196,149,42,.05);border-radius:6px;border:1px solid rgba(196,149,42,.12)">
+          <strong style="color:var(--gold2)">GSP</strong> → Président d'honneur officiel (1 seul)
+        </div>
+        <div style="font-size:12px;padding:6px 10px;background:rgba(255,255,255,.03);border-radius:6px;border:1px solid rgba(255,255,255,.07)">
+          <strong>Royce Gracie</strong> → Membre Fondateur d'Honneur
+        </div>
+        <div style="font-size:12px;padding:6px 10px;background:rgba(255,255,255,.03);border-radius:6px;border:1px solid rgba(255,255,255,.07)">
+          <strong>Fedor Emelianenko</strong> → Membre Fondateur d'Honneur + Commission Éthique
+        </div>
+        <div style="font-size:12px;padding:6px 10px;background:rgba(255,255,255,.03);border-radius:6px;border:1px solid rgba(255,255,255,.07)">
+          <strong>Antonio Rodrigo Nogueira ★</strong> → Vice-Président (rôle actif)
+        </div>
+      </div>
+      <div class="note-box" style="margin-top:10px">
+        <strong>Logique :</strong> GSP = face internationale du MIGC. Royce Gracie = légitimité historique et symbolique. Fedor = autorité morale. Nogueira = combattant engagé et disponible. Chacun dans son registre naturel.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- NOTE FINALE -->
+  <div class="note-box" style="margin-top:24px;border-color:rgba(196,149,42,.3)">
+    <div class="nb-title">📌 Synthèse pour ta décision</div>
+    <strong>Ce que Bertrand a apporté de précieux :</strong> Royce Gracie ★ (vert, déjà partant), Renzo Gracie ★ (vert, déjà partant), Cyril Gane (vert), Ngannou ★ (vert, déjà partant), John Kavanagh (vert), Raphaël Cordeiro (vert), Luigi Perillo ★ (vert), Gustafsson, Wittman, Cage Warriors ★, les présidents de fédération (Maroquin, Diogo ★, Nedkov ★, etc.). La densité de contacts verts est remarquable : <strong>18 noms accessibles immédiatement.</strong> Ces ajouts élèvent réellement la liste.<br><br>
+    <strong>Ce qu'il faut arbitrer :</strong> Pour chaque nom avec plusieurs options (GSP, Fedor, Ngannou, Sudo, Cormier…), Bertrand a fourni un ordre d'options selon disponibilité. Ce document hiérarchise ces options. <strong>La priorité n'est pas d'arbitrer mais de confirmer les disponibilités pour appliquer la cascade.</strong><br><br>
+    <strong>Ce qu'il faut refuser : Jon Jones (absolu), Chuck Liddell, Frank Shamrock. Et parmi les options proposées par Bertrand, orienter Sudo vers Ambassadeur Japon (pas Commission Financière), Bisping vers Ambassadeur UK (pas Secrétaire Général), Khabib vers Ambassadeur MENA (pas Commission Grading, conflit Eagle FC).<br><br>
+    <strong>Ce qui manque encore dans les deux listes :</strong> Un profil MENA fort (Abu Dhabi / Arabie Saoudite / Bahreïn), un représentant ONE Championship Asie du Sud-Est, et un actuaire ou ex-Big 4 crédible pour la Commission Financière. Ce sont les 3 vrais angles morts de la liste consolidée.
+  </div>
+</div>
+
+</div><!-- end page -->
+</body>
+</html>

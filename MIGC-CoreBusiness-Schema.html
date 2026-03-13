@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MIGC / Sport7 — Core Business</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink:    #0C0C0C;
+  --gold:   #C09236;
+  --gold2:  #D4A84B;
+  --cream:  #FDFAF5;
+  --cream2: #F3EDE2;
+  --navy:   #1B2A4A;
+  --green:  #1E5C2A;
+  --rule:   rgba(192,146,54,0.2);
+  --ruleW:  rgba(12,12,12,0.08);
+}
+
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(20px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity:0; }
+  to   { opacity:1; }
+}
+@keyframes drawLine {
+  from { stroke-dashoffset: 300; }
+  to   { stroke-dashoffset: 0; }
+}
+
+body {
+  background: #1a1a1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 32px 20px;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.canvas {
+  width: 960px;
+  background: var(--cream);
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 40px 120px rgba(0,0,0,0.5);
+  animation: fadeIn .5s ease both;
+}
+
+/* TOP BAR */
+.topbar {
+  background: var(--navy);
+  padding: 20px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+.topbar::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--gold), var(--gold2), var(--gold));
+}
+.topbar-wm {
+  position: absolute;
+  right: -20px; top: 50%;
+  transform: translateY(-50%);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 100px;
+  color: rgba(255,255,255,0.03);
+  pointer-events: none;
+  letter-spacing: .05em;
+}
+.tb-left { }
+.tb-eyebrow {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 10px;
+  letter-spacing: .25em;
+  color: var(--gold2);
+  margin-bottom: 4px;
+}
+.tb-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1;
+}
+.tb-title em { color: var(--gold2); font-style: italic; }
+.tb-sub {
+  font-size: 11px;
+  color: rgba(255,255,255,.4);
+  margin-top: 5px;
+  letter-spacing: .04em;
+}
+.tb-badge {
+  width: 64px; height: 64px;
+  border: 1.5px solid rgba(192,146,54,.35);
+  border-radius: 50%;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.tb-badge-m {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px; font-weight: 700;
+  color: var(--gold2); line-height: 1;
+}
+.tb-badge-s {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 8px; letter-spacing: .12em;
+  color: rgba(255,255,255,.4);
+}
+
+/* BODY */
+.body { padding: 32px 40px 28px; }
+
+/* ── ENTITIES ROW ── */
+.entities-label {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 9.5px;
+  letter-spacing: .22em;
+  color: var(--gold);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.entities-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+}
+
+.entities-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 28px;
+  animation: fadeUp .5s ease .1s both;
+}
+
+.entity {
+  border-radius: 5px;
+  overflow: hidden;
+  border: 1px solid var(--ruleW);
+}
+.entity-head {
+  padding: 9px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.entity-abbr {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 15px;
+  letter-spacing: .05em;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.entity-name {
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.entity-body {
+  padding: 9px 14px 10px;
+  background: #fff;
+}
+.entity-form {
+  font-size: 8.5px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  margin-bottom: 4px;
+}
+.entity-role {
+  font-size: 9px;
+  color: #666;
+  line-height: 1.45;
+}
+.entity-link {
+  font-size: 8px;
+  color: #999;
+  margin-top: 5px;
+  padding-top: 5px;
+  border-top: 1px solid var(--ruleW);
+  line-height: 1.4;
+}
+.entity-link::before {
+  content: '→ ';
+  color: var(--gold);
+}
+
+/* entity colors */
+.e-migc .entity-head { background: var(--navy); }
+.e-migc .entity-abbr { color: #fff; }
+.e-migc .entity-name { color: rgba(255,255,255,.85); }
+.e-migc .entity-form { color: var(--gold); }
+
+.e-s7 .entity-head { background: var(--gold); }
+.e-s7 .entity-abbr { color: var(--ink); }
+.e-s7 .entity-name { color: rgba(12,12,12,.8); }
+.e-s7 .entity-form { color: #8B6820; }
+
+.e-fp .entity-head { background: var(--green); }
+.e-fp .entity-abbr { color: #fff; }
+.e-fp .entity-name { color: rgba(255,255,255,.85); }
+.e-fp .entity-form { color: #4CAF70; }
+
+/* DIVIDER WITH CONNECTOR */
+.connector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 0 24px;
+  position: relative;
+  animation: fadeUp .5s ease .15s both;
+}
+.connector-line {
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+}
+.connector-label {
+  margin: 0 16px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 9px;
+  letter-spacing: .22em;
+  color: var(--gold);
+  padding: 4px 12px;
+  border: 1px solid var(--rule);
+  border-radius: 20px;
+  background: var(--cream2);
+  white-space: nowrap;
+}
+
+/* ── PILLARS ── */
+.pillars-label {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 9.5px;
+  letter-spacing: .22em;
+  color: var(--gold);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.pillars-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+}
+
+.pillars-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 7px;
+  animation: fadeUp .5s ease .2s both;
+}
+
+.pillar {
+  border: 1px solid var(--ruleW);
+  border-radius: 5px;
+  overflow: hidden;
+  background: #fff;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.pillar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+
+.pillar-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 11px;
+  letter-spacing: .1em;
+  padding: 8px 11px 0;
+  opacity: .35;
+}
+
+.pillar-icon {
+  font-size: 22px;
+  padding: 4px 11px 6px;
+  line-height: 1;
+}
+
+.pillar-title {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--ink);
+  padding: 0 11px 4px;
+  line-height: 1.3;
+}
+
+.pillar-desc {
+  font-size: 8.5px;
+  color: #777;
+  line-height: 1.4;
+  padding: 0 11px 10px;
+}
+
+.pillar-tag {
+  margin: 0 11px 10px;
+  display: inline-block;
+  font-size: 7.5px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  padding: 2px 7px;
+  border-radius: 10px;
+  text-transform: uppercase;
+}
+
+/* pillar accent colors */
+.p1 .pillar-num  { color: #4A90D9; }
+.p1 .pillar-tag  { background: rgba(74,144,217,.1); color: #4A90D9; }
+.p1 { border-top: 3px solid #4A90D9; }
+
+.p2 .pillar-num  { color: #9B59B6; }
+.p2 .pillar-tag  { background: rgba(155,89,182,.1); color: #9B59B6; }
+.p2 { border-top: 3px solid #9B59B6; }
+
+.p3 .pillar-num  { color: #E67E22; }
+.p3 .pillar-tag  { background: rgba(230,126,34,.1); color: #E67E22; }
+.p3 { border-top: 3px solid #E67E22; }
+
+.p4 .pillar-num  { color: var(--gold); }
+.p4 .pillar-tag  { background: rgba(192,146,54,.12); color: var(--gold); }
+.p4 { border-top: 3px solid var(--gold); }
+
+.p5 .pillar-num  { color: var(--green); }
+.p5 .pillar-tag  { background: rgba(30,92,42,.1); color: var(--green); }
+.p5 { border-top: 3px solid var(--green); }
+
+/* FOOTER */
+.footer {
+  background: var(--navy);
+  padding: 12px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+.footer::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--gold), var(--gold2), var(--gold));
+}
+.footer-quote {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 11px;
+  color: rgba(255,255,255,.45);
+}
+.footer-quote strong { color: var(--gold2); font-style: normal; }
+.footer-meta {
+  font-size: 8.5px;
+  color: rgba(255,255,255,.25);
+  text-align: right;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  line-height: 1.8;
+}
+.footer-meta strong { color: var(--gold); }
+
+/* ── GROWTH ACTIVITIES ── */
+.growth-wrap {
+  background: var(--cream2);
+  padding: 20px 40px 24px;
+  border-top: 1px solid var(--ruleW);
+  position: relative;
+}
+.growth-wrap::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 40px; right: 40px; height: 1px;
+  background: var(--rule);
+}
+.growth-label {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 9.5px;
+  letter-spacing: .22em;
+  color: #888;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.growth-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(0,0,0,0.08);
+}
+.growth-label .gl-badge {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: rgba(0,0,0,0.06);
+  color: #777;
+  text-transform: uppercase;
+}
+.growth-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 7px;
+  animation: fadeUp .5s ease .28s both;
+}
+.gcard {
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.07);
+  border-radius: 5px;
+  padding: 10px 11px 9px;
+  position: relative;
+  overflow: hidden;
+}
+.gcard::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 2px;
+  background: var(--stripe);
+  opacity: .5;
+}
+.gcard-icon { font-size: 18px; line-height: 1; margin-bottom: 6px; }
+.gcard-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 9px;
+  letter-spacing: .12em;
+  color: #bbb;
+  margin-bottom: 3px;
+}
+.gcard-title {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.3;
+  margin-bottom: 4px;
+}
+.gcard-desc {
+  font-size: 8.5px;
+  color: #888;
+  line-height: 1.4;
+  margin-bottom: 6px;
+}
+.gcard-pilier {
+  font-size: 7.5px;
+  font-weight: 600;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: #aaa;
+  border-top: 1px solid rgba(0,0,0,0.06);
+  padding-top: 5px;
+}
+.gcard-pilier span {
+  color: var(--pc);
+}
+.connector-down {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 40px;
+  margin: 0;
+  height: 20px;
+  background: var(--cream2);
+}
+.connector-down svg {
+  width: 960px;
+  height: 20px;
+  overflow: visible;
+}
+</style>
+</head>
+<body>
+<div class="canvas">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="topbar-wm">MIGC</div>
+    <div class="tb-left">
+      <div class="tb-eyebrow">Core Business — Architecture Stratégique</div>
+      <h1 class="tb-title">MIGC <em>&</em> Sport7 Labs</h1>
+      <p class="tb-sub">Association suisse · Canton de Genève · Opéré par Sport7 Labs SARL</p>
+    </div>
+    <div class="tb-badge">
+      <div class="tb-badge-m">M</div>
+      <div class="tb-badge-s">MIGC</div>
+    </div>
+  </div>
+
+  <div class="body">
+
+    <!-- ENTITIES -->
+    <div class="entities-label">3 entités juridiques distinctes</div>
+    <div class="entities-row">
+
+      <div class="entity e-migc">
+        <div class="entity-head">
+          <div class="entity-abbr">MIGC</div>
+          <div class="entity-name">Mixed Martial Arts International<br>Grading Council</div>
+        </div>
+        <div class="entity-body">
+          <div class="entity-form">Association · Art. 60–79 CC · Genève</div>
+          <div class="entity-role">Autorité normative mondiale. Propriétaire des standards, des grades et de la PI normative. Gouvernance indépendante.</div>
+          <div class="entity-link">Mandat fondateur exclusif 20 ans · Sport7 siège permanent membre fondateur</div>
+        </div>
+      </div>
+
+      <div class="entity e-s7">
+        <div class="entity-head">
+          <div class="entity-abbr">S7</div>
+          <div class="entity-name">Sport7 Labs SARL</div>
+        </div>
+        <div class="entity-body">
+          <div class="entity-form">SARL commerciale · RC Genève · Droit suisse</div>
+          <div class="entity-role">Opérateur tech mandaté. Plateforme, IA, blockchain, NFC. Équipe pluridisciplinaire dédiée à l'écosystème MIGC.</div>
+          <div class="entity-link">Mandat fondateur 20 ans · Siège permanent membre fondateur MIGC · PI normative reste au MIGC</div>
+        </div>
+      </div>
+
+      <div class="entity e-fp">
+        <div class="entity-head">
+          <div class="entity-abbr">FP</div>
+          <div class="entity-name">Fondation de<br>Prévoyance MIGC</div>
+        </div>
+        <div class="entity-body">
+          <div class="entity-form">Fondation · Art. 80+ CC / LPP · Droit fédéral</div>
+          <div class="entity-role">Fonds retraite combattants. Entité autonome supervisée OFAS. Fonds 100% ségrégués.</div>
+          <div class="entity-link">Flux jamais via Sport7 — Conseil : Oswald, Odier, Pailhol</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- CONNECTOR -->
+    <div class="connector">
+      <div class="connector-line"></div>
+      <div class="connector-label">5 piliers du Core Business — opérés par Sport7 Labs pour le MIGC</div>
+      <div class="connector-line"></div>
+    </div>
+
+    <!-- PILLARS -->
+    <div class="pillars-label">5 piliers</div>
+    <div class="pillars-row">
+
+      <div class="pillar p1">
+        <div class="pillar-num">01</div>
+        <div class="pillar-icon">🥋</div>
+        <div class="pillar-title">Grades<br>Universels</div>
+        <div class="pillar-desc">Blanc → 10ᵉ Dan. 230 techniques. Diplômes blockchain. Bracelets NFC.</div>
+        <div class="pillar-tag">6€ – 350€</div>
+      </div>
+
+      <div class="pillar p2">
+        <div class="pillar-num">02</div>
+        <div class="pillar-icon">🪪</div>
+        <div class="pillar-title">Digital Sport<br>Passport (DSP)</div>
+        <div class="pillar-desc">Identité NFC blockchain. Grades, palmarès, médical, contrats. Sans DSP = sans accès services.</div>
+        <div class="pillar-tag">Passeport numérique</div>
+      </div>
+
+      <div class="pillar p3">
+        <div class="pillar-num">03</div>
+        <div class="pillar-icon">📊</div>
+        <div class="pillar-title">Ranking<br>Transversal</div>
+        <div class="pillar-desc">Amateurs → pros. Par poids & sexe. Neutre, algorithmique, audité. Scouting IA.</div>
+        <div class="pillar-tag">Neutre & mondial</div>
+      </div>
+
+      <div class="pillar p4">
+        <div class="pillar-num">04</div>
+        <div class="pillar-icon">💰</div>
+        <div class="pillar-title">Pockets PRO<br>(financement)</div>
+        <div class="pillar-desc">Fonds de Créances Sportives. Bourses & bonus avant l'événement. Rendement 9–13%.</div>
+        <div class="pillar-tag">Membres MIGC only</div>
+      </div>
+
+      <div class="pillar p5">
+        <div class="pillar-num">05</div>
+        <div class="pillar-icon">🏦</div>
+        <div class="pillar-title">Fonds<br>de Retraite</div>
+        <div class="pillar-desc">95% cotisations orgas pro. Core-Satellite SMA. Cible 500M$ à 10 ans.</div>
+        <div class="pillar-tag">25M€/an en An 5</div>
+      </div>
+
+    </div>
+
+    <!-- CONNECTOR DOWN -->
+    <div style="display:flex;align-items:center;padding:0 0;margin:0 0 0;height:18px;background:var(--cream2);border-top:1px solid var(--ruleW);">
+      <svg width="100%" height="18" viewBox="0 0 880 18" preserveAspectRatio="none" style="display:block">
+        <!-- 5 arrows pointing down, one per pillar -->
+        <line x1="88"  y1="0" x2="88"  y2="12" stroke="rgba(192,146,54,0.2)" stroke-width="1" stroke-dasharray="3,2"/>
+        <line x1="264" y1="0" x2="264" y2="12" stroke="rgba(192,146,54,0.2)" stroke-width="1" stroke-dasharray="3,2"/>
+        <line x1="440" y1="0" x2="440" y2="12" stroke="rgba(192,146,54,0.2)" stroke-width="1" stroke-dasharray="3,2"/>
+        <line x1="616" y1="0" x2="616" y2="12" stroke="rgba(192,146,54,0.2)" stroke-width="1" stroke-dasharray="3,2"/>
+        <line x1="792" y1="0" x2="792" y2="12" stroke="rgba(192,146,54,0.2)" stroke-width="1" stroke-dasharray="3,2"/>
+        <line x1="40" y1="12" x2="840" y2="12" stroke="rgba(192,146,54,0.15)" stroke-width="1"/>
+      </svg>
+    </div>
+
+  </div><!-- end .body -->
+
+  <!-- GROWTH ACTIVITIES -->
+  <div class="growth-wrap">
+    <div class="growth-label">
+      Activités à déploiement progressif — extensions stratégiques de l'écosystème
+      <span class="gl-badge">Phase 2+</span>
+    </div>
+    <div class="growth-row">
+
+      <!-- A1 : Insurance Suite — rattaché DSP + retraite -->
+      <div class="gcard" style="--stripe:#4A90D9;--pc:#4A90D9">
+        <div class="gcard-icon">🛡️</div>
+        <div class="gcard-num">A1</div>
+        <div class="gcard-title">MIGC Insurance<br>Suite</div>
+        <div class="gcard-desc">Polices MMA dédiées : prévoyance, CTE, civil liability. Négociées en groupe par le MIGC. Souscription via DSP.</div>
+        <div class="gcard-pilier">Issu de → <span>DSP · Fonds Retraite</span></div>
+      </div>
+
+      <!-- A2 : Pockets AMATEUR — extension Pockets PRO -->
+      <div class="gcard" style="--stripe:var(--gold);--pc:#C09236">
+        <div class="gcard-icon">🎯</div>
+        <div class="gcard-num">A2</div>
+        <div class="gcard-title">Pockets<br>AMATEUR</div>
+        <div class="gcard-desc">Plateforme de dons de fans pour soutenir financièrement les combattants amateurs dans leur transition vers le statut professionnel.</div>
+        <div class="gcard-pilier">Issu de → <span>Pockets PRO · Grades</span></div>
+      </div>
+
+      <!-- A3 : Events Hub — ranking + orgas -->
+      <div class="gcard" style="--stripe:#E67E22;--pc:#E67E22">
+        <div class="gcard-icon">🏟️</div>
+        <div class="gcard-num">A3</div>
+        <div class="gcard-title">MIGC Events<br>Hub</div>
+        <div class="gcard-desc">Plateforme centralisée d'organisation d'événements MMA + billetterie intégrée. Certification et labellisation des compétitions.</div>
+        <div class="gcard-pilier">Issu de → <span>Ranking · DSP</span></div>
+      </div>
+
+      <!-- A4 : Merch & Licensing — grades + marque -->
+      <div class="gcard" style="--stripe:#9B59B6;--pc:#9B59B6">
+        <div class="gcard-icon">👕</div>
+        <div class="gcard-num">A4</div>
+        <div class="gcard-title">MIGC Merch<br>&amp; Licensing</div>
+        <div class="gcard-desc">Produits dérivés officiels et licensing de la marque MIGC auprès des partenaires équipementiers et médias.</div>
+        <div class="gcard-pilier">Issu de → <span>Grades · Marque MIGC</span></div>
+      </div>
+
+      <!-- A5 : Data Intelligence — modèle ATP -->
+      <div class="gcard" style="--stripe:var(--green);--pc:#1E5C2A">
+        <div class="gcard-icon">📡</div>
+        <div class="gcard-num">A5</div>
+        <div class="gcard-title">MIGC Data<br>Intelligence</div>
+        <div class="gcard-desc">Monétisation de la data MMA mondiale (modèle ATP). Analytics, scouting avancé, API data pour médias et investisseurs.</div>
+        <div class="gcard-pilier">Issu de → <span>Ranking · DSP · IA</span></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-quote">Le MMA ne rattrape pas — il dépasse d'une génération. <strong>Mars 2026</strong></div>
+    <div class="footer-meta">
+      <strong>sport7labs.com</strong>
+      <br>Confidentiel · v5 · Genève
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

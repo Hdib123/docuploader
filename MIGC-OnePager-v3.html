@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MIGC — One Pager v3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --ink:   #0C0C0C;
+  --ink2:  #2A2A2A;
+  --ink3:  #5A5A5A;
+  --ink4:  #9A9A9A;
+  --gold:  #C09236;
+  --gold2: #D4A84B;
+  --gold3: #F0D080;
+  --cream: #FDFAF5;
+  --cream2:#F5EFE4;
+  --white: #FFFFFF;
+  --rule:  rgba(192,146,54,0.22);
+  --ruleW: rgba(12,12,12,0.07);
+}
+@keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+@keyframes barIn  { from{width:0} to{width:var(--w)} }
+
+html,body { background:var(--cream); color:var(--ink); font-family:'DM Sans',sans-serif; font-size:11px; line-height:1.5; }
+
+/* SHELL */
+.shell { max-width:1180px; margin:0 auto; background:var(--cream); box-shadow:0 0 80px rgba(0,0,0,0.11),0 0 1px rgba(0,0,0,0.05); overflow:hidden; position:relative; animation:fadeIn .5s ease both; }
+.spine { position:absolute; left:0; top:0; bottom:0; width:5px; background:linear-gradient(180deg,var(--gold) 0%,var(--gold2) 50%,var(--gold) 100%); z-index:10; }
+.wm { position:absolute; right:-80px; top:50%; transform:translateY(-50%) rotate(-90deg); font-family:'Bebas Neue',sans-serif; font-size:240px; color:rgba(192,146,54,0.035); white-space:nowrap; pointer-events:none; user-select:none; z-index:0; }
+
+/* HEADER */
+.hdr { padding:32px 48px 24px 52px; display:grid; grid-template-columns:1fr auto; align-items:end; gap:40px; border-bottom:1px solid var(--ruleW); position:relative; z-index:1; animation:fadeUp .6s ease .05s both; }
+.eyebrow { font-family:'Bebas Neue',sans-serif; font-size:10.5px; letter-spacing:.22em; color:var(--gold); margin-bottom:10px; display:flex; align-items:center; gap:10px; }
+.eyebrow::before { content:''; display:inline-block; width:28px; height:1px; background:var(--gold); }
+.htitle { font-family:'Playfair Display',serif; font-size:50px; font-weight:900; line-height:.93; letter-spacing:-.01em; }
+.htitle em { font-style:italic; color:var(--gold); }
+.hsub { margin-top:11px; font-size:12.5px; font-weight:300; color:var(--ink3); line-height:1.55; max-width:500px; }
+.seal { display:inline-flex; flex-direction:column; align-items:center; justify-content:center; width:88px; height:88px; border:1.5px solid var(--rule); border-radius:50%; position:relative; }
+.seal::before { content:''; position:absolute; inset:5px; border:.5px solid rgba(192,146,54,0.14); border-radius:50%; }
+.seal-m { font-family:'Playfair Display',serif; font-size:28px; font-weight:700; color:var(--gold); line-height:1; }
+.seal-sub { font-family:'Bebas Neue',sans-serif; font-size:8px; letter-spacing:.14em; color:var(--ink4); margin-top:2px; }
+.hmeta { margin-top:9px; text-align:right; font-size:9px; color:var(--ink4); letter-spacing:.05em; text-transform:uppercase; line-height:1.8; }
+
+/* STAT STRIP */
+.stats { background:var(--ink); display:grid; grid-template-columns:repeat(6,1fr); position:relative; z-index:1; animation:fadeIn .6s ease .1s both; }
+.stats::after { content:''; position:absolute; bottom:0; left:0; right:0; height:2px; background:linear-gradient(90deg,var(--gold),var(--gold2),var(--gold)); }
+.si { padding:13px 18px; border-right:1px solid rgba(255,255,255,0.06); }
+.si:last-child { border-right:none; }
+.sn { font-family:'Bebas Neue',sans-serif; font-size:30px; letter-spacing:.02em; color:var(--gold2); line-height:1; }
+.sn sup { font-size:14px; vertical-align:super; letter-spacing:0; }
+.sl { font-size:9px; color:rgba(255,255,255,.42); text-transform:uppercase; letter-spacing:.07em; line-height:1.4; margin-top:2px; }
+
+/* MAIN GRID */
+.main { display:grid; grid-template-columns:1.08fr 1fr 1fr; gap:0; position:relative; z-index:1; animation:fadeUp .6s ease .15s both; }
+.col { padding:24px 28px; border-right:1px solid var(--ruleW); }
+.col:last-child { border-right:none; }
+.col-mid { background:var(--cream2); padding:24px 24px; }
+
+/* LABELS */
+.lbl { font-family:'Bebas Neue',sans-serif; font-size:9.5px; letter-spacing:.2em; color:var(--gold); text-transform:uppercase; margin-bottom:13px; display:flex; align-items:center; gap:8px; }
+.lbl::after { content:''; flex:1; height:1px; background:var(--rule); }
+.divider { height:1px; background:var(--ruleW); margin:13px 0; }
+
+/* PILIERS */
+.pilier { display:flex; gap:9px; margin-bottom:12px; padding-bottom:12px; border-bottom:1px solid var(--ruleW); }
+.pilier:last-child { border-bottom:none; margin-bottom:0; padding-bottom:0; }
+.pnum { font-family:'Bebas Neue',sans-serif; font-size:20px; color:rgba(192,146,54,.28); line-height:1; width:20px; flex-shrink:0; padding-top:1px; }
+.ptitle { font-size:11px; font-weight:600; color:var(--ink); margin-bottom:2px; }
+.pdesc { font-size:9.5px; color:var(--ink3); line-height:1.45; }
+.pdesc strong { color:var(--ink2); font-weight:600; }
+
+/* METRIC */
+.metric { text-align:center; padding:13px 0 11px; border-bottom:1px solid var(--ruleW); }
+.metric:last-child { border-bottom:none; }
+.mv { font-family:'Bebas Neue',sans-serif; font-size:44px; letter-spacing:-.01em; line-height:1; }
+.mv.g { color:var(--gold); }
+.mv sup { font-size:19px; vertical-align:super; letter-spacing:0; }
+.mt { font-size:9px; font-weight:500; color:var(--ink4); text-transform:uppercase; letter-spacing:.09em; margin-top:3px; line-height:1.4; }
+.mt em { font-style:normal; color:var(--ink3); font-size:8.5px; display:block; margin-top:1px; letter-spacing:.04em; text-transform:none; font-weight:400; }
+
+/* REDIST */
+.redist-wrap { margin-top:10px; }
+.redist-block { margin-bottom:10px; padding-bottom:10px; border-bottom:1px solid var(--ruleW); }
+.redist-block:last-child { border-bottom:none; margin-bottom:0; }
+.rb-title { font-size:9.5px; font-weight:600; color:var(--ink2); margin-bottom:5px; }
+.rb-row { display:flex; align-items:center; gap:5px; margin-bottom:3px; }
+.rb-label { font-size:9px; color:var(--ink3); width:80px; flex-shrink:0; line-height:1.3; }
+.rb-bar-wrap { flex:1; height:4px; background:rgba(0,0,0,0.06); border-radius:2px; overflow:hidden; }
+.rb-bar { height:100%; border-radius:2px; }
+.rb-pct { font-family:'Bebas Neue',sans-serif; font-size:11px; letter-spacing:.03em; color:var(--ink2); width:28px; text-align:right; flex-shrink:0; }
+.rb-amt { font-size:9px; color:var(--ink4); width:36px; text-align:right; flex-shrink:0; }
+
+/* BARS COLORS */
+.bc-migc   { background:#1B2A4A; }
+.bc-ret    { background:#2E7D32; }
+.bc-fed    { background:#4A90D9; }
+.bc-s7     { background:var(--gold); }
+.bc-ass    { background:#E07850; }
+
+/* LAYERS */
+.layer { display:flex; align-items:flex-start; gap:8px; padding:6px 0; border-bottom:1px solid var(--ruleW); }
+.layer:last-child { border-bottom:none; }
+.ldot { width:7px; height:7px; border-radius:50%; margin-top:3px; flex-shrink:0; }
+.ltitle { font-size:10.5px; font-weight:600; color:var(--ink); line-height:1.2; margin-bottom:1px; }
+.ldesc { font-size:9px; color:var(--ink4); line-height:1.35; }
+
+/* IA */
+.ia-grid { display:grid; grid-template-columns:1fr 1fr; gap:5px; margin-top:9px; }
+.iac { background:var(--white); border:1px solid var(--ruleW); border-radius:4px; padding:7px 9px; }
+.iac-t { font-size:10px; font-weight:600; color:var(--ink); margin-bottom:2px; }
+.iac-d { font-size:9px; color:var(--ink4); line-height:1.35; }
+
+/* PEOPLE GRID */
+.people-grid { display:grid; grid-template-columns:1fr 1fr; gap:5px; margin-top:9px; }
+.person-card { background:var(--white); border:1px solid var(--ruleW); border-radius:4px; padding:7px 9px; border-left:3px solid var(--ruleW); }
+.person-card.pc-gold { border-left-color:var(--gold); }
+.person-card.pc-blue { border-left-color:#4A90D9; }
+.person-card.pc-green { border-left-color:#2E7D32; }
+.person-card.pc-red  { border-left-color:#C04040; }
+.pc-role { font-size:8px; font-weight:600; text-transform:uppercase; letter-spacing:.08em; color:var(--ink4); margin-bottom:2px; }
+.pc-name { font-size:10px; font-weight:600; color:var(--ink); line-height:1.3; }
+.pc-detail { font-size:8.5px; color:var(--ink4); line-height:1.3; margin-top:1px; }
+
+/* TIMELINE */
+.timeline { display:flex; gap:0; margin-top:9px; }
+.tl { flex:1; padding:7px 9px; background:var(--white); border:1px solid rgba(0,0,0,.06); border-right:none; }
+.tl:first-child { border-radius:4px 0 0 4px; }
+.tl:last-child { border-right:1px solid rgba(0,0,0,.06); border-radius:0 4px 4px 0; }
+.tl.act { background:var(--ink); }
+.tl-p { font-family:'Bebas Neue',sans-serif; font-size:11px; letter-spacing:.1em; color:var(--gold); }
+.tl.act .tl-p { color:var(--gold2); }
+.tl-l { font-size:8.5px; color:var(--ink4); line-height:1.35; margin-top:1px; }
+.tl.act .tl-l { color:rgba(255,255,255,.45); }
+
+/* PULLQUOTE */
+.pq { margin-top:14px; padding:12px 14px; border-left:2px solid var(--gold); background:rgba(192,146,54,.04); }
+.pq p { font-family:'Playfair Display',serif; font-size:12px; font-style:italic; color:var(--ink2); line-height:1.55; }
+
+/* REVENUE STRIP */
+.rev-strip { padding:16px 52px 18px; border-top:1px solid var(--ruleW); position:relative; z-index:1; animation:fadeUp .6s ease .3s both; }
+.rev-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:0; margin-top:10px; border:1px solid var(--ruleW); border-radius:6px; overflow:hidden; }
+.rev-item { padding:11px 14px; border-right:1px solid var(--ruleW); background:var(--white); }
+.rev-item:last-child { border-right:none; }
+.rev-item:nth-child(even) { background:var(--cream2); }
+.rev-prod { font-size:9.5px; font-weight:600; color:var(--ink2); margin-bottom:2px; line-height:1.3; }
+.rev-ann { font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:.02em; color:var(--gold); line-height:1; }
+.rev-note { font-size:8.5px; color:var(--ink4); line-height:1.35; margin-top:2px; }
+
+/* FOOTER */
+.footer { background:var(--ink); padding:14px 52px; display:grid; grid-template-columns:1fr auto; align-items:center; gap:40px; position:relative; z-index:1; animation:fadeIn .6s ease .4s both; }
+.footer::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,var(--gold),var(--gold2),var(--gold)); }
+.fv { font-family:'Playfair Display',serif; font-size:13px; font-style:italic; color:rgba(255,255,255,.65); line-height:1.5; }
+.fv strong { color:var(--gold2); font-style:normal; font-weight:600; }
+.fm { text-align:right; font-size:9px; color:rgba(255,255,255,.28); letter-spacing:.05em; text-transform:uppercase; line-height:1.9; }
+/* LEGAL ENTITIES */
+.legal-wrap { margin-top:0; }
+.legal-entity { display:grid; grid-template-columns:44px 1fr; margin-bottom:5px; border:1px solid var(--ruleW); border-radius:4px; overflow:hidden; }
+.legal-entity:last-child { margin-bottom:0; }
+.le-flag { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:7px 4px; gap:2px; }
+.le-flag-abbr { font-family:'Bebas Neue',sans-serif; font-size:13px; letter-spacing:.04em; color:#fff; line-height:1; }
+.le-flag-jur { font-size:7px; color:rgba(255,255,255,.6); text-transform:uppercase; letter-spacing:.05em; text-align:center; line-height:1.3; }
+.le-body { padding:7px 9px; background:var(--white); }
+.le-form { font-size:8.5px; font-weight:600; color:var(--gold); letter-spacing:.03em; margin-bottom:1px; }
+.le-name { font-size:10.5px; font-weight:600; color:var(--ink); line-height:1.2; }
+.le-desc { font-size:9px; color:var(--ink4); line-height:1.35; margin-top:2px; }
+.le-link { font-size:8.5px; color:var(--ink3); margin-top:3px; padding-left:10px; position:relative; }
+.le-link::before { content:'→'; color:var(--gold); position:absolute; left:0; }
+
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="spine"></div>
+  <div class="wm">MIGC</div>
+
+  <!-- HEADER -->
+  <header class="hdr">
+    <div>
+      <div class="eyebrow">Association Suisse · Canton de Genève · Art. 60–79 CC · Opéré par Sport7 Labs SARL</div>
+      <h1 class="htitle">Mixed Martial Arts<br>International <em>Grading</em> Council</h1>
+      <p class="hsub">Le premier standard mondial de certification, de ranking et de protection sociale pour le MMA — propulsé par l'IA, sécurisé sur blockchain, déployé en 24 mois.</p>
+    </div>
+    <div style="text-align:right">
+      <div class="seal"><div class="seal-m">M</div><div class="seal-sub">MIGC</div></div>
+      <div class="hmeta">Fondé par Sport7 Labs SARL<br><strong style="color:var(--gold)">Confidentiel — v5.0 — Mars 2026</strong></div>
+    </div>
+  </header>
+
+  <!-- STAT STRIP -->
+  <div class="stats">
+    <div class="si"><div class="sn">4<sup>M+</sup></div><div class="sl">Pratiquants MMA<br>dans le monde</div></div>
+    <div class="si"><div class="sn">640<sup>M</sup></div><div class="sl">Fans MMA<br>mondiaux</div></div>
+    <div class="si"><div class="sn">140</div><div class="sl">Fédérations<br>cible An 3</div></div>
+    <div class="si"><div class="sn">10</div><div class="sl">Organisations pro<br>fondatrices</div></div>
+    <div class="si"><div class="sn">25<sup>M€</sup></div><div class="sl">Fonds Retraite<br>alimenté / an An 5</div></div>
+    <div class="si"><div class="sn">500<sup>M$</sup></div><div class="sl">Cible Fonds<br>Retraite à 10 ans</div></div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- COL 1 : PILIERS -->
+    <div class="col">
+      <div class="lbl">Ce que le MIGC apporte au MMA</div>
+
+      <div class="pilier">
+        <div class="pnum">01</div>
+        <div>
+          <div class="ptitle">Grades universels — la colonne vertébrale</div>
+          <div class="pdesc">Ceinture blanche → 10ème Dan. 230 techniques. Diplômes blockchain infalsifiables. <strong>6€/an/pratiquant</strong> via fédérations. Bracelet NFC : le passeport physique du combattant.</div>
+        </div>
+      </div>
+      <div class="pilier">
+        <div class="pnum">02</div>
+        <div>
+          <div class="ptitle">Digital Sport Passport (DSP)</div>
+          <div class="pdesc">Identité numérique NFC. Grades, palmarès, historique médical, contrats. <strong>Sans DSP actif = sans accès à la protection sociale, au fonds de retraite, ni aux Pockets PRO.</strong></div>
+        </div>
+      </div>
+      <div class="pilier">
+        <div class="pnum">03</div>
+        <div>
+          <div class="ptitle">Ranking transversal neutre</div>
+          <div class="pdesc">Amateurs → pros. Par catégorie de poids <strong>et par sexe</strong>. Seuls les résultats dans la cage comptent. Scouting IA temps réel pour les organisations professionnelles.</div>
+        </div>
+      </div>
+      <div class="pilier">
+        <div class="pnum">04</div>
+        <div>
+          <div class="ptitle">Pockets PRO — Financement combattants</div>
+          <div class="pdesc">Fonds de Créances Sportives. Les combattants accèdent à leurs <strong>bourses de présences et bonus de victoires</strong> avant l'événement. Rendement investisseurs cible : <strong>9–13%</strong>.</div>
+        </div>
+      </div>
+      <div class="pilier">
+        <div class="pnum">05</div>
+        <div>
+          <div class="ptitle">Fonds de Retraite — Fondation suisse</div>
+          <div class="pdesc"><strong>95% des cotisations orgas pro</strong> → Fonds Retraite. Stratégie Core-Satellite SMA. Accumulation 2026–2030. Distribution dès 2030. Cible 500M$ à 10 ans.</div>
+        </div>
+      </div>
+
+
+      <div class="divider"></div>
+      <div class="lbl">Solidité juridique — 3 entités distinctes</div>
+      <div class="legal-wrap">
+
+        <!-- MIGC -->
+        <div class="legal-entity">
+          <div class="le-flag" style="background:#1B2A4A;">
+            <div class="le-flag-abbr">MIGC</div>
+            <div class="le-flag-jur">Suisse<br>Genève</div>
+          </div>
+          <div class="le-body">
+            <div class="le-form">Association à but non lucratif · Art. 60–79 CC</div>
+            <div class="le-name">Mixed Martial Arts International Grading Council</div>
+            <div class="le-desc">Autorité normative indépendante. Propriétaire des référentiels techniques et normatifs. Neutralité structurelle garantie — aucun intérêt commercial propre.</div>
+            <div class="le-link">Relation avec Sport7 : contrat de partenariat fondateur exclusif 20 ans — irrévocable sauf faute lourde + décision tribunal</div>
+          </div>
+        </div>
+
+        <!-- Sport7 -->
+        <div class="legal-entity">
+          <div class="le-flag" style="background:var(--gold);">
+            <div class="le-flag-abbr" style="color:var(--ink);">S7</div>
+            <div class="le-flag-jur" style="color:rgba(12,12,12,.55);">Suisse<br>Genève</div>
+          </div>
+          <div class="le-body">
+            <div class="le-form">SARL commerciale · Droit suisse · RC Genève</div>
+            <div class="le-name">Sport7 Labs SARL</div>
+            <div class="le-desc">Opérateur technologique mandaté. Propriétaire de la plateforme, des algorithmes et de l'IA. Revenus : marges produits + services. Dir. : Yann Dib &amp; Bertrand Amoussou.</div>
+            <div class="le-link">Relation avec MIGC : mandat fondateur exclusif 20 ans · Siège permanent membre fondateur · PI normative reste au MIGC</div>
+          </div>
+        </div>
+
+        <!-- Fonds Retraite -->
+        <div class="legal-entity">
+          <div class="le-flag" style="background:#2E7D32;">
+            <div class="le-flag-abbr">FR</div>
+            <div class="le-flag-jur">Suisse<br>Fédéral</div>
+          </div>
+          <div class="le-body">
+            <div class="le-form">Fondation de prévoyance · Art. 80+ CC · LPP</div>
+            <div class="le-name">Fondation de Prévoyance MIGC</div>
+            <div class="le-desc">Entité juridique autonome, supervisée par l'OFAS. Fonds 100% ségrégués — aucun accès par le MIGC ni Sport7. Conseil : Oswald, Odier, Pailhol, Nogueira.</div>
+            <div class="le-link">Alimentée par : 95% cotisations orgas pro + % sur chaque grade, bracelet et diplôme</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="pq">
+        <p>Le MMA ne rattrape pas le tennis ou la boxe — il les dépasse d'une génération technologique et financière.</p>
+      </div>
+    </div>
+
+    <!-- COL 2 : METRICS + REDISTRIBUTION -->
+    <div class="col col-mid">
+      <div class="lbl">Indicateurs clés</div>
+
+      <div class="metric">
+        <div class="mv g">69<sup>M€</sup></div>
+        <div class="mt">Total revenus bruts annuels
+          <em>Produits grades — An 3 à An 5</em>
+        </div>
+      </div>
+      <div class="metric">
+        <div class="mv">5<sup>%</sup></div>
+        <div class="mt">Cotisation orgas pro
+          <em>Bourses + bonus de victoires</em>
+        </div>
+      </div>
+      <div class="metric">
+        <div class="mv g">2,1<sup>M€</sup></div>
+        <div class="mt">Revenus dès An 1
+          <em>Sans cotisations orgas pro</em>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="lbl" style="font-size:8.5px">Redistribution par produit</div>
+
+      <div class="redist-wrap">
+        <!-- Grade couleur 6€ -->
+        <div class="redist-block">
+          <div class="rb-title">Grade couleur — 6€ (fédérations)</div>
+          <div class="rb-row"><span class="rb-label">MIGC</span><div class="rb-bar-wrap"><div class="rb-bar bc-migc" style="width:20%"></div></div><span class="rb-pct">20%</span><span class="rb-amt">1,20€</span></div>
+          <div class="rb-row"><span class="rb-label">Fonds Retraite</span><div class="rb-bar-wrap"><div class="rb-bar bc-ret" style="width:20%"></div></div><span class="rb-pct">20%</span><span class="rb-amt">1,20€</span></div>
+          <div class="rb-row"><span class="rb-label">Sport7 (tech)</span><div class="rb-bar-wrap"><div class="rb-bar bc-s7" style="width:50%"></div></div><span class="rb-pct">50%</span><span class="rb-amt">3,00€</span></div>
+          <div class="rb-row"><span class="rb-label">Féd. nationale</span><div class="rb-bar-wrap"><div class="rb-bar bc-fed" style="width:10%"></div></div><span class="rb-pct">10%</span><span class="rb-amt">0,60€</span></div>
+        </div>
+        <!-- Diplôme Black+ 100€ -->
+        <div class="redist-block">
+          <div class="rb-title">Diplôme Black+ / Dan — 100€</div>
+          <div class="rb-row"><span class="rb-label">MIGC</span><div class="rb-bar-wrap"><div class="rb-bar bc-migc" style="width:20%"></div></div><span class="rb-pct">20%</span><span class="rb-amt">16,40€</span></div>
+          <div class="rb-row"><span class="rb-label">Fonds Retraite</span><div class="rb-bar-wrap"><div class="rb-bar bc-ret" style="width:20%"></div></div><span class="rb-pct">20%</span><span class="rb-amt">16,40€</span></div>
+          <div class="rb-row"><span class="rb-label">Féd. nationale</span><div class="rb-bar-wrap"><div class="rb-bar bc-fed" style="width:30%"></div></div><span class="rb-pct">30%</span><span class="rb-amt">24,60€</span></div>
+          <div class="rb-row"><span class="rb-label">Sport7 (tech)</span><div class="rb-bar-wrap"><div class="rb-bar bc-s7" style="width:20%"></div></div><span class="rb-pct">20%</span><span class="rb-amt">16,40€</span></div>
+        </div>
+        <!-- Bracelet CN 350€ -->
+        <div class="redist-block">
+          <div class="rb-title">Bracelet ceinture noire — 350€ (marge 175€)</div>
+          <div class="rb-row"><span class="rb-label">MIGC</span><div class="rb-bar-wrap"><div class="rb-bar bc-migc" style="width:15%"></div></div><span class="rb-pct">15%</span><span class="rb-amt">26,25€</span></div>
+          <div class="rb-row"><span class="rb-label">Fonds Retraite</span><div class="rb-bar-wrap"><div class="rb-bar bc-ret" style="width:15%"></div></div><span class="rb-pct">15%</span><span class="rb-amt">26,25€</span></div>
+          <div class="rb-row"><span class="rb-label">Féd. nationale</span><div class="rb-bar-wrap"><div class="rb-bar bc-fed" style="width:20%"></div></div><span class="rb-pct">20%</span><span class="rb-amt">35,00€</span></div>
+          <div class="rb-row"><span class="rb-label">Sport7 (tech)</span><div class="rb-bar-wrap"><div class="rb-bar bc-s7" style="width:50%"></div></div><span class="rb-pct">50%</span><span class="rb-amt">87,50€</span></div>
+        </div>
+        <!-- Cotisations orgas -->
+        <div class="redist-block">
+          <div class="rb-title">Cotisations orgas pro — 5% bourses+bonus</div>
+          <div class="rb-row"><span class="rb-label">Fonds Retraite</span><div class="rb-bar-wrap"><div class="rb-bar bc-ret" style="width:95%"></div></div><span class="rb-pct">95%</span><span class="rb-amt">~19M$</span></div>
+          <div class="rb-row"><span class="rb-label">MIGC (gestion)</span><div class="rb-bar-wrap"><div class="rb-bar bc-migc" style="width:5%"></div></div><span class="rb-pct">5%</span><span class="rb-amt">~1M$</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COL 3 : GOUVERNANCE + IA + TIMELINE -->
+    <div class="col">
+      <div class="lbl">Architecture institutionnelle</div>
+
+      <div class="layer">
+        <div class="ldot" style="background:#C04040"></div>
+        <div><div class="ltitle">Couche 1 — Exécution MIGC</div><div class="ldesc">7–8 permanents · DG, DT, DF, RI ×2, Comm., Juriste · Genève</div></div>
+      </div>
+      <div class="layer">
+        <div class="ldot" style="background:var(--gold)"></div>
+        <div><div class="ltitle">Couche 2 — Sport7 Labs (tech)</div><div class="ldesc">Opérateur exclusif 20 ans · Siège permanent membre fondateur MIGC · Mandat irrévocable sauf faute lourde + tribunal</div></div>
+      </div>
+      <div class="layer">
+        <div class="ldot" style="background:#4A90D9"></div>
+        <div><div class="ltitle">Couche 3 — Comité Directeur</div><div class="ldesc">7 membres élus · GSP (Prés. d'honneur) · Bertrand Amoussou (Prés.) · Firas Zahabi</div></div>
+      </div>
+      <div class="layer">
+        <div class="ldot" style="background:#3CB8A0"></div>
+        <div><div class="ltitle">Couche 4 — 6 Commissions d'experts</div><div class="ldesc">Fedor (Éthique) · D. Cormier (Ranking) · A. Nunes (Protection) · R. Gracie (Tech) · Big John (Partnership)</div></div>
+      </div>
+      <div class="layer">
+        <div class="ldot" style="background:#6BAF50"></div>
+        <div><div class="ltitle">Couche 5 — Fondation de Prévoyance</div><div class="ldesc">Denis Oswald · Patrick Odier (Lombard Odier) · JM Pailhol (Allianz) · Nogueira (athlètes)</div></div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="lbl">IA — 4 modules actifs</div>
+      <div class="ia-grid">
+        <div class="iac"><div class="iac-t">⚡ Guardian 24/7</div><div class="iac-d">Surveillance flux financiers, intégrité Ranking, cybersécurité DSP</div></div>
+        <div class="iac"><div class="iac-t">🤖 Assistants</div><div class="iac-d">PV auto, synthèses multilingues. 1 assistant/membre, non-transférable</div></div>
+        <div class="iac"><div class="iac-t">📊 Audit auto</div><div class="iac-d">Rapprochements comptables, alertes écarts, interface Big 4</div></div>
+        <div class="iac"><div class="iac-t">🔍 Scouting</div><div class="iac-d">Détection talents via Ranking. Profils structurés pour orgas pro</div></div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="lbl">Ambassadeurs régionaux</div>
+      <div class="people-grid">
+        <div class="person-card pc-gold">
+          <div class="pc-role">Brésil / Am. Sud</div>
+          <div class="pc-name">Antonio R. Nogueira</div>
+          <div class="pc-detail">Légende PRIDE · UFC · Fondation</div>
+        </div>
+        <div class="person-card pc-blue">
+          <div class="pc-role">Amérique du Nord</div>
+          <div class="pc-name">Randy Couture</div>
+          <div class="pc-detail">5× champion UFC · Pionnier MMA</div>
+        </div>
+        <div class="person-card pc-blue">
+          <div class="pc-role">Europe</div>
+          <div class="pc-name">Mirko Cro Cop</div>
+          <div class="pc-detail">Légende PRIDE · Icône européenne</div>
+        </div>
+        <div class="person-card pc-green">
+          <div class="pc-role">Afrique</div>
+          <div class="pc-name">Francis Ngannou</div>
+          <div class="pc-detail">Champion UFC · Figure africaine</div>
+        </div>
+        <div class="person-card pc-red">
+          <div class="pc-role">Asie</div>
+          <div class="pc-name">Genki Sudo</div>
+          <div class="pc-detail">Champion · Sénateur · Culture</div>
+        </div>
+        <div class="person-card pc-gold">
+          <div class="pc-role">Océanie</div>
+          <div class="pc-name">Mark Hunt</div>
+          <div class="pc-detail">PRIDE · UFC · Défenseur droits</div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="lbl" style="font-size:8.5px">Déploiement — Phase unique 0–24 mois</div>
+      <div class="timeline">
+        <div class="tl act"><div class="tl-p">M 1–12</div><div class="tl-l">Constitution légale + plateforme v1 + 25 féd.</div></div>
+        <div class="tl"><div class="tl-p">M 12–24</div><div class="tl-l">100 féd. + 10 orgas pro + Ranking live</div></div>
+        <div class="tl"><div class="tl-p">2028+</div><div class="tl-l">140 féd. + Standard mondial</div></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- REVENUE STRIP -->
+  <div class="rev-strip">
+    <div class="lbl">Revenus bruts projetés — Produits grades (hors cotisations orgas pro)</div>
+    <div class="rev-grid">
+      <div class="rev-item">
+        <div class="rev-prod">Grades couleur<br>(6€ féd. / 10€ indép.)</div>
+        <div class="rev-ann">24 M€</div>
+        <div class="rev-note">An 3–5 / an · 4M passages/an</div>
+      </div>
+      <div class="rev-item">
+        <div class="rev-prod">Bracelets NFC<br>couleur (9€)</div>
+        <div class="rev-ann">36 M€</div>
+        <div class="rev-note">An 3–5 / an · 4M bracelets/an</div>
+      </div>
+      <div class="rev-item">
+        <div class="rev-prod">Diplômes Black+<br>et Dan (100€)</div>
+        <div class="rev-ann">2,5 M€</div>
+        <div class="rev-note">An 3–5 / an · 25 000 diplômes</div>
+      </div>
+      <div class="rev-item">
+        <div class="rev-prod">Bracelets ceinture<br>noire (350€ · 1×/Dan)</div>
+        <div class="rev-ann">5,25 M€</div>
+        <div class="rev-note">An 3–5 / an · 15 000 bracelets</div>
+      </div>
+      <div class="rev-item">
+        <div class="rev-prod">Services &amp;<br>abonnements</div>
+        <div class="rev-ann">2 M€</div>
+        <div class="rev-note">An 3–5 / an</div>
+      </div>
+      <div class="rev-item" style="background:var(--ink);">
+        <div class="rev-prod" style="color:rgba(255,255,255,.6)">Total revenus<br>bruts grades</div>
+        <div class="rev-ann" style="color:var(--gold2)">69,75 M€</div>
+        <div class="rev-note" style="color:rgba(255,255,255,.35)">An 3–5 / an · hors cotisations orgas</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="fv">Le MIGC n'est pas une fédération de plus. C'est <strong>l'infrastructure fondatrice</strong> qui manquait au MMA mondial — et la fenêtre d'opportunité est ouverte <strong>maintenant.</strong></div>
+    <div class="fm">
+      <span class="fhi">sport7labs.com</span>
+      <span>Sport7 Labs SARL · Genève, Suisse</span>
+      <span>LB v5 · Org-Comité v5 · Fonds Retraite v3 · Écosystème v3</span>
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>

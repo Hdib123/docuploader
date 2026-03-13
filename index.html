@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIGC — Centre de Documents</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0f;
+            color: #e4e4e7;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── Ambient glow (decorative) ────────────── */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -40%;
+            left: -20%;
+            width: 80%;
+            height: 80%;
+            background: radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -30%;
+            right: -10%;
+            width: 60%;
+            height: 60%;
+            background: radial-gradient(circle, rgba(14,165,233,0.06) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ── Header ───────────────────────────────── */
+        header {
+            position: relative;
+            z-index: 1;
+            padding: 4rem 2rem 3.5rem;
+            text-align: center;
+            background: transparent;
+        }
+
+        header .badge {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: #818cf8;
+            border: 1px solid rgba(129,140,248,0.25);
+            padding: 0.3rem 0.9rem;
+            border-radius: 100px;
+            margin-bottom: 1.2rem;
+            background: rgba(129,140,248,0.06);
+        }
+
+        header h1 {
+            font-size: 2.6rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 0.6rem;
+            background: linear-gradient(135deg, #f0f0ff 0%, #a5b4fc 50%, #818cf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        header p {
+            font-size: 1.05rem;
+            color: rgba(228,228,231,0.5);
+            font-weight: 400;
+            max-width: 520px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        /* ── Main Container ───────────────────────── */
+        main {
+            position: relative;
+            z-index: 1;
+            max-width: 1100px;
+            margin: 0 auto 4rem;
+            padding: 0 1.25rem;
+        }
+
+        /* ── Card Grid ────────────────────────────── */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1rem;
+        }
+
+        /* ── Card ─────────────────────────────────── */
+        .card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 16px;
+            padding: 1.5rem 1.6rem 1.4rem;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: transform 0.25s cubic-bezier(.4,0,.2,1),
+                        box-shadow 0.25s cubic-bezier(.4,0,.2,1),
+                        border-color 0.25s cubic-bezier(.4,0,.2,1),
+                        background 0.25s cubic-bezier(.4,0,.2,1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(129,140,248,0.06) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4),
+                        0 0 0 1px rgba(129,140,248,0.15);
+            border-color: rgba(129, 140, 248, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        /* ── Tags ─────────────────────────────────── */
+        .card-tag {
+            display: inline-block;
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 0.22rem 0.6rem;
+            border-radius: 6px;
+            width: fit-content;
+        }
+
+        .tag-simulation  { background: rgba(34,197,94,0.12);  color: #4ade80; }
+        .tag-etude       { background: rgba(251,146,60,0.12); color: #fb923c; }
+        .tag-rh          { background: rgba(56,189,248,0.12); color: #38bdf8; }
+        .tag-brand       { background: rgba(251,113,133,0.12);color: #fb7185; }
+        .tag-business    { background: rgba(167,139,250,0.12);color: #a78bfa; }
+        .tag-ecosysteme  { background: rgba(45,212,191,0.12); color: #2dd4bf; }
+        .tag-finance     { background: rgba(250,204,21,0.12); color: #facc15; }
+        .tag-operations  { background: rgba(148,163,184,0.12);color: #94a3b8; }
+        .tag-overview    { background: rgba(129,140,248,0.12);color: #818cf8; }
+
+        .card-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+            line-height: 1.4;
+            color: #f4f4f5;
+        }
+
+        .card-desc {
+            font-size: 0.85rem;
+            color: rgba(161,161,170,0.85);
+            line-height: 1.6;
+        }
+
+        .card-arrow {
+            margin-top: auto;
+            padding-top: 0.6rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #818cf8;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            opacity: 0;
+            transform: translateX(-4px);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+
+        .card:hover .card-arrow {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* ── Divider line ─────────────────────────── */
+        .divider {
+            border: none;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            margin: 1rem 0;
+        }
+
+        /* ── Footer ───────────────────────────────── */
+        footer {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 2.5rem 1rem;
+            font-size: 0.75rem;
+            color: rgba(161,161,170,0.4);
+            letter-spacing: 0.04em;
+        }
+
+        /* ── Responsive ───────────────────────────── */
+        @media (max-width: 680px) {
+            header { padding: 3rem 1.25rem 2.5rem; }
+            header h1 { font-size: 1.8rem; }
+            header p { font-size: 0.95rem; }
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <span class="badge">Espace Interne · 2026</span>
+    <h1>MIGC — Centre de Documents</h1>
+    <p>Accédez à l'ensemble des outils, simulations et documents de référence du projet.</p>
+</header>
+
+<main>
+    <div class="grid">
+
+        <a class="card" href="MIGC-OnePager-v3.html">
+            <span class="card-tag tag-overview">Overview</span>
+            <span class="card-title">MIGC — One Pager v3</span>
+            <span class="card-desc">Synthèse exécutive du projet MIGC au format one-pager.</span>
+            <span class="card-arrow">Ouvrir →</span>
+        </a>
+
+        <a class="card" href="MIGC-Note-Fonctionnement-Global-v2.html">
+            <span class="card-tag tag-operations">Opérations</span>
+            <span class="card-title">Note de Fonctionnement Global</span>
+            <span class="card-desc">Documentation complète du fonctionnement opérationnel — Confidentiel.</span>
+            <span class="card-arrow">Ouvrir →</span>
+        </a>
+
+        <a class="card" href="MIGC-CoreBusiness-Schema.html">
+            <span class="card-tag tag-business">Business</span>
+            <span class="card-title">Core Business — MIGC / Sport7</span>
+            <span class="card-desc">Schéma du modèle d'affaires et structure entre MIGC et Sport7.</span>
+            <span class="card-arrow">Ouvrir →</span>
+        </a>
+
+        <a class="card" href="MIGC-Brand-Guide-v1.html">
+            <span class="card-tag tag-brand">Brand</span>
+            <span class="card-title">Charte Graphique · Brand Guide 2026</span>
+            <span class="card-desc">Identité visuelle, palette de couleurs et standards graphiques MIGC.</span>
+            <span class="card-arrow">Ouvrir →</span>
+        </a>
+
+        <a class="card" href="MIGC-Ecosysteme-Personnes-v6.html">
+            <span class="card-tag tag-ecosysteme">Écosystème</span>
+            <span class="card-title">Écosystème Personnes & Implication</span>
+            <span class="card-desc">Cartographie des personnes et niveaux d'implication dans le projet.</span>
+            <span class="card-arrow">Ouvrir →</span>
+        </a>
+
+        <a class="card" href="MIGC-Analyse-RH-Bertrand-v3.html">
+            <span class="card-tag tag-rh">RH</span>
+            <span class="card-title">Analyse RH — Bertrand vs Yann</span>
+            <span class="card-desc">Analyse comparative des profils et indicateurs de performance.</span>
+            <span class="card-arrow">Ouvrir →</span>
+        </a>
+
+        <a class="card" href="MIGC-Moteur-Calcul-v1.html">
+            <span class="card-tag tag-finance">Finance</span>
+            <span class="card-title">Moteur de Calcul Actuariel — CFO Tool</span>
+            <span class="card-desc">Outil de modélisation financière et de projections actuarielles.</span>
+            <span class="card-arrow">Ouvrir →</span>
+        </a>
+
+        <a class="card" href="BSD-MIGC-Simulation-v4.html">
+            <span class="card-tag tag-simulation">Simulation</span>
+            <span class="card-title">BSD · Simulation Fonds Retraite v8</span>
+            <span class="card-desc">Simulateur de scénarios pour le fonds de retraite MIGC.</span>
+            <span class="card-arrow">Ouvrir →</span>
+        </a>
+
+        <a class="card" href="SIMULATION-RETRAITE-MIGC-v3.html">
+            <span class="card-tag tag-simulation">Simulation</span>
+            <span class="card-title">Simulation Retraite — Carrières Longues</span>
+            <span class="card-desc">Calcul de retraite pour les carrières longues de 35 à 45 ans.</span>
+            <span class="card-arrow">Ouvrir →</span>
+        </a>
+
+        <a class="card" href="ETUDE-CARRIERE-COMBATTANTS-PRO-MMA-2026-v3.html">
+            <span class="card-tag tag-etude">Étude</span>
+            <span class="card-title">Parcours des Combattants Pro MMA — 2026</span>
+            <span class="card-desc">Étude complète des trajectoires de carrière des combattants professionnels.</span>
+            <span class="card-arrow">Ouvrir →</span>
+        </a>
+
+    </div>
+</main>
+
+<footer>
+    MIGC · 2026
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MIGC — Écosystème Personnes & Implication v6</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#080E1C; --bg2:#0F1829; --bg3:#162034; --bg4:#1C2840;
+  --gold:#C4952A; --gold2:#DFB24C; --gold3:rgba(196,149,42,.1); --gold4:rgba(196,149,42,.06);
+  --green:#1F8A6A; --green2:#28B584; --green3:rgba(31,138,106,.12);
+  --red:#B83530; --red2:#E55248; --red3:rgba(184,53,48,.12);
+  --amber:#C86A0A; --amber2:#E8923A; --amber3:rgba(200,106,10,.12);
+  --blue:#2558A0; --blue2:#5B8FD4; --blue3:rgba(37,88,160,.14);
+  --violet:#6A3F9E; --violet2:#9B6FD4; --violet3:rgba(106,63,158,.12);
+  --teal:#0E7C7B; --teal2:#3CB8B7; --teal3:rgba(14,124,123,.12);
+  --steel:#8A9AB0; --mist:#C4D0DC; --white:#F0F4F8;
+  --mono:'DM Mono',monospace;
+  --sans:'DM Sans',sans-serif;
+  --head:'Syne',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--white);font-family:var(--sans);font-size:13px;line-height:1.55;-webkit-font-smoothing:antialiased;}
+
+/* ── TOPBAR ── */
+.topbar{background:rgba(8,14,28,.96);backdrop-filter:blur(12px);border-bottom:1px solid rgba(196,149,42,.18);padding:0 36px;height:50px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:300;}
+.tb-brand{font-family:var(--head);font-weight:800;font-size:13px;letter-spacing:.14em;color:var(--gold);text-transform:uppercase;}
+.tb-center{display:flex;gap:3px;}
+.np{padding:5px 11px;border-radius:16px;font-size:10px;font-weight:600;cursor:pointer;color:var(--steel);border:1px solid transparent;transition:.15s;text-decoration:none;letter-spacing:.04em;}
+.np:hover{background:var(--gold4);color:var(--gold2);border-color:rgba(196,149,42,.2);}
+.tb-right{font-family:var(--mono);font-size:10px;color:rgba(138,154,176,.4);letter-spacing:.06em;}
+
+/* ── HERO ── */
+.hero{background:linear-gradient(150deg,#050A14 0%,#0A1520 50%,#0F1D30 100%);padding:44px 36px 32px;border-bottom:1px solid rgba(196,149,42,.12);position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-80px;right:-80px;width:500px;height:500px;background:radial-gradient(circle,rgba(196,149,42,.05) 0%,transparent 65%);pointer-events:none;}
+.hero::after{content:'';position:absolute;bottom:-60px;left:30%;width:300px;height:300px;background:radial-gradient(circle,rgba(37,88,160,.06) 0%,transparent 65%);pointer-events:none;}
+.hero-top{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex-wrap:wrap;}
+.brand{display:flex;align-items:center;gap:14px;}
+.brand-badge{width:48px;height:48px;background:linear-gradient(135deg,var(--gold) 0%,#A07020 100%);border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:var(--head);font-size:22px;font-weight:800;color:#fff;flex-shrink:0;}
+.brand-name{font-family:var(--head);font-weight:800;font-size:22px;color:#fff;letter-spacing:.01em;}
+.brand-sub{font-size:11px;color:var(--steel);margin-top:2px;letter-spacing:.04em;}
+.hero-kpis{display:flex;gap:12px;flex-wrap:wrap;}
+.hk{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:10px 16px;text-align:center;min-width:80px;}
+.hk-v{font-family:var(--head);font-weight:800;font-size:26px;color:var(--gold2);line-height:1;}
+.hk-l{font-size:10px;color:var(--steel);margin-top:3px;letter-spacing:.06em;text-transform:uppercase;}
+.hero-meta{margin-top:14px;font-size:12px;color:var(--steel);}
+.hero-meta span{color:var(--gold2);font-weight:600;}
+
+/* ── ACCESS LEGEND ── */
+.access-bar{display:flex;gap:20px;flex-wrap:wrap;align-items:center;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:10px 18px;margin-bottom:20px;}
+.abl{font-size:11px;font-weight:700;color:var(--steel);letter-spacing:.08em;text-transform:uppercase;margin-right:4px;}
+.ab-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--mist);}
+.ab-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.g{background:var(--green2);}
+.y{background:var(--amber2);}
+.r{background:var(--red2);}
+
+/* ── PAGE LAYOUT ── */
+.page{max-width:1520px;margin:0 auto;padding:0 36px 80px;}
+.section{margin-top:40px;}
+.layer-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.06);}
+.layer-badge{padding:4px 13px;border-radius:20px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;font-family:var(--mono);}
+.lb-exec{background:rgba(220,53,69,.15);color:#FF7080;}
+.lb-tech{background:var(--gold3);color:var(--gold2);}
+.lb-strat{background:var(--blue3);color:var(--blue2);}
+.lb-comm{background:var(--teal3);color:var(--teal2);}
+.lb-org{background:var(--violet3);color:var(--violet2);}
+.lb-amb{background:var(--green3);color:var(--green2);}
+.lb-fond{background:rgba(40,181,132,.1);color:#4CC8A8;}
+.layer-title{font-family:var(--head);font-size:17px;font-weight:700;color:#fff;}
+.layer-desc{font-size:12px;color:var(--steel);}
+
+/* ── GRID ── */
+.g1{display:grid;gap:12px;}
+.c2{grid-template-columns:repeat(2,1fr);}
+.c3{grid-template-columns:repeat(3,1fr);}
+.c4{grid-template-columns:repeat(4,1fr);}
+.c5{grid-template-columns:repeat(5,1fr);}
+.cauto{grid-template-columns:repeat(auto-fill,minmax(290px,1fr));}
+
+/* ── BASE CARD ── */
+.card{background:var(--bg3);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:0;overflow:hidden;transition:transform .15s,border-color .15s;display:flex;flex-direction:column;}
+.card:hover{transform:translateY(-2px);border-color:rgba(196,149,42,.22);}
+.card-stripe{height:3px;flex-shrink:0;}
+.cs-gold{background:linear-gradient(90deg,var(--gold),var(--gold2));}
+.cs-blue{background:linear-gradient(90deg,var(--blue),var(--blue2));}
+.cs-teal{background:linear-gradient(90deg,var(--teal),var(--teal2));}
+.cs-violet{background:linear-gradient(90deg,var(--violet),var(--violet2));}
+.cs-red{background:linear-gradient(90deg,var(--red),var(--red2));}
+.cs-green{background:linear-gradient(90deg,var(--green),var(--green2));}
+.cs-steel{background:linear-gradient(90deg,#445566,#667788);}
+.card-body{padding:13px 15px 10px;flex:1;display:flex;flex-direction:column;gap:6px;}
+.card-role{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--steel);}
+.card-name{font-family:var(--head);font-size:14px;font-weight:700;color:#fff;line-height:1.25;display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
+.card-flag{font-size:16px;}
+.star-b{font-size:9px;font-weight:700;background:rgba(196,149,42,.2);border:1px solid rgba(196,149,42,.35);color:var(--gold2);border-radius:8px;padding:1px 7px;white-space:nowrap;}
+.card-bio{font-size:11px;color:var(--mist);line-height:1.55;}
+.card-bio strong{color:#fff;font-weight:600;}
+.card-why{font-size:11px;background:rgba(196,149,42,.04);border-left:2px solid rgba(196,149,42,.3);padding:6px 9px;border-radius:0 4px 4px 0;color:var(--gold2);line-height:1.5;}
+.card-why em{color:var(--mist);font-style:normal;}
+
+/* ── OPTIONS BAR ── */
+.card-options{padding:8px 14px;background:rgba(0,0,0,.2);border-top:1px solid rgba(255,255,255,.05);}
+.opt-label{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--steel);margin-bottom:5px;}
+.opt-list{display:flex;flex-wrap:wrap;gap:5px;}
+.opt-item{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:3px 9px;font-size:10px;color:var(--mist);}
+.opt-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+
+/* ── CARD FOOTER ── */
+.card-foot{padding:8px 14px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(255,255,255,.05);}
+.cf-hours{font-family:var(--mono);font-size:10px;color:var(--steel);}
+.cf-badge{font-size:9px;font-weight:700;padding:2px 9px;border-radius:10px;letter-spacing:.06em;white-space:nowrap;}
+.cfb-confirm{background:rgba(40,181,132,.15);color:var(--green2);}
+.cfb-proposed{background:var(--gold3);color:var(--gold2);}
+.cfb-recruit{background:var(--blue3);color:var(--blue2);}
+.cfb-tbd{background:rgba(100,100,100,.15);color:#888;}
+.cfb-found{background:rgba(40,181,132,.12);color:#4CC8A8;}
+.cfb-org{background:var(--violet3);color:var(--violet2);}
+.cfb-cdd{background:rgba(220,53,69,.15);color:#FF7080;}
+
+/* ── ACCESS DOT (large) ── */
+.access-dot{width:13px;height:13px;border-radius:50%;flex-shrink:0;}
+
+/* ── SECTION LABEL ── */
+.sec-label{display:inline-flex;align-items:center;gap:7px;background:rgba(196,149,42,.07);border:1px solid rgba(196,149,42,.18);border-radius:5px;padding:5px 13px;font-size:11px;font-weight:700;color:var(--gold2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;margin-top:18px;}
+
+/* ── COMMISSION BLOCK ── */
+.comm-block{margin-bottom:28px;}
+.comm-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;padding:8px 14px;border-radius:8px 8px 0 0;border-bottom:1px solid rgba(255,255,255,.06);}
+.comm-icon{font-size:18px;}
+.comm-title{font-family:var(--head);font-size:14px;font-weight:700;color:#fff;}
+.comm-desc{font-size:11px;color:var(--steel);}
+.comm-pres{border:1px solid rgba(196,149,42,.25);border-radius:8px;overflow:hidden;margin-bottom:10px;}
+.comm-pres .card-stripe{background:linear-gradient(90deg,var(--gold),var(--gold2));}
+.comm-members{display:grid;gap:10px;}
+
+/* ── ORG CARD ── */
+.org-card{background:var(--bg3);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:13px 15px;transition:transform .15s,border-color .15s;}
+.org-card:hover{transform:translateY(-2px);border-color:rgba(196,149,42,.22);}
+.org-rank{font-family:var(--mono);font-size:10px;color:var(--gold);font-weight:600;margin-bottom:5px;letter-spacing:.08em;}
+.org-name{font-family:var(--head);font-size:14px;font-weight:700;color:#fff;margin-bottom:6px;}
+.org-desc{font-size:11px;color:var(--mist);margin-bottom:8px;line-height:1.5;}
+.org-reps{display:flex;flex-direction:column;gap:5px;padding-top:8px;border-top:1px solid rgba(255,255,255,.06);}
+.org-rep{font-size:10px;display:flex;align-items:center;gap:7px;color:var(--mist);}
+.org-rep-role{font-size:9px;font-weight:700;color:var(--steel);text-transform:uppercase;letter-spacing:.08em;white-space:nowrap;}
+.org-rep-name{color:#fff;font-weight:600;}
+
+/* ── NOTE BOX ── */
+.note{background:rgba(196,149,42,.05);border:1px solid rgba(196,149,42,.15);border-left:3px solid var(--gold);border-radius:6px;padding:11px 15px;font-size:11.5px;color:var(--mist);line-height:1.65;margin-top:12px;}
+.note strong{color:#fff;}
+.note .nt{font-family:var(--head);font-size:12px;font-weight:700;color:var(--gold2);margin-bottom:5px;display:block;}
+
+/* ── TBD CARD ── */
+.card-tbd{opacity:.6;}
+.card-tbd .card-name{color:var(--steel);font-style:italic;}
+
+/* ── SUMMARY BAR ── */
+.sum-bar{display:flex;gap:16px;flex-wrap:wrap;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:14px 20px;margin-bottom:24px;}
+.sb-item{display:flex;align-items:center;gap:10px;}
+.sb-dot{width:10px;height:10px;border-radius:50%;}
+.sb-label{font-size:12px;color:var(--steel);}
+.sb-val{font-size:14px;font-weight:700;color:#fff;}
+.sb-note{font-size:11px;color:var(--gold);font-weight:600;}
+
+@media(max-width:1100px){
+  .c5{grid-template-columns:repeat(3,1fr);}
+  .c4{grid-template-columns:repeat(2,1fr);}
+  .c3{grid-template-columns:repeat(2,1fr);}
+  .page,.hero{padding-left:20px;padding-right:20px;}
+}
+@media(max-width:700px){
+  .c5,.c4,.c3,.c2{grid-template-columns:1fr;}
+  .tb-center{display:none;}
+}
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(196,149,42,.25);border-radius:3px;}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <span class="tb-brand">MIGC · Écosystème</span>
+  <nav class="tb-center">
+    <a class="np" href="#c1">Exécution</a>
+    <a class="np" href="#c2">Tech</a>
+    <a class="np" href="#c3">Comité</a>
+    <a class="np" href="#c4">Commissions</a>
+    <a class="np" href="#c5">Organisations</a>
+    <a class="np" href="#c6fed">Politique & Business</a>
+    <a class="np" href="#c7amb">Ambassadeurs</a>
+    <a class="np" href="#c8fund">Prévoyance</a>
+  </nav>
+  <span class="tb-right">Confidentiel · Sport7 Labs · Mars 2026 · v6</span>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-top">
+    <div class="brand">
+      <div class="brand-badge">M</div>
+      <div>
+        <div class="brand-name">MIGC — Écosystème Personnes</div>
+        <div class="brand-sub">Mixed Martial Arts International Grading Council · Sport7 Labs · v6</div>
+      </div>
+    </div>
+    <div class="hero-kpis">
+      <div class="hk"><div class="hk-v">45+</div><div class="hk-l">Noms</div></div>
+      <div class="hk"><div class="hk-v">8</div><div class="hk-l">Couches</div></div>
+      <div class="hk"><div class="hk-v">5</div><div class="hk-l">Commissions</div></div>
+      <div class="hk"><div class="hk-v">10</div><div class="hk-l">Orgs pro</div></div>
+      <div class="hk"><div class="hk-v">18</div><div class="hk-l">★ Partants</div></div>
+    </div>
+  </div>
+  <div class="hero-meta">Composition proposée par <span>Bertrand Amoussou & Yann Dib</span> · Document <span>MIGC-Ecosystème-Personnes-v6</span> · Confidentiel — Mars 2026</div>
+</div>
+
+<div class="page">
+
+<!-- ACCESS LEGEND -->
+<div style="margin-top:20px">
+  <div class="access-bar">
+    <span class="abl">Accès prise de contact :</span>
+    <div class="ab-item"><div class="ab-dot g"></div><strong>Vert</strong> — Contact proche · Immédiat</div>
+    <div class="ab-item"><div class="ab-dot y"></div><strong>Jaune</strong> — Contact direct · Facile d'accès</div>
+    <div class="ab-item"><div class="ab-dot r"></div><strong>Rouge</strong> — Contact indirect · Via réseau</div>
+    <div class="ab-item" style="margin-left:8px">★ <strong style="margin-left:3px">Étoile</strong> — Forte probabilité d'accord</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- COUCHE 1 — EXÉCUTION                                      -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="section" id="c1">
+  <div class="layer-header">
+    <span class="layer-badge lb-exec">🔴 Couche 1</span>
+    <div>
+      <div class="layer-title">Direction Opérationnelle MIGC — 7-8 salariés</div>
+      <div class="layer-desc">Phase lancement : équipe intérimaire issue de Sport7 Labs · Phase permanente : recrutements externes en parallèle · Sport7 Labs garde sa propre RH</div>
+    </div>
+  </div>
+
+  <div class="sec-label">⚡ Équipe de lancement — CDD temporaires</div>
+  <div class="g1 c5" style="margin-bottom:18px">
+    <!-- Yann Dib -->
+    <div class="card">
+      <div class="card-stripe cs-red"></div>
+      <div class="card-body">
+        <div class="card-role">Directeur Général — Intérim Lancement</div>
+        <div class="card-name"><span class="card-flag">🇫🇷</span>Yann Dib</div>
+        <div class="card-bio">CEO & co-fondateur Sport7 Labs. Architecte de l'ensemble de l'écosystème MIGC depuis l'origine. Maîtrise complète — vision stratégique, structure juridique, modèle économique.</div>
+        <div class="card-why">Seul à détenir la vision globale du projet. DG de lancement par défaut · Transition vers profil DG externe dès recrutement idéal.</div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">Full time lancement</span><span class="cf-badge cfb-cdd">Intérim Lancement</span></div>
+    </div>
+    <!-- Bertrand -->
+    <div class="card">
+      <div class="card-stripe cs-gold"></div>
+      <div class="card-body">
+        <div class="card-role">Directeur Technique — Intérim Lancement</div>
+        <div class="card-name"><span class="card-flag">🇫🇷</span>Bertrand Amoussou</div>
+        <div class="card-bio">Fondateur du système de grades MMA mondial. Ancien Président IMMAF. Seul à maîtriser le référentiel technique dans sa totalité. Cumul Président + DT assumé durant le lancement.</div>
+        <div class="card-why">Double casquette temporaire indispensable — le référentiel technique MIGC ne peut être délégué à personne d'autre à ce stade.</div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">Full time lancement</span><span class="cf-badge cfb-cdd">Président + DT Intérim</span></div>
+    </div>
+    <!-- Mikado -->
+    <div class="card">
+      <div class="card-stripe cs-red"></div>
+      <div class="card-body">
+        <div class="card-role">DAF — Intérim Lancement</div>
+        <div class="card-name"><span class="card-flag">🇫🇷</span>Mickael Salfati</div>
+        <div class="card-bio">CFO Sport7 Labs. Maîtrise complète de la structure financière MIGC. Architecte des flux 5% levy, suivi des budgets et interface auditeur.</div>
+        <div class="card-why">Continuité financière garantie dès J+1 · Transition vers CFO externe lors du recrutement définitif.</div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">Full time lancement</span><span class="cf-badge cfb-cdd">Intérim Lancement</span></div>
+    </div>
+    <!-- Pierre -->
+    <div class="card">
+      <div class="card-stripe cs-red"></div>
+      <div class="card-body">
+        <div class="card-role">Juriste — Intérim Lancement</div>
+        <div class="card-name"><span class="card-flag">🇫🇷</span>Pierre</div>
+        <div class="card-bio">Juriste interne Sport7 Labs. Connaissance complète des contrats et structure MIGC. Rédaction des actes, veille réglementaire.</div>
+        <div class="card-why">⚠️ Non avocat — pour actes formels, recours à cabinet externe (Lenz & Staehelin ou Lalive). Juridique interne assuré dès le lancement.</div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">Full time lancement</span><span class="cf-badge cfb-cdd">Intérim Lancement</span></div>
+    </div>
+    <!-- Benjamin -->
+    <div class="card">
+      <div class="card-stripe cs-red"></div>
+      <div class="card-body">
+        <div class="card-role">Directeur IA & Logiciels — CDD Lancement</div>
+        <div class="card-name"><span class="card-flag">🇫🇷</span>Benjamin Bouchard</div>
+        <div class="card-bio">Responsable IA Guardian & architecture logicielle Sport7 Labs. DSP, smart contracts, bracelets NFC, supervision IA Assistants membres.</div>
+        <div class="card-why">Interface technique entre MIGC et Sport7 Labs · Poste clé pour la phase de lancement — tout le stack technologique passe par lui.</div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">Full time lancement</span><span class="cf-badge cfb-cdd">Intérim Lancement</span></div>
+    </div>
+  </div>
+
+  <div class="sec-label">🔎 Recrutements permanents — Profils idéaux</div>
+  <div class="g1 c4">
+    <div class="card card-tbd">
+      <div class="card-stripe cs-blue"></div>
+      <div class="card-body">
+        <div class="card-role">Directeur Général — Permanent</div>
+        <div class="card-name">CEO / COO scale-up international</div>
+        <div class="card-bio">Profil start-up to licorne. A déjà scalé une organisation de 0 à plusieurs dizaines de millions. Revenue, partnerships, go-to-market international. La légitimité sportive est assurée par le Comité.</div>
+        <div class="card-why">Le DG gère la machine — le Comité gère la légitimité sportive.</div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">40-50h / semaine</span><span class="cf-badge cfb-recruit">À recruter</span></div>
+    </div>
+    <div class="card card-tbd">
+      <div class="card-stripe cs-blue"></div>
+      <div class="card-body">
+        <div class="card-role">Directeur Technique — Permanent</div>
+        <div class="card-name">Profil cible : Nicolas Messner (IJF)</div>
+        <div class="card-bio">Directeur Éducation IJF — a déployé le système de grades judo dans 200 pays. Référence absolue en structuration de niveaux internationaux et déploiement contenu technique mondial.</div>
+        <div class="card-why">Architecte grades international éprouvé — le profil idéal pour succéder à Bertrand sur la dimension technique.</div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">40-50h / semaine</span><span class="cf-badge cfb-recruit">À recruter</span></div>
+    </div>
+    <div class="card card-tbd">
+      <div class="card-stripe cs-blue"></div>
+      <div class="card-body">
+        <div class="card-role">Relations Internationales ×2</div>
+        <div class="card-name">Pôle Asie/MENA + Pôle Europe/Amériques</div>
+        <div class="card-bio">RI#1 : EN / arabophone et/ou mandarin · Réseau ONE, BRAVE CF, UAE Warriors · RI#2 : FR/EN/ES · Réseau KSW, AresMMA, Cage Warriors + Amériques Latines. Mobilité 50%+.</div>
+        <div class="card-why">Deux zones géographiques, deux profils culturels — les RI sont la force de frappe terrain du MIGC.</div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">40h / semaine chacun</span><span class="cf-badge cfb-recruit">À recruter</span></div>
+    </div>
+    <div class="card card-tbd">
+      <div class="card-stripe cs-blue"></div>
+      <div class="card-body">
+        <div class="card-role">Responsable Communication</div>
+        <div class="card-name">Expert media sport de combat international</div>
+        <div class="card-bio">Journaliste/PR sport de combat. Maîtrise éditoriale multilingue. Gestion réputation institutionnelle. Coordination avec IA Assistant dédié pour communiqués officiels.</div>
+        <div class="card-why">Phase 1 : externalisable via agence Paris ou Genève · Recrutement interne dès la montée en puissance.</div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">40h / semaine</span><span class="cf-badge cfb-recruit">Externalisable Ph.1</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- COUCHE 2 — TECH (Sport7 Labs)                            -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="section" id="c2">
+  <div class="layer-header">
+    <span class="layer-badge lb-tech">🟡 Couche 2</span>
+    <div>
+      <div class="layer-title">Sport7 Labs — Opérateur technologique mandaté (SARL)</div>
+      <div class="layer-desc">8-12 salariés Sport7 Labs · Entité séparée · SLA avec pénalités · MIGC co-propriétaire des données · Mandat exclusif 20 ans</div>
+    </div>
+  </div>
+  <div class="g1 c3">
+    <div class="card">
+      <div class="card-stripe cs-gold"></div>
+      <div class="card-body">
+        <div class="card-role">Équipe développement</div>
+        <div class="card-name">8-12 ingénieurs / développeurs</div>
+        <div class="card-bio">Plateforme DSP · App mobile iOS/Android · Blockchain · Smart contracts 5% levy · Bracelets NFC · Architecture data ranking.</div>
+        <div class="card-why">Cœur technologique du MIGC — Sport7 Labs est le bras armé technique exclusif.</div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">Temps plein collectif</span><span class="cf-badge cfb-org">Commission SLA</span></div>
+    </div>
+    <div class="card">
+      <div class="card-stripe cs-steel"></div>
+      <div class="card-body">
+        <div class="card-role">IA Guardian</div>
+        <div class="card-name">Système automatisé 24/7</div>
+        <div class="card-bio">Surveillance flux financiers · Intégrité ranking · Détection conflits d'intérêts · Cybersécurité DSP · Alertes temps réel · Génération automatique des PV.</div>
+        <div class="card-why">Couche de transparence et de gouvernance automatique — remplace l'audit manuel permanent.</div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">24/7 — 168h/semaine</span><span class="cf-badge cfb-tbd">Machine</span></div>
+    </div>
+    <div class="card">
+      <div class="card-stripe cs-steel"></div>
+      <div class="card-body">
+        <div class="card-role">IA Assistants dédiés</div>
+        <div class="card-name">1 assistant IA par membre</div>
+        <div class="card-bio">PV automatiques · Traduction multilingue · Synthèses dossiers · Continuité en cas d'absence · Non-transférable · Personnalisé par membre.</div>
+        <div class="card-why">Réduit la charge administrative des membres du Comité et des commissions à zéro.</div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">Continu / par membre</span><span class="cf-badge cfb-tbd">Automatisé</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- COUCHE 3 — COMITÉ DIRECTEUR                               -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="section" id="c3">
+  <div class="layer-header">
+    <span class="layer-badge lb-strat">🔵 Couche 3</span>
+    <div>
+      <div class="layer-title">Comité Directeur — 8 membres bénévoles</div>
+      <div class="layer-desc">Gouvernance MIGC · Art. 60-79 CC Suisse · 4-6 jours de présence / mois · IA Assistant dédié par membre</div>
+    </div>
+  </div>
+
+  <div class="g1 c4">
+
+    <!-- Bertrand -->
+    <div class="card">
+      <div class="card-stripe cs-gold"></div>
+      <div class="card-body">
+        <div class="card-role">Président du Comité</div>
+        <div class="card-name"><span class="card-flag">🇫🇷</span>Bertrand Amoussou <span class="star-b">FONDATEUR</span></div>
+        <div class="card-bio"><strong>Ancien Président IMMAF</strong> · Fondateur du système de grades MMA mondial · 30 ans de pratique et d'enseignement · Seul expert au monde à maîtriser le référentiel MIGC dans sa totalité · Se consacre exclusivement au MIGC.</div>
+        <div class="card-why">Il est l'unique porteur de vision technique et institutionnelle. Le MIGC existe parce qu'il l'a créé — personne d'autre ne peut occuper ce rôle.</div>
+      </div>
+      <div class="card-options">
+        <div class="opt-label">Statut</div>
+        <div class="opt-list"><div class="opt-item"><div class="opt-dot g"></div>Fondateur · Rôle non négociable</div></div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">~220j / an</span><span class="cf-badge cfb-found">Fondateur</span></div>
+    </div>
+
+    <!-- Président d'honneur -->
+    <div class="card">
+      <div class="card-stripe cs-gold"></div>
+      <div class="card-body">
+        <div class="card-role">Président d'Honneur</div>
+        <div class="card-name"><span class="card-flag">🇨🇦</span>Georges St-Pierre (GSP) <span class="star-b">OPT. 1</span></div>
+        <div class="card-bio"><strong>Double champion UFC</strong> (poids welter + moyen) · UFC Hall of Fame · Co-fondateur MMAAA · 7M+ followers · Image irréprochable · Businessman accompli post-carrière · Contact vert direct de Bertrand.</div>
+        <div class="card-why">Le Roger Federer du MMA — crédibilité absolue, image mondiale sans controverse. Rôle honorifique parfait pour donner au MIGC une légitimité immédiate auprès du public international.</div>
+      </div>
+      <div class="card-options">
+        <div class="opt-label">Si GSP refuse → options</div>
+        <div class="opt-list">
+          <div class="opt-item"><div class="opt-dot y"></div>Royce Gracie (jaune) — légitimité historique absolue</div>
+          <div class="opt-item"><div class="opt-dot g"></div>Fedor Emelianenko (vert) — icône mondiale</div>
+        </div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">4-6j / mois</span><span class="cf-badge cfb-proposed">Priorité 1</span></div>
+    </div>
+
+    <!-- VP Nogueira -->
+    <div class="card">
+      <div class="card-stripe cs-blue"></div>
+      <div class="card-body">
+        <div class="card-role">Vice-Président</div>
+        <div class="card-name"><span class="card-flag">🇧🇷</span>Antonio Rodrigo Nogueira <span class="star-b">★ CONFIRMÉ</span></div>
+        <div class="card-bio"><strong>Légende MMA</strong> · Champion PRIDE + UFC HW · Hall of Fame UFC · Oncle Big Nog · Ambassadeur naturel Amériques + Brésil · Contact vert étoilé de Bertrand — engagement déjà acquis.</div>
+        <div class="card-why">Profil rare : légitimité sportive absolue + engagement institutionnel confirmé + représentation géographique Brésil/Amériques. Nogueira est la colonne vertébrale crédible du Comité.</div>
+      </div>
+      <div class="card-options">
+        <div class="opt-label">Si empêché →</div>
+        <div class="opt-list">
+          <div class="opt-item"><div class="opt-dot g"></div>Randy Couture (jaune) — profil institutionnel US</div>
+        </div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">6-10h / semaine</span><span class="cf-badge cfb-confirm">★ Confirmé</span></div>
+    </div>
+
+    <!-- Secrétaire Général -->
+    <div class="card">
+      <div class="card-stripe cs-blue"></div>
+      <div class="card-body">
+        <div class="card-role">Secrétaire Général</div>
+        <div class="card-name"><span class="card-flag">🇺🇸</span>Nick Lembo</div>
+        <div class="card-bio"><strong>Directeur Droit Sportif — New Jersey AC</strong> · Co-auteur des Unified Rules of MMA (2001, révisées 2016) · Architecte de la réglementation MMA mondiale · 25 ans d'expérience régulatoire · Contact indirect de Bertrand.</div>
+        <div class="card-why">Le meilleur profil possible sur le fond — il a littéralement écrit les règles du MMA. Son titre MIGC serait une consécration de son travail. L'approche passe par Marc Ratner (vert) ou le réseau ABC.</div>
+      </div>
+      <div class="card-options">
+        <div class="opt-label">Si Lembo indisponible → option immédiate</div>
+        <div class="opt-list">
+          <div class="opt-item"><div class="opt-dot g"></div>Marc Ratner (vert) — ex-VP UFC, réglementation, accessible directement</div>
+        </div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">8-12h / semaine</span><span class="cf-badge cfb-proposed">Via réseau</span></div>
+    </div>
+
+    <!-- Trésorier -->
+    <div class="card">
+      <div class="card-stripe cs-blue"></div>
+      <div class="card-body">
+        <div class="card-role">Trésorier</div>
+        <div class="card-name"><span class="card-flag">🇮🇹</span>Luigi Perillo <span class="star-b">★ PARTANT</span></div>
+        <div class="card-bio"><strong>Finance sport international</strong> · Expert finance institutionnelle · Réseau sportif européen et international · Contact vert étoilé de Bertrand — engagement déjà acquis · Profil finance + sport : combinaison rare.</div>
+        <div class="card-why">Supervision flux financiers, alertes IA Guardian, co-signature >$10K. Sa combinaison profil financier + passion sport combat + contact vert étoilé en fait le choix idéal et immédiatement disponible.</div>
+      </div>
+      <div class="card-options">
+        <div class="opt-label">Statut</div>
+        <div class="opt-list"><div class="opt-item"><div class="opt-dot g"></div>Déjà partant — à officialiser</div></div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">6-10h / semaine</span><span class="cf-badge cfb-confirm">★ Partant</span></div>
+    </div>
+
+    <!-- Membre Technique -->
+    <div class="card">
+      <div class="card-stripe cs-blue"></div>
+      <div class="card-body">
+        <div class="card-role">Membre Technique MMA</div>
+        <div class="card-name"><span class="card-flag">🇨🇦</span>Firas Zahabi</div>
+        <div class="card-bio"><strong>Head coach Tristar Gym</strong> · Architecte de la carrière de GSP · Philosophie systémique du MMA · Reconnu top 5 coach mondial · Conçoit des critères d'évaluation objectifs et défendables · Contact direct Bertrand.</div>
+        <div class="card-why">Le Comité a besoin d'un technicien de haut niveau — pas d'une star médiatique. Zahabi est le parfait équilibre entre crédibilité technique, capacité d'abstraction et discrétion institutionnelle.</div>
+      </div>
+      <div class="card-options">
+        <div class="opt-label">Si Zahabi indisponible →</div>
+        <div class="opt-list">
+          <div class="opt-item"><div class="opt-dot g"></div>Eugene Bareman (vert) — City Kickboxing, réseau mondial</div>
+        </div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">8-10j / mois</span><span class="cf-badge cfb-proposed">À recruter</span></div>
+    </div>
+
+    <!-- Membre Développement -->
+    <div class="card">
+      <div class="card-stripe cs-teal"></div>
+      <div class="card-body">
+        <div class="card-role">Membre Développement</div>
+        <div class="card-name"><span class="card-flag">🇮🇪</span>John Kavanagh</div>
+        <div class="card-bio"><strong>Head coach SBG Ireland</strong> · Coach de Conor McGregor + Gunnar Nelson · Premier ceinture noire BJJ d'Irlande · Connu dans 150+ pays via réseau McGregor · Contact vert direct de Bertrand.</div>
+        <div class="card-why">Son réseau McGregor ouvre des portes normalement inaccessibles. La visibilité SBG + McGregor est un multiplicateur de crédibilité pour le MIGC dans tous les marchés anglophones.</div>
+      </div>
+      <div class="card-options">
+        <div class="opt-label">Si Kavanagh indisponible →</div>
+        <div class="opt-list">
+          <div class="opt-item"><div class="opt-dot g"></div>Ubaldo Maroquin (vert ★) — couverture Amériques Latines critique</div>
+        </div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">4-8h / semaine</span><span class="cf-badge cfb-proposed">À recruter</span></div>
+    </div>
+
+    <!-- Représentant Athlètes -->
+    <div class="card">
+      <div class="card-stripe cs-green"></div>
+      <div class="card-body">
+        <div class="card-role">Représentant des Athlètes</div>
+        <div class="card-name"><span class="card-flag">🇫🇷</span>Cyril Gane</div>
+        <div class="card-bio"><strong>Ancien champion intérimaire UFC HW</strong> · Top 5 mondial actif · Français, éduqué, articulé · "Bon Gamin" — image positive sans controverse · Représente la génération actuelle des combattants · Contact vert Bertrand.</div>
+        <div class="card-why">Le seul profil actif qui allie légitimité sportive de très haut niveau + image irréprochable + contact direct Bertrand. Contrat UFC = pas un obstacle pour siéger au Comité.</div>
+      </div>
+      <div class="card-options">
+        <div class="opt-label">Si Gane indisponible →</div>
+        <div class="opt-list">
+          <div class="opt-item"><div class="opt-dot y"></div>Valentina Shevchenko (jaune) — représentation genre + Asie Centrale</div>
+          <div class="opt-item"><div class="opt-dot g"></div>Francis Ngannou ★ (vert) — si pas déjà Commission Protection Sociale</div>
+        </div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">3-6h / semaine</span><span class="cf-badge cfb-proposed">Priorité 1</span></div>
+    </div>
+
+  </div>
+
+  <!-- Membres fondateurs d'honneur -->
+  <div class="sec-label">🏆 Membres Fondateurs d'Honneur</div>
+  <div class="note">
+    <span class="nt">Catégorie créée pour les légendes qui ont bâti le MMA — titre pérenne, non soumis à renouvellement</span>
+    Ces noms confèrent une légitimité historique au MIGC. Ils participent aux événements officiels, signent les grades de plus haut niveau et sont associés à l'image institutionnelle de façon permanente. Pas de rôle opérationnel — mais un rôle symbolique décisif.
+  </div>
+  <div class="g1 c3" style="margin-top:10px">
+    <div class="card">
+      <div class="card-stripe" style="background:linear-gradient(90deg,#7A5010,#C8963E)"></div>
+      <div class="card-body">
+        <div class="card-role">Membre Fondateur d'Honneur</div>
+        <div class="card-name"><span class="card-flag">🇺🇸</span>Royce Gracie</div>
+        <div class="card-bio"><strong>Vainqueur UFC 1, 2, 4</strong> · A démontré la supériorité du BJJ au monde entier · Pionnier absolu du MMA moderne · Famille Gracie = fondateurs du sport · Contact direct Bertrand.</div>
+        <div class="card-why">Sans Royce Gracie, le MMA tel qu'on le connaît n'existe pas. Sa présence au sein du MIGC est un signal fondateur envoyé à toute la communauté mondiale.</div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">Événements officiels</span><span class="cf-badge cfb-found">Fondateur d'Honneur</span></div>
+    </div>
+    <div class="card">
+      <div class="card-stripe" style="background:linear-gradient(90deg,#7A5010,#C8963E)"></div>
+      <div class="card-body">
+        <div class="card-role">Membre Fondateur d'Honneur</div>
+        <div class="card-name"><span class="card-flag">🇷🇺</span>Fedor Emelianenko</div>
+        <div class="card-bio"><strong>The Last Emperor</strong> · Champion PRIDE · Unanimement considéré meilleur HW de tous les temps · 10 ans d'invincibilité · Retraité · Contact vert direct de Bertrand · MIGC neutre géopolitiquement.</div>
+        <div class="card-why">Fedor incarne l'excellence sportive au-delà de toute frontière géopolitique. Sa légitimité en Europe de l'Est et en Russie est incomparable — et le MIGC ne fait pas de politique.</div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">Événements officiels</span><span class="cf-badge cfb-found">Fondateur d'Honneur</span></div>
+    </div>
+    <div class="card">
+      <div class="card-stripe" style="background:linear-gradient(90deg,#7A5010,#C8963E)"></div>
+      <div class="card-body">
+        <div class="card-role">Membre Fondateur d'Honneur</div>
+        <div class="card-name"><span class="card-flag">🇧🇷</span>Renzo Gracie <span class="star-b">★ PARTANT</span></div>
+        <div class="card-bio"><strong>Ceinture corail 7e degré BJJ</strong> · Petit-fils Carlos Gracie · 66+ académies mondiales · Double champion ADCC 1998/2000 · Expert des systèmes de grades · Contact vert étoilé — déjà partant.</div>
+        <div class="card-why">Note : Renzo est également Président de la Commission Technique & Grading — son titre de Fondateur d'Honneur complète son rôle opérationnel dans les commissions.</div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">+ Commission Grading</span><span class="cf-badge cfb-confirm">★ Déjà partant</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- COUCHE 4 — COMMISSIONS                                    -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="section" id="c4">
+  <div class="layer-header">
+    <span class="layer-badge lb-comm">🟢 Couche 4</span>
+    <div>
+      <div class="layer-title">Commissions Spécialisées — 5 commissions · 1 président + 3 membres chacune</div>
+      <div class="layer-desc">Experts & légendes MMA · Bénévoles · Rémunération honorifique · Combattants actifs sous contrat bienvenus — pas de contrainte d'exclusivité pour les commissions MIGC</div>
+    </div>
+  </div>
+
+<!-- ─── COMMISSION 1 : TECHNIQUE & GRADING ─── -->
+  <div class="comm-block">
+    <div class="comm-header" style="background:rgba(196,149,42,.07);border:1px solid rgba(196,149,42,.15);border-bottom:none;border-radius:8px 8px 0 0;">
+      <span class="comm-icon">🥋</span>
+      <div>
+        <div class="comm-title">Commission Technique & Grading</div>
+        <div class="comm-desc">Définit les critères de grades · Valide les référentiels techniques · Certifie les instructeurs · Cœur métier du MIGC</div>
+      </div>
+    </div>
+    <!-- Président -->
+    <div class="comm-pres">
+      <div class="card-stripe cs-gold" style="height:3px"></div>
+      <div class="card-body">
+        <div class="card-role" style="color:var(--gold)">★ Président Commission — PRIORITÉ ABSOLUE</div>
+        <div class="card-name"><span class="card-flag">🇧🇷</span>Renzo Gracie <span class="star-b">★ PARTANT · VERT</span></div>
+        <div class="card-bio"><strong>Ceinture corail 7e degré BJJ</strong> · Petit-fils Carlos Gracie · Double champion ADCC · 66+ académies sur 4 continents · Expert mondial des systèmes de grades d'arts martiaux · A structuré des niveaux de progression pour des milliers d'élèves · Contact vert étoilé — déjà partant.</div>
+        <div class="card-why">La Commission Grading est le cœur du MIGC — Renzo Gracie est la seule personne au monde qui allie légitimité technique, réseau mondial et engagement confirmé. Sa signature ici est la première à aller chercher. Si GSP est le visage public du MIGC, Renzo en est l'âme technique.</div>
+      </div>
+      <div class="card-options">
+        <div class="opt-label">Si Renzo refuse → backup</div>
+        <div class="opt-list">
+          <div class="opt-item"><div class="opt-dot g"></div>Firas Zahabi (jaune) — si pas Comité Technique</div>
+          <div class="opt-item"><div class="opt-dot y"></div>Erick Paulson (jaune) — coach légendaire, expertise multi-disciplines</div>
+        </div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">3-5 jours / mois</span><span class="cf-badge cfb-confirm">★ Priorité Absolue</span></div>
+    </div>
+    <!-- Membres -->
+    <div class="comm-members c3">
+      <div class="card">
+        <div class="card-stripe cs-gold" style="opacity:.5"></div>
+        <div class="card-body">
+          <div class="card-role" style="color:var(--gold)">Membre Commission</div>
+          <div class="card-name"><span class="card-flag">🇺🇸</span>Big John McCarthy <span style="font-size:9px;background:rgba(232,146,58,.15);color:var(--amber2);border:1px solid rgba(232,146,58,.3);border-radius:8px;padding:1px 7px;">JAUNE</span></div>
+          <div class="card-bio"><strong>Co-inventeur terme "MMA"</strong> · Arbitre depuis UFC 2 (1994) · Co-auteur des Unified Rules of MMA · Triple Referee of the Year · 30 ans d'expérience terrain · Autorité incontestable sur les règles du combat.</div>
+          <div class="card-why">McCarthy apporte la dimension réglementaire que Renzo n'a pas. Sa connaissance des règles du combat combinée à la vision grades de Renzo couvre l'intégralité du spectre technique MIGC.</div>
+        </div>
+        <div class="card-options">
+          <div class="opt-label">Si refus →</div>
+          <div class="opt-list"><div class="opt-item"><div class="opt-dot y"></div>Marc Ratner (vert) — si pas SG</div></div>
+        </div>
+        <div class="card-foot"><span class="cf-hours">2-3j / mois</span><span class="cf-badge cfb-proposed">À recruter</span></div>
+      </div>
+      <div class="card">
+        <div class="card-stripe cs-gold" style="opacity:.5"></div>
+        <div class="card-body">
+          <div class="card-role" style="color:var(--gold)">Membre Commission</div>
+          <div class="card-name"><span class="card-flag">🇧🇷</span>Raphaël Cordeiro <span style="font-size:9px;background:rgba(40,181,132,.15);color:var(--green2);border:1px solid rgba(40,181,132,.3);border-radius:8px;padding:1px 7px;">VERT</span></div>
+          <div class="card-bio"><strong>Head coach Kings MMA</strong> · A entraîné Cris Cyborg, Rafael Dos Anjos, Wanderlei Silva · Spécialiste Muay Thai & MMA élite · Référence mondiale école brésilienne de frappe · Contact vert direct de Bertrand.</div>
+          <div class="card-why">L'école brésilienne est la school la plus représentée dans le MMA haut niveau. Cordeiro est le garant que les critères de grades techniques reflètent ce que le fighting brésilien a apporté au sport.</div>
+        </div>
+        <div class="card-options">
+          <div class="opt-label">Statut</div>
+          <div class="opt-list"><div class="opt-item"><div class="opt-dot g"></div>Contact vert — approche directe</div></div>
+        </div>
+        <div class="card-foot"><span class="cf-hours">2-3j / mois</span><span class="cf-badge cfb-proposed">À recruter</span></div>
+      </div>
+      <div class="card">
+        <div class="card-stripe cs-gold" style="opacity:.5"></div>
+        <div class="card-body">
+          <div class="card-role" style="color:var(--gold)">Membre Commission</div>
+          <div class="card-name"><span class="card-flag">🇳🇿</span>Eugene Bareman <span style="font-size:9px;background:rgba(40,181,132,.15);color:var(--green2);border:1px solid rgba(40,181,132,.3);border-radius:8px;padding:1px 7px;">VERT</span></div>
+          <div class="card-bio"><strong>Head coach City Kickboxing</strong> · Coach d'Israel Adesanya, Alexander Volkanovski, Carlos Ulberg · École néo-zélandaise — incarne l'internationalisation du MMA · Vision holistique du combattant · Contact vert de Bertrand.</div>
+          <div class="card-why">Bareman représente la vague de l'école Pacifique/Océanie dans le MMA. Sa présence garantit que les grades MIGC ne sont pas perçus comme une vision euro-américaine uniquement.</div>
+        </div>
+        <div class="card-options">
+          <div class="opt-label">Si refus →</div>
+          <div class="opt-list"><div class="opt-item"><div class="opt-dot y"></div>John Danaher (jaune) — génie tactique, autre angle</div></div>
+        </div>
+        <div class="card-foot"><span class="cf-hours">2-3j / mois</span><span class="cf-badge cfb-proposed">À recruter</span></div>
+      </div>
+    </div>
+  </div>
+
+<!-- ─── COMMISSION 2 : RANKING & COMPÉTITIONS ─── -->
+  <div class="comm-block">
+    <div class="comm-header" style="background:rgba(37,88,160,.07);border:1px solid rgba(37,88,160,.2);border-bottom:none;border-radius:8px 8px 0 0;">
+      <span class="comm-icon">🏆</span>
+      <div>
+        <div class="comm-title">Commission Ranking & Compétitions</div>
+        <div class="comm-desc">Gère le système de ranking MIGC · Valide les résultats · Supervise la conformité des compétitions · Interface avec les organisations pro</div>
+      </div>
+    </div>
+    <div class="comm-pres">
+      <div class="card-stripe cs-blue" style="height:3px"></div>
+      <div class="card-body">
+        <div class="card-role" style="color:var(--blue2)">Président Commission</div>
+        <div class="card-name"><span class="card-flag">🇺🇸</span>Daniel Cormier (DC) <span style="font-size:9px;background:rgba(232,146,58,.15);color:var(--amber2);border:1px solid rgba(232,146,58,.3);border-radius:8px;padding:1px 7px;">JAUNE</span></div>
+        <div class="card-bio"><strong>Double champion UFC</strong> (LHW + HW) · Lutteur olympique (JO 2004) · Analyste ESPN — expert classements et compétitions · Respecté de tous les acteurs de l'industrie · Voix de référence sur la valeur des combattants · Contact direct Bertrand.</div>
+        <div class="card-why">DC est l'homme idéal pour présider la Commission Ranking : il a vécu le système de l'intérieur (combattant), il l'analyse quotidiennement (ESPN) et il est respecté par toutes les organisations. Contrat ESPN = pas un obstacle pour siéger au MIGC.</div>
+      </div>
+      <div class="card-options">
+        <div class="opt-label">Si DC indisponible →</div>
+        <div class="opt-list">
+          <div class="opt-item"><div class="opt-dot g"></div>Marc Ratner (vert) — ex-VP UFC, expert réglementation compétitions</div>
+          <div class="opt-item"><div class="opt-dot y"></div>Randy Couture (jaune) — légitimité athlète + institutionnel</div>
+        </div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">3-4j / mois</span><span class="cf-badge cfb-proposed">À recruter</span></div>
+    </div>
+    <div class="comm-members c3">
+      <div class="card">
+        <div class="card-stripe cs-blue" style="opacity:.5"></div>
+        <div class="card-body">
+          <div class="card-role" style="color:var(--blue2)">Membre Commission</div>
+          <div class="card-name"><span class="card-flag">🇺🇸</span>Marc Ratner <span style="font-size:9px;background:rgba(40,181,132,.15);color:var(--green2);border:1px solid rgba(40,181,132,.3);border-radius:8px;padding:1px 7px;">VERT</span></div>
+          <div class="card-bio"><strong>Ex-VP Réglementation UFC</strong> · Ex-Directeur Nevada Athletic Commission · 15+ ans au sommet réglementaire du sport · Architecte des standards de sécurité MMA · Retraité = disponible · Contact vert direct de Bertrand.</div>
+          <div class="card-why">La mémoire institutionnelle du MMA. Ratner apporte 30 ans de règles, de décisions et de jurisprudence. Son background réglementaire complète parfaitement le profil athlétique de DC.</div>
+        </div>
+        <div class="card-options">
+          <div class="opt-label">Note</div>
+          <div class="opt-list"><div class="opt-item"><div class="opt-dot g"></div>Option Secrétaire Général si Lembo indisponible</div></div>
+        </div>
+        <div class="card-foot"><span class="cf-hours">2-3j / mois</span><span class="cf-badge cfb-proposed">À recruter</span></div>
+      </div>
+      <div class="card">
+        <div class="card-stripe cs-blue" style="opacity:.5"></div>
+        <div class="card-body">
+          <div class="card-role" style="color:var(--blue2)">Membre Commission</div>
+          <div class="card-name"><span class="card-flag">🇺🇸</span>Randy Couture <span style="font-size:9px;background:rgba(232,146,58,.15);color:var(--amber2);border:1px solid rgba(232,146,58,.3);border-radius:8px;padding:1px 7px;">JAUNE</span></div>
+          <div class="card-bio"><strong>5× Champion UFC</strong> (HW + LHW) · Hall of Fame · Ex-militaire, père de famille, entrepreneur · Profil le plus institutionnel du MMA américain · Impliqué dans la politique sportive US · Contact direct Bertrand.</div>
+          <div class="card-why">Couture apporte la légitimité du combattant qui comprend les systèmes. Sa stature en Amérique du Nord est un atout pour convaincre les organisations US de rejoindre le MIGC.</div>
+        </div>
+        <div class="card-options">
+          <div class="opt-label">Si refus →</div>
+          <div class="opt-list"><div class="opt-item"><div class="opt-dot y"></div>Alexander Gustafsson (jaune) — crédibilité Europe du Nord</div></div>
+        </div>
+        <div class="card-foot"><span class="cf-hours">2-3j / mois</span><span class="cf-badge cfb-proposed">À recruter</span></div>
+      </div>
+      <div class="card">
+        <div class="card-stripe cs-blue" style="opacity:.5"></div>
+        <div class="card-body">
+          <div class="card-role" style="color:var(--blue2)">Membre Commission</div>
+          <div class="card-name"><span class="card-flag">🇺🇸</span>Erick Paulson <span style="font-size:9px;background:rgba(232,146,58,.15);color:var(--amber2);border:1px solid rgba(232,146,58,.3);border-radius:8px;padding:1px 7px;">JAUNE</span></div>
+          <div class="card-bio"><strong>Champion SHOOTO 1997</strong> · Expert Wrestling, BJJ, Catch · A entraîné Brock Lesnar, Josh Barnett · Encyclopédie vivante des arts martiaux · Profil technique multi-disciplines idéal pour valider des critères de ranking objectifs · Contact direct Bertrand.</div>
+          <div class="card-why">Le ranking MMA exige de comprendre toutes les disciplines. Paulson est l'un des rares à maîtriser le wrestling, le BJJ et le catch au niveau mondial — vision 360° indispensable pour la Commission Ranking.</div>
+        </div>
+        <div class="card-options">
+          <div class="opt-label">Si refus →</div>
+          <div class="opt-list"><div class="opt-item"><div class="opt-dot y"></div>John Danaher (jaune) — génie analytique, vision systémique</div></div>
+        </div>
+        <div class="card-foot"><span class="cf-hours">2-3j / mois</span><span class="cf-badge cfb-proposed">À recruter</span></div>
+      </div>
+    </div>
+  </div>
+
+<!-- ─── COMMISSION 3 : ÉTHIQUE & INTÉGRITÉ ─── -->
+  <div class="comm-block">
+    <div class="comm-header" style="background:rgba(106,63,158,.08);border:1px solid rgba(106,63,158,.2);border-bottom:none;border-radius:8px 8px 0 0;">
+      <span class="comm-icon">⚖️</span>
+      <div>
+        <div class="comm-title">Commission Éthique & Intégrité</div>
+        <div class="comm-desc">Gère les conflits · Traite les violations · Protège l'intégrité du système · Interface IA Guardian pour alertes éthiques</div>
+      </div>
+    </div>
+    <div class="comm-pres">
+      <div class="card-stripe cs-violet" style="height:3px"></div>
+      <div class="card-body">
+        <div class="card-role" style="color:var(--violet2)">Président Commission</div>
+        <div class="card-name"><span class="card-flag">🇷🇺</span>Fedor Emelianenko <span style="font-size:9px;background:rgba(40,181,132,.15);color:var(--green2);border:1px solid rgba(40,181,132,.3);border-radius:8px;padding:1px 7px;">VERT</span></div>
+        <div class="card-bio"><strong>The Last Emperor</strong> · Champion PRIDE · 10 ans d'invincibilité · Unanimement respecté pour son intégrité hors du commun · Personnalité calme, profonde et droite · Ex-président Fédération MMA Russie · Contact vert direct de Bertrand · MIGC neutre géopolitiquement.</div>
+        <div class="card-why">L'éthique nécessite une personne au-dessus de tout soupçon. Fedor est universellement respecté, y compris par ses adversaires les plus acharnés. Son autorité morale transcende toutes les frontières géographiques et politiques — le MIGC n'est pas une organisation politique.</div>
+      </div>
+      <div class="card-options">
+        <div class="opt-label">Si Fedor indisponible →</div>
+        <div class="opt-list">
+          <div class="opt-item"><div class="opt-dot y"></div>Randy Couture (jaune) — ex-militaire, éthique incontestable</div>
+          <div class="opt-item"><div class="opt-dot g"></div>Antonio Rodrigo Nogueira (vert ★) — en dernier recours si pas VP</div>
+        </div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">3-4j / mois</span><span class="cf-badge cfb-proposed">À recruter</span></div>
+    </div>
+    <div class="comm-members c3">
+      <div class="card">
+        <div class="card-stripe cs-violet" style="opacity:.5"></div>
+        <div class="card-body">
+          <div class="card-role" style="color:var(--violet2)">Membre Commission</div>
+          <div class="card-name"><span class="card-flag">🇺🇸</span>Greg Jackson <span style="font-size:9px;background:rgba(232,146,58,.15);color:var(--amber2);border:1px solid rgba(232,146,58,.3);border-radius:8px;padding:1px 7px;">JAUNE</span></div>
+          <div class="card-bio"><strong>Directeur Jackson-Wink MMA Academy</strong> · A entraîné 15+ champions du monde · Philosophe du combat · Respecté pour sa neutralité et son éthique dans une industrie très compétitive · Contact direct Bertrand.</div>
+          <div class="card-why">Jackson est connu dans toute l'industrie pour son intégrité — il refuse régulièrement des combattants dont l'entourage ne correspond pas à ses valeurs. Profil idéal pour une Commission Éthique.</div>
+        </div>
+        <div class="card-options">
+          <div class="opt-label">Si refus →</div>
+          <div class="opt-list"><div class="opt-item"><div class="opt-dot y"></div>Trevor Wittman (vert) — éthique reconnue</div></div>
+        </div>
+        <div class="card-foot"><span class="cf-hours">2-3j / mois</span><span class="cf-badge cfb-proposed">À recruter</span></div>
+      </div>
+      <div class="card">
+        <div class="card-stripe cs-violet" style="opacity:.5"></div>
+        <div class="card-body">
+          <div class="card-role" style="color:var(--violet2)">Membre Commission</div>
+          <div class="card-name"><span class="card-flag">🇺🇸</span>Trevor Wittman <span style="font-size:9px;background:rgba(232,146,58,.15);color:var(--amber2);border:1px solid rgba(232,146,58,.3);border-radius:8px;padding:1px 7px;">JAUNE</span></div>
+          <div class="card-bio"><strong>Head coach ONX Sports</strong> · A entraîné Justin Gaethje, Rose Namajunas · Reconnu pour son travail éthique · Discret, professionnel · Coach de l'Année ESPN 2019 · Contact vert direct de Bertrand.</div>
+          <div class="card-why">Wittman représente la nouvelle génération de coaches avec éthique et rigueur. Sa réputation sans tache dans l'industrie est un atout pour une commission qui doit elle-même être au-dessus de tout soupçon.</div>
+        </div>
+        <div class="card-options"><div class="opt-label">Statut</div><div class="opt-list"><div class="opt-item"><div class="opt-dot g"></div>Contact vert — approche directe</div></div></div>
+        <div class="card-foot"><span class="cf-hours">2-3j / mois</span><span class="cf-badge cfb-proposed">À recruter</span></div>
+      </div>
+      <div class="card">
+        <div class="card-stripe cs-violet" style="opacity:.5"></div>
+        <div class="card-body">
+          <div class="card-role" style="color:var(--violet2)">Membre Commission</div>
+          <div class="card-name"><span class="card-flag">🇷🇺</span>Khabib Nurmagomedov <span style="font-size:9px;background:rgba(232,146,58,.15);color:var(--amber2);border:1px solid rgba(232,146,58,.3);border-radius:8px;padding:1px 7px;">JAUNE</span></div>
+          <div class="card-bio"><strong>Champion UFC LW invaincu</strong> (29-0) · Retraité · CEO Eagle FC (UAE) · Image morale exceptionnelle · Respecté mondialement · Pont stratégique MENA/Asie Centrale · Contact direct Bertrand.</div>
+          <div class="card-why">Khabib en Commission Éthique (pas Grading, pour éviter le conflit Eagle FC) apporte la légitimité MENA et un pont indispensable vers les marchés CIS que nul autre ne peut couvrir.</div>
+        </div>
+        <div class="card-options">
+          <div class="opt-label">Attention</div>
+          <div class="opt-list"><div class="opt-item"><div class="opt-dot y"></div>Éviter Commission Grading — Eagle FC = conflit d'intérêt potentiel</div></div>
+        </div>
+        <div class="card-foot"><span class="cf-hours">2-3j / mois</span><span class="cf-badge cfb-proposed">À recruter</span></div>
+      </div>
+    </div>
+  </div>
+
+<!-- ─── COMMISSION 4 : PROTECTION SOCIALE & ATHLÈTES ─── -->
+  <div class="comm-block">
+    <div class="comm-header" style="background:rgba(40,181,132,.07);border:1px solid rgba(40,181,132,.2);border-bottom:none;border-radius:8px 8px 0 0;">
+      <span class="comm-icon">🛡️</span>
+      <div>
+        <div class="comm-title">Commission Protection Sociale & Athlètes</div>
+        <div class="comm-desc">Gère le Smart Fund (Association de Prévoyance MIGC) · Défend les droits des combattants · Propose des standards de protection sociale</div>
+      </div>
+    </div>
+    <div class="comm-pres">
+      <div class="card-stripe cs-green" style="height:3px"></div>
+      <div class="card-body">
+        <div class="card-role" style="color:var(--green2)">Président Commission</div>
+        <div class="card-name"><span class="card-flag">🇧🇷</span>Amanda Nunes <span style="font-size:9px;background:rgba(232,146,58,.15);color:var(--amber2);border:1px solid rgba(232,146,58,.3);border-radius:8px;padding:1px 7px;">JAUNE</span></div>
+        <div class="card-bio"><strong>The Lioness</strong> · Double championne UFC (BW + FW) · Mère de famille · Première grande figure féminine à retraite planifiée et structurée · A parlé publiquement de la précarité des combattants en fin de carrière · Engagée dans les droits des athlètes.</div>
+        <div class="card-why">Amanda Nunes incarne précisément pourquoi le Smart Fund existe. Son témoignage personnel sur la précarité des combattants est le message le plus puissant possible pour cette commission. Elle représente aussi le MMA féminin à son plus haut niveau.</div>
+      </div>
+      <div class="card-options">
+        <div class="opt-label">Si Amanda refuse →</div>
+        <div class="opt-list">
+          <div class="opt-item"><div class="opt-dot y"></div>Valentina Shevchenko (jaune) — championne active, représentation genre + Asie Centrale</div>
+          <div class="opt-item"><div class="opt-dot g"></div>Francis Ngannou ★ (vert) — fondation Africa + protection athlètes</div>
+        </div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">3-4j / mois</span><span class="cf-badge cfb-proposed">À recruter</span></div>
+    </div>
+    <div class="comm-members c3">
+      <div class="card">
+        <div class="card-stripe cs-green" style="opacity:.5"></div>
+        <div class="card-body">
+          <div class="card-role" style="color:var(--green2)">Membre Commission</div>
+          <div class="card-name"><span class="card-flag">🇨🇲</span>Francis Ngannou <span style="font-size:9px;background:rgba(40,181,132,.15);color:var(--green2);border:1px solid rgba(40,181,132,.3);border-radius:8px;padding:1px 7px;">VERT ★</span></div>
+          <div class="card-bio"><strong>Ex-Champion UFC HW</strong> · Fondateur Francis Ngannou Foundation (Afrique) · A quitté l'UFC pour défendre les droits des combattants · La figure la plus engagée de l'histoire du MMA pour la protection sociale des athlètes · Contact vert étoilé — déjà partant.</div>
+          <div class="card-why">Ngannou EST la cause de cette commission. Sa fondation africaine, son départ de l'UFC pour des raisons éthiques, son combat médiatique pour les droits des combattants — tout s'aligne parfaitement. Son engagement est acquis.</div>
+        </div>
+        <div class="card-options"><div class="opt-label">Statut</div><div class="opt-list"><div class="opt-item"><div class="opt-dot g"></div>★ Déjà partant — priorité d'approche</div></div></div>
+        <div class="card-foot"><span class="cf-hours">2-3j / mois</span><span class="cf-badge cfb-confirm">★ Partant</span></div>
+      </div>
+      <div class="card">
+        <div class="card-stripe cs-green" style="opacity:.5"></div>
+        <div class="card-body">
+          <div class="card-role" style="color:var(--green2)">Membre Commission</div>
+          <div class="card-name"><span class="card-flag">🇰🇬</span>Valentina Shevchenko <span style="font-size:9px;background:rgba(232,146,58,.15);color:var(--amber2);border:1px solid rgba(232,146,58,.3);border-radius:8px;padding:1px 7px;">JAUNE</span></div>
+          <div class="card-bio"><strong>La Bala</strong> · Ex-championne UFC FW · Née au Kirghizstan · Represent l'Asie Centrale dans le MMA mondial · Active en termes d'engagement communautaire · Voix forte du MMA féminin · Contact direct Bertrand.</div>
+          <div class="card-why">Valentina représente tout ce que le MIGC veut promouvoir : une combattante venue d'une région sans structure de protection sociale, qui a réussi grâce à son talent seul. Sa présence ici envoie un message puissant vers l'Asie Centrale et le monde entier.</div>
+        </div>
+        <div class="card-options">
+          <div class="opt-label">Si refus →</div>
+          <div class="opt-list"><div class="opt-item"><div class="opt-dot y"></div>Demetrius Johnson (jaune) — longévité carrière, protection athlètes</div></div>
+        </div>
+        <div class="card-foot"><span class="cf-hours">2-3j / mois</span><span class="cf-badge cfb-proposed">À recruter</span></div>
+      </div>
+      <div class="card">
+        <div class="card-stripe cs-green" style="opacity:.5"></div>
+        <div class="card-body">
+          <div class="card-role" style="color:var(--green2)">Membre Commission</div>
+          <div class="card-name"><span class="card-flag">🇺🇸</span>Demetrius Johnson (DJ) <span style="font-size:9px;background:rgba(232,146,58,.15);color:var(--amber2);border:1px solid rgba(232,146,58,.3);border-radius:8px;padding:1px 7px;">JAUNE</span></div>
+          <div class="card-bio"><strong>Mighty Mouse</strong> · 11 défenses de titre consécutives (record UFC) · A traversé l'ensemble du spectre de l'industrie (UFC → ONE Championship) · Expérience unique des négociations et de la transition de carrière · Contact direct Bertrand.</div>
+          <div class="card-why">DJ a vécu dans sa chair les problématiques que cette commission adresse : longévité, valeur marchande, transition post-carrière. Sa sagesse pratique complète parfaitement les profils militants de Ngannou et Shevchenko.</div>
+        </div>
+        <div class="card-options">
+          <div class="opt-label">Si refus →</div>
+          <div class="opt-list"><div class="opt-item"><div class="opt-dot y"></div>Michael Bisping (jaune) — vécu difficultés post-carrière</div></div>
+        </div>
+        <div class="card-foot"><span class="cf-hours">2-3j / mois</span><span class="cf-badge cfb-proposed">À recruter</span></div>
+      </div>
+    </div>
+  </div>
+
+<!-- ─── COMMISSION 5 : DÉVELOPPEMENT ─── -->
+  <div class="comm-block">
+    <div class="comm-header" style="background:rgba(14,124,123,.07);border:1px solid rgba(14,124,123,.2);border-bottom:none;border-radius:8px 8px 0 0;">
+      <span class="comm-icon">🌍</span>
+      <div>
+        <div class="comm-title">Commission de Développement</div>
+        <div class="comm-desc">Déploie le MIGC sur toute la planète · Fait adopter les grades &amp; le ranking par clubs, fédérations, médias · Indépendante de l'IMMAF et de tout cercle institutionnel existant</div>
+      </div>
+    </div>
+    <div class="comm-pres">
+      <div class="card-stripe cs-teal" style="height:3px"></div>
+      <div class="card-body">
+        <div class="card-role" style="color:var(--teal2)">Président Commission</div>
+        <div class="card-name"><span class="card-flag">🇲🇽</span>Ubaldo Maroquin <span style="font-size:9px;background:rgba(40,181,132,.15);color:var(--green2);border:1px solid rgba(40,181,132,.3);border-radius:8px;padding:1px 7px;">VERT ★</span></div>
+        <div class="card-bio"><strong>Figure de référence MMA Mexique</strong> · Entrepreneur sport de combat · Réseau Amériques Latines solide · Mexique = 2e marché MMA mondial après les USA · Contact vert étoilé — déjà partant · Entièrement indépendant de l'IMMAF.</div>
+        <div class="card-why">Les Amériques Latines sont le plus grand potentiel de croissance du MIGC. Maroquin n'est pas un bureaucrate fédéral — c'est un entrepreneur qui construit. Son engagement est acquis et il ne vient d'aucun cercle IMMAF.</div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">3-4j / mois</span><span class="cf-badge cfb-confirm">★ Partant</span></div>
+    </div>
+    <div class="comm-members c3">
+      <div class="card">
+        <div class="card-stripe cs-teal" style="opacity:.5"></div>
+        <div class="card-body">
+          <div class="card-role" style="color:var(--teal2)">Membre Commission — France / Europe institutionnelle</div>
+          <div class="card-name"><span class="card-flag">🇫🇷</span>Patrick Vignal <span style="font-size:9px;background:rgba(40,181,132,.15);color:var(--green2);border:1px solid rgba(40,181,132,.3);border-radius:8px;padding:1px 7px;">VERT</span></div>
+          <div class="card-bio"><strong>Co-auteur du rapport parlementaire 2016 qui a légalisé le MMA en France</strong> · Député de l'Hérault 2012-2024 · Professeur d'arts martiaux (judo, CAM Montpellier depuis 1977) · Maîtrise management des entreprises sportives · Prochain Président de la Fédération française de MMA · A rencontré Bertrand Amoussou durant sa mission parlementaire.</div>
+          <div class="card-why">Vignal est le seul profil qui réunit <em>légitimité politique</em> + <em>connaissance terrain du MMA</em> + <em>indépendance totale vis-à-vis de l'IMMAF</em>. Il a littéralement légalisé le MMA en France — en tant que Président de la Fédération française de MMA il sera le relais institutionnel naturel du MIGC en France et un ambassadeur crédible auprès des gouvernements européens.</div>
+        </div>
+        <div class="card-options">
+          <div class="opt-label">Profil unique</div>
+          <div class="opt-list"><div class="opt-item"><div class="opt-dot g"></div>Contact vert direct — approche immédiate via Bertrand</div></div>
+        </div>
+        <div class="card-foot"><span class="cf-hours">2-3j / mois</span><span class="cf-badge cfb-proposed">À recruter</span></div>
+      </div>
+      <div class="card">
+        <div class="card-stripe cs-teal" style="opacity:.5"></div>
+        <div class="card-body">
+          <div class="card-role" style="color:var(--teal2)">Membre Commission — MENA / Asie · Développement commercial</div>
+          <div class="card-name"><span class="card-flag">🇺🇸</span>Audie Attar <span style="font-size:9px;background:rgba(184,53,48,.15);color:var(--red2);border:1px solid rgba(184,53,48,.3);border-radius:8px;padding:1px 7px;">INDIRECT</span></div>
+          <div class="card-bio"><strong>Fondateur &amp; CEO Paradigm Sports Management</strong> · Agent de Conor McGregor, Francis Ngannou, Charles Oliveira · A négocié des contrats pour plus de 40 combattants dans 30+ pays · Entrepreneur américano-libanais · Réseaux MENA, Europe, USA · Aucun lien institutionnel IMMAF.</div>
+          <div class="card-why">Attar n'est pas un fonctionnaire du sport — c'est le deal-maker qui a ouvert les marchés les plus difficiles. Son carnet d'adresses (promoteurs, médias, organisations dans 30 pays) est exactement ce que la Commission Développement doit activer. Via réseau Ngannou / Kavanagh (McGregor).</div>
+        </div>
+        <div class="card-options">
+          <div class="opt-label">Si refus →</div>
+          <div class="opt-list"><div class="opt-item"><div class="opt-dot r"></div>Ali Abdelaziz (Dominance MMA) — réseaux MENA + Khabib</div></div>
+        </div>
+        <div class="card-foot"><span class="cf-hours">2-3j / mois</span><span class="cf-badge cfb-proposed">À recruter</span></div>
+      </div>
+      <div class="card">
+        <div class="card-stripe cs-teal" style="opacity:.5"></div>
+        <div class="card-body">
+          <div class="card-role" style="color:var(--teal2)">Membre Commission — Asie / Japon · Développement médias</div>
+          <div class="card-name"><span class="card-flag">🇯🇵</span>Sakakibara Nobuyuki <span style="font-size:9px;background:rgba(184,53,48,.15);color:var(--red2);border:1px solid rgba(184,53,48,.3);border-radius:8px;padding:1px 7px;">INDIRECT</span></div>
+          <div class="card-bio"><strong>CEO RIZIN Fighting Federation</strong> · A fondé PRIDE FC en 1997 · A créé le MMA spectacle japonais au niveau mondial · Expertise unique : transformer une discipline de combat en phénomène culturel de masse · 30 ans de développement MMA Asie · Indépendant de l'IMMAF.</div>
+          <div class="card-why">RIZIN est le modèle que le monde entier regarde pour le MMA en tant que spectacle culturel. Sakakibara a fait ce que le MIGC veut faire : imposer une vision, une esthétique, des règles adoptées massivement. Son expertise est irremplaçable pour le marché asiatique (400M de pratiquants potentiels).</div>
+        </div>
+        <div class="card-options">
+          <div class="opt-label">Si refus →</div>
+          <div class="opt-list"><div class="opt-item"><div class="opt-dot r"></div>Profil ONE Championship VP Asie SE</div></div>
+        </div>
+        <div class="card-foot"><span class="cf-hours">2-3j / mois</span><span class="cf-badge cfb-proposed">À recruter</span></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end section commissions -->
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- COUCHE 5 — ORGANISATIONS PRO FONDATRICES                 -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="section" id="c5">
+  <div class="layer-header">
+    <span class="layer-badge lb-org">🟣 Couche 5</span>
+    <div>
+      <div class="layer-title">Comité des Organisations Pro — Membres Fondateurs</div>
+      <div class="layer-desc">Chaque organisation peut désigner <strong style="color:var(--gold2)">jusqu'à 2 représentants</strong> pour des sièges MIGC — Comité, Commission ou Ambassadeur · Couche strictement réservée aux organisations PRO</div>
+    </div>
+  </div>
+
+  <div class="note" style="margin-bottom:16px">
+    <span class="nt">Principe : chaque organisation fondatrice = max. 2 sièges MIGC</span>
+    Chaque organisation pro membre fondateur peut désigner jusqu'à 2 personnes de leur organisation pour postuler à des sièges au sein du MIGC. Ces sièges peuvent être au Comité Directeur, dans une Commission spécialisée, ou en tant qu'Ambassadeur régional. Les profils proposés ci-dessous illustrent le type de représentation envisagé — les noms définitifs sont à valider avec chaque organisation.
+  </div>
+
+  <div class="g1 cauto">
+
+    <!-- UFC -->
+    <div class="org-card" style="border-color:rgba(196,149,42,.2);">
+      <div class="org-rank">🏆 Tier 1 — Amérique du Nord</div>
+      <div class="org-name">UFC — Ultimate Fighting Championship</div>
+      <div class="org-desc">Organisation #1 mondiale · Vegas-based · TKO Group · Audience 900M+ · Référence absolue du MMA professionnel mondial.</div>
+      
+    </div>
+
+    <!-- ONE Championship -->
+    <div class="org-card">
+      <div class="org-rank">🏆 Tier 1 — Asie</div>
+      <div class="org-name">ONE Championship</div>
+      <div class="org-desc">Organisation #1 Asie · Singapour · MMA + Muay Thai + Kickboxing · Audience Asie du Sud-Est massive · Valorisation multi-milliards.</div>
+      
+    </div>
+
+    <!-- PFL -->
+    <div class="org-card">
+      <div class="org-rank">🥈 Tier 2 — International</div>
+      <div class="org-name">PFL — Professional Fighters League</div>
+      <div class="org-desc">Format saison sportive unique · Fusions Bellator + BRAVE CF · Présence UAE, Afrique, Europe · Modèle innovant de compétition.</div>
+      
+    </div>
+
+    <!-- Rizin -->
+    <div class="org-card">
+      <div class="org-rank">🥈 Tier 2 — Japon</div>
+      <div class="org-name">RIZIN Fighting Federation</div>
+      <div class="org-desc">Successeur spirituel PRIDE · Tokyo · Spectacles féeriques · Audience japonaise et internationale · Pont culturel Japon-monde.</div>
+      
+    </div>
+
+    <!-- Cage Warriors -->
+    <div class="org-card" style="border-color:rgba(40,181,132,.2);">
+      <div class="org-rank">🥈 Tier 2 — Europe <span style="background:rgba(40,181,132,.15);color:var(--green2);font-size:9px;padding:1px 7px;border-radius:8px;margin-left:6px;">★ VERT</span></div>
+      <div class="org-name">Cage Warriors</div>
+      <div class="org-desc">Organisation #1 Europe · Cardiff-based · Tremplin MMA européen · Alumni : Conor McGregor, Michael Bisping · Contact vert étoilé — Bertrand ami direct.</div>
+      
+    </div>
+
+    <!-- KSW -->
+    <div class="org-card">
+      <div class="org-rank">🥈 Tier 2 — Europe Centrale</div>
+      <div class="org-name">KSW — Konfrontacja Sztuk Walki</div>
+      <div class="org-desc">Organisation #1 Pologne · Audience Europe centrale massive · Événements stade plein (80 000+ spectateurs record) · Réseau Europe de l'Est.</div>
+      
+    </div>
+
+    <!-- ACA / ACB -->
+    <div class="org-card">
+      <div class="org-rank">🥈 Tier 2 — Russie / CIS</div>
+      <div class="org-name">ACA — Absolute Championship Akhmat</div>
+      <div class="org-desc">Organisation #1 Russie/CIS · Chechen-based · Réseau ex-URSS incomparable · Soutien gouvernemental · Audience Est-Europe et MENA.</div>
+      
+    </div>
+
+    <!-- BRAVE CF -->
+    <div class="org-card">
+      <div class="org-rank">🥈 Tier 2 — MENA</div>
+      <div class="org-name">BRAVE CF — Bahrain</div>
+      <div class="org-desc">Organisation royale Bahreïn · Présence dans 15+ pays · Pont MENA-Europe-Asie · Soutien institutionnel royal · Partenariats gouvernementaux.</div>
+      
+    </div>
+
+    <!-- AresMMA -->
+    <div class="org-card">
+      <div class="org-rank">🥉 Tier 3 — France</div>
+      <div class="org-name">Ares MMA — France</div>
+      <div class="org-desc">Organisation française premium · Paris · Événements spectaculaires · Développement MMA francophone · Pont Afrique francophone.</div>
+      
+    </div>
+
+    <!-- Oktagon MMA -->
+    <div class="org-card">
+      <div class="org-rank">🥉 Tier 2 — Europe Centrale</div>
+      <div class="org-name">Oktagon MMA — Tchéquie / Slovaquie</div>
+      <div class="org-desc">Co-fondée 2016 par Ondřej Novotný &amp; Pavol Neruda · #1 Europe centrale-orientale · Eden Stadium 27K spectateurs · Deutsche Bank Park 60K (record européen) · Présence en 3 pays · 2.3Mds d'impressions sociales 2025.</div>
+      
+    </div>
+
+  </div>
+
+  
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- COUCHE 6 — ACTEURS MMA INDÉPENDANTS                      -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="section" id="c6fed">
+  <div class="layer-header">
+    <span class="layer-badge" style="background:rgba(91,143,212,.15);color:#7BAAE8;">🔷 Couche 6</span>
+    <div>
+      <div class="layer-title">Comité Politique, Business & Influence</div>
+      <div class="layer-desc">Personnalités politiques, agents, entrepreneurs · Profils qui font adopter les standards MIGC par leur influence — totalement indépendants des structures existantes</div>
+    </div>
+  </div>
+
+  <div class="g1 cauto">
+
+    <!-- Patrick Vignal -->
+    <div class="card" style="border-color:rgba(40,181,132,.25);">
+      <div class="card-stripe" style="background:linear-gradient(90deg,#1F8A6A,#28B584)"></div>
+      <div class="card-body">
+        <div class="card-role" style="color:var(--green2)">Interface Gouvernements & Politique du Sport</div>
+        <div class="card-name"><span class="card-flag">🇫🇷</span>Patrick Vignal <span style="font-size:9px;background:rgba(40,181,132,.15);color:var(--green2);border:1px solid rgba(40,181,132,.3);border-radius:8px;padding:1px 7px;">VERT</span></div>
+        <div class="card-bio"><strong>Co-auteur du rapport parlementaire 2016 qui a légalisé le MMA en France</strong> · Député de l'Hérault 2012–2024 · Professeur d'arts martiaux depuis 1977 (CAM Montpellier, 2 000 adhérents) · Maîtrise management des entreprises sportives · Prochain Président de la Fédération française de MMA · A travaillé directement avec Bertrand Amoussou lors de sa mission pour le Premier ministre Manuel Valls.</div>
+        <div class="card-why">Vignal est le seul profil au monde qui combine <em>pouvoir législatif</em> + <em>pratique terrain des arts martiaux</em> + <em>connaissance intime du dossier MMA</em>. Il a convaincu un gouvernement hostile de légaliser le MMA en France. En tant que futur Président de la fédération française, il devient le relais naturel du MIGC auprès de tous les gouvernements européens — une porte que personne d'autre dans la liste ne peut ouvrir.</div>
+      </div>
+      <div class="card-options">
+        <div class="opt-label">Siège proposé</div>
+        <div class="opt-list"><div class="opt-item"><div class="opt-dot g"></div>Commission Développement — Interface Gouvernements Europe</div></div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">2-3j / mois</span><span class="cf-badge cfb-proposed">À approcher</span></div>
+    </div>
+
+    <!-- Audie Attar -->
+    <div class="card" style="border-color:rgba(91,143,212,.2);">
+      <div class="card-stripe" style="background:linear-gradient(90deg,#2558A0,#5B8FD4)"></div>
+      <div class="card-body">
+        <div class="card-role" style="color:#7BAAE8">Développement Commercial & Réseaux Internationaux</div>
+        <div class="card-name"><span class="card-flag">🇺🇸</span>Audie Attar</div>
+        <div class="card-bio"><strong>Fondateur & CEO Paradigm Sports Management</strong> · Agent de Francis Ngannou, Charles Oliveira, Sean O'Malley · A géré la carrière de Conor McGregor · Contrats dans 30+ pays · Entrepreneur américano-libanais · Réseaux MENA, Amérique du Nord, Europe · Zéro lien institutionnel avec les fédérations existantes.</div>
+        <div class="card-why">Attar ne gère pas des institutions — il ouvre des marchés. Son carnet d'adresses dans 30 pays (promoteurs, médias, investisseurs, combattants stars) est exactement ce qu'il faut pour déployer les grades et le ranking MIGC massivement. Accessible via Ngannou ou Kavanagh (McGregor).</div>
+      </div>
+      <div class="card-options">
+        <div class="opt-label">Siège proposé</div>
+        <div class="opt-list"><div class="opt-item"><div class="opt-dot r"></div>Commission Développement — Déploiement commercial</div></div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">2-3j / mois</span><span class="cf-badge cfb-proposed">Via Ngannou</span></div>
+    </div>
+
+    <!-- Ali Abdelaziz -->
+    <div class="card" style="border-color:rgba(91,143,212,.2);">
+      <div class="card-stripe" style="background:linear-gradient(90deg,#2558A0,#5B8FD4)"></div>
+      <div class="card-body">
+        <div class="card-role" style="color:#7BAAE8">Réseaux MENA & Asie Centrale</div>
+        <div class="card-name"><span class="card-flag">🇪🇬</span>Ali Abdelaziz</div>
+        <div class="card-bio"><strong>CEO Dominance MMA</strong> · Agent de Khabib Nurmagomedov, Islam Makhachev, Justin Gaethje, Max Holloway · 50+ combattants sous contrat dans le monde · Égyptien établi aux USA · Réseaux MENA, Russie, Asie Centrale, Amérique du Nord · Indépendant de toute fédération.</div>
+        <div class="card-why">Abdelaziz EST la connexion MENA-Asie Centrale du MMA mondial. Son réseau autour de Khabib et des lutteurs d'Asie Centrale est indispensable pour imposer les grades MIGC dans cette région. Pont naturel vers les marchés CIS que nulle organisation ne peut atteindre autrement.</div>
+      </div>
+      <div class="card-options">
+        <div class="opt-label">Siège proposé</div>
+        <div class="opt-list"><div class="opt-item"><div class="opt-dot y"></div>Commission Développement — Zone MENA/CIS</div></div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">2-3j / mois</span><span class="cf-badge cfb-proposed">Via Khabib</span></div>
+    </div>
+
+    <!-- Bob Bennett -->
+    <div class="card" style="border-color:rgba(91,143,212,.2);">
+      <div class="card-stripe" style="background:linear-gradient(90deg,#2558A0,#5B8FD4)"></div>
+      <div class="card-body">
+        <div class="card-role" style="color:#7BAAE8">Réglementation Sportive & Standards Officiels</div>
+        <div class="card-name"><span class="card-flag">🇺🇸</span>Bob Bennett</div>
+        <div class="card-bio"><strong>Executive Director Nevada Athletic Commission (NSAC)</strong> · Responsable de la réglementation MMA dans la juridiction la plus influente du monde · Co-auteur des révisions Unified Rules 2016 · Travaille avec Marc Ratner depuis 20 ans · Fait adopter les standards de combat aux commissions athlétiques de 48 États US.</div>
+        <div class="card-why">La NSAC est la commission de référence mondiale — ce que Bennett valide devient la norme pour toutes les commissions athlétiques. Son implication dans le MIGC donne une légitimité réglementaire américaine absolue, indépendamment de tout cercle fédéral international.</div>
+      </div>
+      <div class="card-options">
+        <div class="opt-label">Siège proposé</div>
+        <div class="opt-list"><div class="opt-item"><div class="opt-dot y"></div>Commission Technique ou Commission Ranking — Standards réglementaires US</div></div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">2-3j / mois</span><span class="cf-badge cfb-proposed">Via Ratner / Lembo</span></div>
+    </div>
+
+    <!-- Lorenzo Fertitta -->
+    <div class="card" style="border-color:rgba(91,143,212,.2);">
+      <div class="card-stripe" style="background:linear-gradient(90deg,#2558A0,#5B8FD4)"></div>
+      <div class="card-body">
+        <div class="card-role" style="color:#7BAAE8">Investissement & Développement Global Sport</div>
+        <div class="card-name"><span class="card-flag">🇺🇸</span>Lorenzo Fertitta</div>
+        <div class="card-bio"><strong>Co-fondateur TUF · Ex-co-propriétaire UFC 2001-2016</strong> · A acheté l'UFC pour $2M et l'a revendu $4Mds · Fondateur Station Casinos · Investisseur dans le sport de combat mondial · CEO Fertitta Capital · Stratège institutionnel du MMA moderne · A quitté l'UFC en 2016 : aucun conflit d'intérêt actuel.</div>
+        <div class="card-why">Fertitta a construit l'industrie du MMA telle qu'elle existe. Son expertise en structuration institutionnelle d'une organisation de combat est incomparable. Son statut de retraité de l'UFC le libère de tout conflit et son carnet d'adresses dans l'industrie est le plus précieux qui soit.</div>
+      </div>
+      <div class="card-options">
+        <div class="opt-label">Siège proposé</div>
+        <div class="opt-list"><div class="opt-item"><div class="opt-dot r"></div>Conseil de Prévoyance ou Comité Directeur — Vision stratégique</div></div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">1-2j / mois</span><span class="cf-badge cfb-proposed">À approcher</span></div>
+    </div>
+
+
+
+  </div>
+
+  
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- COUCHE 7 — AMBASSADEURS RÉGIONAUX                        -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="section" id="c7amb">
+  <div class="layer-header">
+    <span class="layer-badge lb-amb">🟢 Couche 7</span>
+    <div>
+      <div class="layer-title">Ambassadeurs Régionaux — Représentation Mondiale</div>
+      <div class="layer-desc">Visages du MIGC dans chaque zone géographique · Rôle honorifique · Événements locaux · Recrutement fédérations · 1 à 2 jours par mois</div>
+    </div>
+  </div>
+
+  <div class="g1 cauto">
+
+    <div class="card">
+      <div class="card-stripe cs-green"></div>
+      <div class="card-body">
+        <div class="card-role">Ambassadeur Brésil / Amériques du Sud</div>
+        <div class="card-name"><span class="card-flag">🇧🇷</span>Antonio Rodrigo Nogueira <span class="star-b">★ VP + AMB.</span></div>
+        <div class="card-bio"><strong>VP MIGC + Ambassadeur naturel</strong> · Champion PRIDE + UFC · Symbole du MMA brésilien · Sa seule présence ouvre toutes les portes au Brésil.</div>
+        <div class="card-why">Double rôle VP + Ambassadeur Brésil : sa légitimité unique dans les deux fonctions justifie cette exception.</div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">1-2j / mois</span><span class="cf-badge cfb-confirm">★ Confirmé</span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-stripe cs-green"></div>
+      <div class="card-body">
+        <div class="card-role">Ambassadeur Amérique du Nord</div>
+        <div class="card-name"><span class="card-flag">🇺🇸</span>Randy Couture <span style="font-size:9px;background:rgba(232,146,58,.15);color:var(--amber2);border:1px solid rgba(232,146,58,.3);border-radius:8px;padding:1px 7px;">JAUNE</span></div>
+        <div class="card-bio"><strong>5× Champion UFC</strong> (HW + LHW) · Hall of Fame · Ex-militaire · Impliqué dans politique sportive US · Profil institutionnel le plus solide du MMA américain.</div>
+        <div class="card-why">Si Couture est dans la Commission Ranking, il peut cumuler avec Ambassadeur US — les deux rôles sont complémentaires et peu exigeants en temps.</div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">1-2j / mois</span><span class="cf-badge cfb-proposed">À recruter</span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-stripe cs-green"></div>
+      <div class="card-body">
+        <div class="card-role">Ambassadeur Amériques Latines</div>
+        <div class="card-name"><span class="card-flag">🇲🇽</span>Ubaldo Maroquin <span class="star-b">★ VERT</span></div>
+        <div class="card-bio"><strong>Figure MMA Mexique</strong> · Si Président Commission Développement — cumulable avec Ambassadeur LATAM. Mexicain = 2e communauté MMA mondiale. Réseau continental.</div>
+        <div class="card-why">L'Amérique Latine a besoin d'un visage. Maroquin est le choix naturel — et son double rôle Commission Développement + Ambassadeur renforce sa légitimité terrain.</div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">1-2j / mois</span><span class="cf-badge cfb-confirm">★ Partant</span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-stripe cs-green"></div>
+      <div class="card-body">
+        <div class="card-role">Ambassadeur Europe / UK</div>
+        <div class="card-name"><span class="card-flag">🇬🇧</span>Michael Bisping <span style="font-size:9px;background:rgba(232,146,58,.15);color:var(--amber2);border:1px solid rgba(232,146,58,.3);border-radius:8px;padding:1px 7px;">JAUNE</span></div>
+        <div class="card-bio"><strong>The Count</strong> · Premier champion UFC britannique · Analyste ESPN/BT Sport · 200+ épisodes de podcasts · Extraordinaire communicant · Profil media star idéal en Ambassadeur.</div>
+        <div class="card-why">Bisping est une star media — c'est son point fort, pas ses compétences institutionnelles. En Ambassadeur Europe/UK, ce profil est parfaitement adapté : visibilité + réseau + charisme.</div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">1-2j / mois</span><span class="cf-badge cfb-proposed">À recruter</span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-stripe cs-green"></div>
+      <div class="card-body">
+        <div class="card-role">Ambassadeur Europe du Nord / Scandinavie</div>
+        <div class="card-name"><span class="card-flag">🇸🇪</span>Alexander Gustafsson <span style="font-size:9px;background:rgba(232,146,58,.15);color:var(--amber2);border:1px solid rgba(232,146,58,.3);border-radius:8px;padding:1px 7px;">JAUNE</span></div>
+        <div class="card-bio"><strong>The Mauler</strong> · Top LHW mondial · Fondateur Arena MMA (gym Suède) · Populaire Scandinavie · Représente la vague nordique du MMA · Retraité et disponible.</div>
+        <div class="card-why">La Scandinavie produit parmi les meilleurs MMA fighters d'Europe. Gustafsson est le visage naturel de cette région pour le MIGC.</div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">1-2j / mois</span><span class="cf-badge cfb-proposed">À recruter</span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-stripe cs-green"></div>
+      <div class="card-body">
+        <div class="card-role">Ambassadeur MENA / Asie Centrale</div>
+        <div class="card-name"><span class="card-flag">🇷🇺</span>Khabib Nurmagomedov <span style="font-size:9px;background:rgba(232,146,58,.15);color:var(--amber2);border:1px solid rgba(232,146,58,.3);border-radius:8px;padding:1px 7px;">JAUNE</span></div>
+        <div class="card-bio"><strong>Champion UFC invaincu LW</strong> (29-0) · CEO Eagle FC UAE · Pont stratégique MENA-Asie Centrale · Suivi par 50M+ fans · Voix de l'Islam modéré dans le sport.</div>
+        <div class="card-why">Khabib en Ambassadeur MENA — pas en Commission Grading (Eagle FC = conflit potentiel). Son implication dans Eagle FC UAE le positionne naturellement comme le visage MENA du MIGC.</div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">1-2j / mois</span><span class="cf-badge cfb-proposed">À recruter</span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-stripe cs-green"></div>
+      <div class="card-body">
+        <div class="card-role">Ambassadeur Japon</div>
+        <div class="card-name"><span class="card-flag">🇯🇵</span>Genki Sudo <span style="font-size:9px;background:rgba(184,53,48,.15);color:var(--red2);border:1px solid rgba(184,53,48,.3);border-radius:8px;padding:1px 7px;">ROUGE</span></div>
+        <div class="card-bio"><strong>Sénateur japonais</strong> · Champion PRIDE · Artiste · Personnalité trans-générationnelle · Représente le Japon institutionnel et culturel · Accès indirect via réseau RIZIN.</div>
+        <div class="card-why">Sudo en Ambassadeur Japon uniquement — pas Secrétaire Général (trop éloigné de son profil) ni Commission Financière. Son statut sénatorial donne au MIGC une légitimité institutionnelle inédite au Japon.</div>
+      </div>
+      <div class="card-options">
+        <div class="opt-label">Si Sudo indisponible →</div>
+        <div class="opt-list"><div class="opt-item"><div class="opt-dot r"></div>Takanori Gomi (rouge) ou Shinya Aoki (rouge)</div></div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">1-2j / mois</span><span class="cf-badge cfb-proposed">Via RIZIN</span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-stripe cs-green"></div>
+      <div class="card-body">
+        <div class="card-role">Ambassadeur Afrique</div>
+        <div class="card-name"><span class="card-flag">🇨🇲</span>Francis Ngannou <span class="star-b">★ VERT · PARTANT</span></div>
+        <div class="card-bio"><strong>Ex-Champion UFC HW</strong> · Fondateur Ngannou Foundation · Icône africaine mondiale · Son engagement pour les combattants africains est son combat personnel.</div>
+        <div class="card-why">Si Ngannou est dans Commission Protection Sociale, il peut aussi être Ambassadeur Afrique — les deux rôles se renforcent mutuellement et exigent peu de temps supplémentaire.</div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">1-2j / mois</span><span class="cf-badge cfb-confirm">★ Confirmé</span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-stripe cs-green"></div>
+      <div class="card-body">
+        <div class="card-role">Ambassadeur Océanie</div>
+        <div class="card-name"><span class="card-flag">🇳🇿</span>Mark Hunt + Alexander Volkanovski</div>
+        <div class="card-bio"><strong>Mark Hunt</strong> · Kickboxeur + MMA · Super Samoan · Figure légendaire Océanie · Retraité, disponible · <strong>Volkanovski</strong> (jaune) · Champion UFC FW · Ex-rubgy pro · Référence actuelle de l'Océanie MMA.</div>
+        <div class="card-why">Hunt pour la légitimité historique immédiate · Volkanovski comme relève naturelle dès sa retraite. Double ambassadeur pour couvrir le Pacifique Sud sur deux générations.</div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">1-2j / mois</span><span class="cf-badge cfb-proposed">À recruter</span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- COUCHE 7 — ASSOCIATION DE PRÉVOYANCE / SMART FUND        -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="section" id="c8fund">
+  <div class="layer-header">
+    <span class="layer-badge lb-fond">⚪ Couche 8</span>
+    <div>
+      <div class="layer-title">Association de Prévoyance MIGC — Smart Fund</div>
+      <div class="layer-desc">Association séparée Art. 60-79 CC Suisse · Conseil de Prévoyance indépendant · Fonds retraite par points pour combattants · Flux JAMAIS via Sport7 — Association directement</div>
+    </div>
+  </div>
+  <div class="g1 c4">
+    <div class="card">
+      <div class="card-stripe" style="background:linear-gradient(90deg,#1a1a2e,#3a3a5c)"></div>
+      <div class="card-body">
+        <div class="card-role">Conseil de Prévoyance — Gouvernance</div>
+        <div class="card-name"><span class="card-flag">🇨🇭</span>Denis Oswald</div>
+        <div class="card-bio"><strong>Ex-Président COI Suisse</strong> · Expert gouvernance sportive internationale · Membre historique du mouvement olympique · Réseau institutionnel suisse inégalé.</div>
+        <div class="card-why">La légitimité olympique d'Oswald est indispensable pour que l'Association de Prévoyance soit perçue comme un acteur institutionnel sérieux.</div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">2-3j / mois</span><span class="cf-badge cfb-proposed">À recruter</span></div>
+    </div>
+    <div class="card">
+      <div class="card-stripe" style="background:linear-gradient(90deg,#1a1a2e,#3a3a5c)"></div>
+      <div class="card-body">
+        <div class="card-role">Conseil de Prévoyance — Finance</div>
+        <div class="card-name"><span class="card-flag">🇨🇭</span>Patrick Odier</div>
+        <div class="card-bio"><strong>Senior Partner Lombard Odier</strong> · Banque privée suisse depuis 1796 · Expertise gestion de patrimoine institutionnel · Crédibilité bancaire suisse absolue.</div>
+        <div class="card-why">Un fonds de prévoyance a besoin d'un garant bancaire de premier rang. Patrick Odier incarne exactement la rigueur et la réputation requises.</div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">2-3j / mois</span><span class="cf-badge cfb-proposed">À recruter</span></div>
+    </div>
+    <div class="card">
+      <div class="card-stripe" style="background:linear-gradient(90deg,#1a1a2e,#3a3a5c)"></div>
+      <div class="card-body">
+        <div class="card-role">Conseil de Prévoyance — Assurance</div>
+        <div class="card-name"><span class="card-flag">🇫🇷</span>Jean-Marc Pailhol</div>
+        <div class="card-bio"><strong>Directeur Produits AXA International</strong> · Expert assurance sportive · Structuration produits prévoyance complexes · Réseau assureurs institutionnels mondiaux.</div>
+        <div class="card-why">L'Association de Prévoyance interface directement avec les assureurs. Pailhol est le pont naturel entre la vision MIGC et les produits assurantiels concrets.</div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">2-3j / mois</span><span class="cf-badge cfb-proposed">À recruter</span></div>
+    </div>
+    <div class="card">
+      <div class="card-stripe" style="background:linear-gradient(90deg,#1a1a2e,#3a3a5c)"></div>
+      <div class="card-body">
+        <div class="card-role">Conseil de Prévoyance — Sport</div>
+        <div class="card-name"><span class="card-flag">🇧🇷</span>Antonio Rodrigo Nogueira <span class="star-b">★</span></div>
+        <div class="card-bio"><strong>VP MIGC + Conseil de Prévoyance</strong> · Représentant des athlètes dans le fonds · Sa présence garantit que la voix des combattants est entendue au niveau financier · Contact vert étoilé.</div>
+        <div class="card-why">Le fonds existe pour les combattants. Nogueira garantit que les décisions du Conseil de Prévoyance ne dérivant jamais loin de la réalité des athlètes.</div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">2-3j / mois</span><span class="cf-badge cfb-confirm">★ Confirmé</span></div>
+    </div>
+  </div>
+
+  <div class="sec-label" style="margin-top:20px">⚙️ Équipe opérationnelle — Gestion quotidienne du fonds</div>
+  <div class="g1 c3" style="margin-top:10px">
+    <div class="card">
+      <div class="card-stripe" style="background:linear-gradient(90deg,#1F6A4A,#28A070)"></div>
+      <div class="card-body">
+        <div class="card-role" style="color:var(--green2)">Responsable Stratégie Satellite Tactique</div>
+        <div class="card-name"><span class="card-flag">🇫🇷</span>Joey Dib</div>
+        <div class="card-bio"><strong>Pilote la stratégie d'allocation globale du Smart Fund</strong> · Interface entre le Conseil de Prévoyance et le dépositaire · Supervision des stratégies satellite (Aave, BlackRock BUIDL, rendement DeFi) · Reporting mensuel aux membres du Conseil · Co-signature sur mouvements >$10K · Exécution de l'IPS au quotidien.</div>
+        <div class="card-why">Joey est la personne désignée pour piloter les flux Smart Fund. Sa connaissance du projet MIGC depuis l'origine garantit la cohérence entre la vision du fonds et son exécution opérationnelle.</div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">Temps plein — fonds</span><span class="cf-badge cfb-cdd">IPS à mandater</span></div>
+    </div>
+    <div class="card">
+      <div class="card-stripe" style="background:linear-gradient(90deg,#1F6A4A,#28A070)"></div>
+      <div class="card-body">
+        <div class="card-role" style="color:var(--green2)">Directeur de Gestion des Investissements</div>
+        <div class="card-name card-tbd">Profil cible : CFA · Ex-gérant fonds institutionnel</div>
+        <div class="card-bio"><strong>Gestionnaire CFA charterholder</strong> · Expérience minimum 10 ans gestion de fonds institutionnels · Expertise allocation multi-actifs (liquid + alternatives) · Connaissance des contraintes réglementaires suisses (LPP/BVG) · Bilingue FR/EN · Genève ou Zurich.</div>
+        <div class="card-why">Le directeur d'investissements est le garant fiduciaire du fonds. Son profil CFA + expérience institutionnelle est non-négociable pour assurer la crédibilité du Smart Fund auprès des auditeurs et des bénéficiaires combattants.</div>
+      </div>
+      <div class="card-options">
+        <div class="opt-label">Profil type</div>
+        <div class="opt-list"><div class="opt-item" style="border-color:rgba(91,143,212,.3)">Ex-gérant CPF, PERP, LPP · Private bank background</div></div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">Temps plein</span><span class="cf-badge cfb-recruit">À recruter</span></div>
+    </div>
+    <div class="card">
+      <div class="card-stripe" style="background:linear-gradient(90deg,#1F6A4A,#28A070)"></div>
+      <div class="card-body">
+        <div class="card-role" style="color:var(--green2)">Responsable Comptabilité & Versements de Pensions</div>
+        <div class="card-name card-tbd">Profil cible : Expert-comptable · Spécialiste LPP/BVG</div>
+        <div class="card-bio"><strong>Expert-comptable agréé suisse</strong> · Spécialiste droit LPP/BVG (Loi sur la Prévoyance Professionnelle) · Tenue de la comptabilité de l'Association de Prévoyance · Calcul et exécution des versements de rentes par points · Reporting fiscal AFC Genève · Interface OAR-OREF · Gnosis Safe co-signature.</div>
+        <div class="card-why">Le calcul des pensions par points exige une expertise LPP/BVG très spécialisée. Ce profil est le garant que chaque combattant reçoit exactement ce qui lui est dû, dans les délais réglementaires — crédibilité absolue du système.</div>
+      </div>
+      <div class="card-options">
+        <div class="opt-label">Compétences critiques</div>
+        <div class="opt-list"><div class="opt-item" style="border-color:rgba(91,143,212,.3)">LPP · AML/KYC · Multidevises (USD/USDC/CHF)</div></div>
+      </div>
+      <div class="card-foot"><span class="cf-hours">Temps plein</span><span class="cf-badge cfb-recruit">À recruter</span></div>
+    </div>
+  </div>
+
+  <div class="note" style="margin-top:16px">
+    <span class="nt">Architecture Smart Fund — Association de Prévoyance MIGC (Art. 60-79 CC)</span>
+    Les flux du fonds ne transitent <strong>jamais via Sport7 Labs</strong>. L'Association de Prévoyance est une entité légale entièrement séparée. 
+    Infrastructure technique : <strong>Gnosis Safe 3/5 multi-signature</strong> · Polygon · USDC/EURC · Stratégie rendement : Aave + BlackRock BUIDL · Budget opérationnel CHF 80-150K/an · 
+    IPS à mandater Lombard Odier · Affiliation OAR-OREF (LBA/AMLA) à effectuer dès constitution · Audit smart contracts CHF 15-25K · Exonération fiscale AFC Genève à demander après constitution.
+  </div>
+</div>
+
+</div><!-- end .page -->
+
+<!-- FOOTER -->
+<div style="background:var(--bg2);border-top:1px solid rgba(196,149,42,.1);padding:20px 36px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+  <div style="font-family:var(--head);font-size:11px;font-weight:700;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;">MIGC · Mixed Martial Arts International Grading Council</div>
+  <div style="font-family:var(--mono);font-size:10px;color:rgba(138,154,176,.4)">Sport7 Labs SARL · Genève · v6 · Mars 2026 · CONFIDENTIEL</div>
+</div>
+
+</body>
+</html>
