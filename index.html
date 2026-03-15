@@ -184,6 +184,30 @@ footer a{color:rgba(184,137,10,.45);text-decoration:none}footer a:hover{color:va
 /* ── Animations ─────────────────── */
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 
+/* ── Archive modal ───────────────── */
+.archive-trigger{display:inline-flex;align-items:center;gap:.45rem;font-family:var(--sans);font-size:.7rem;font-weight:600;color:var(--gold-lt);cursor:pointer;padding:.42rem 1rem;border-radius:8px;border:1px solid rgba(184,137,10,.22);background:rgba(184,137,10,.07);transition:all .25s ease;letter-spacing:.04em;white-space:nowrap}
+.archive-trigger:hover{color:var(--ivory);background:rgba(184,137,10,.14);border-color:rgba(184,137,10,.35);box-shadow:0 0 16px rgba(184,137,10,.08)}
+.archive-trigger svg{width:14px;height:14px;opacity:.7}
+
+.archive-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s ease}
+.archive-overlay.open{opacity:1;pointer-events:all}
+.archive-modal{background:linear-gradient(165deg,rgba(42,42,38,.97),rgba(27,27,24,.98));border:1px solid rgba(184,137,10,.12);border-radius:var(--r);padding:1.8rem 2rem 1.5rem;max-width:420px;width:90%;max-height:80vh;overflow-y:auto;transform:translateY(18px) scale(.97);transition:transform .3s cubic-bezier(.23,1,.32,1);box-shadow:0 30px 80px rgba(0,0,0,.5),0 0 0 1px rgba(184,137,10,.06)}
+.archive-overlay.open .archive-modal{transform:translateY(0) scale(1)}
+.archive-modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem}
+.archive-modal-head h2{font-family:var(--serif);font-size:1.15rem;font-weight:400;color:var(--ivory);letter-spacing:.02em}
+.archive-close{width:28px;height:28px;border-radius:6px;border:1px solid rgba(184,137,10,.1);background:rgba(255,255,255,.03);color:var(--silver);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;transition:all .2s}
+.archive-close:hover{background:rgba(184,137,10,.1);color:var(--ivory);border-color:rgba(184,137,10,.2)}
+.archive-list{list-style:none;display:flex;flex-direction:column;gap:.45rem}
+.archive-item{display:flex;align-items:center;gap:.7rem;padding:.6rem .8rem;border-radius:8px;border:1px solid rgba(184,137,10,.05);background:rgba(255,255,255,.015);text-decoration:none;color:inherit;transition:all .2s ease}
+.archive-item:hover{background:rgba(184,137,10,.06);border-color:rgba(184,137,10,.14)}
+.archive-item-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;background:rgba(184,137,10,.06);color:var(--gold);flex-shrink:0}
+.archive-item-icon svg{width:13px;height:13px}
+.archive-item-info{flex:1;min-width:0}
+.archive-item-name{font-family:var(--sans);font-size:.78rem;color:var(--mist);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.archive-item-detail{font-size:.6rem;color:var(--slate);margin-top:.1rem;font-family:var(--mono);letter-spacing:.03em}
+.archive-item-badge{font-size:.52rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;padding:.12rem .4rem;border-radius:3px;background:rgba(184,137,10,.08);color:var(--gold-lt);flex-shrink:0;font-family:var(--sans)}
+.archive-empty{font-size:.8rem;color:var(--slate);text-align:center;padding:1.5rem 0}
+
 /* ── Responsive ─────────────────── */
 @media(max-width:680px){
   header{padding:2.8rem 1.2rem 0}header h1{font-size:2.1rem}header p{font-size:.88rem}
@@ -246,6 +270,10 @@ footer a{color:rgba(184,137,10,.45);text-decoration:none}footer a:hover{color:va
   </div>
   <div class="toolbar-row">
     <div class="result-count" id="resultCount"><span>11</span> documents</div>
+    <button class="archive-trigger" id="archiveTrigger">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"/></svg>
+      Anciennes versions
+    </button>
     <div class="view-toggle">
       <button class="view-btn active" data-view="grid" aria-label="Vue grille"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></button>
       <button class="view-btn" data-view="list" aria-label="Vue liste"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" d="M3 6h18M3 12h18M3 18h18"/></svg></button>
@@ -322,7 +350,7 @@ footer a{color:rgba(184,137,10,.45);text-decoration:none}footer a:hover{color:va
   </div>
   <span class="card-title">Moteur de Calcul Actuariel &mdash; CFO Tool</span>
   <span class="card-desc">Outil de mod&eacute;lisation financi&egrave;re et de projections actuarielles.</span>
-  <div class="card-meta"><span class="card-arrow">Ouvrir <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg></span><span class="card-version">v1</span></div>
+  <div class="card-meta"><span class="card-arrow">Ouvrir <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg></span><span class="card-version">v1.1</span></div>
 </a>
 
 <a class="card" href="BSD-MIGC-Simulation-v4.html" data-tag="simulation">
@@ -384,6 +412,26 @@ footer a{color:rgba(184,137,10,.45);text-decoration:none}footer a:hover{color:va
   <div class="footer-brand">MIGC</div>
   <div class="footer-copy">Mixed Martial Arts International Grading Council &middot; 2026 &mdash; Tous droits r&eacute;serv&eacute;s</div>
 </footer>
+<!-- Archive Modal -->
+<div class="archive-overlay" id="archiveOverlay">
+  <div class="archive-modal">
+    <div class="archive-modal-head">
+      <h2>Anciennes Versions</h2>
+      <button class="archive-close" id="archiveClose" aria-label="Fermer">&times;</button>
+    </div>
+    <ul class="archive-list">
+      <a class="archive-item" href="MIGC-Moteur-Calcul-v1.html">
+        <div class="archive-item-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 15.75V18m-7.5-6.75h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V13.5zm0 2.25h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V18zm2.498-6.75h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V13.5zm0 2.25h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V18zm2.504-6.75h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V13.5zm0 2.25h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V18zm2.498-6.75h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V13.5zM8.25 6h7.5v2.25h-7.5V6zM12 2.25c-1.892 0-3.758.11-5.593.322C5.307 2.7 4.5 3.65 4.5 4.757V19.5a2.25 2.25 0 002.25 2.25h10.5a2.25 2.25 0 002.25-2.25V4.757c0-1.108-.806-2.057-1.907-2.185A48.507 48.507 0 0012 2.25z"/></svg></div>
+        <div class="archive-item-info">
+          <div class="archive-item-name">Moteur de Calcul Actuariel</div>
+          <div class="archive-item-detail">Remplac&eacute; par v1.1</div>
+        </div>
+        <span class="archive-item-badge">v1</span>
+      </a>
+    </ul>
+  </div>
+</div>
+
 <script>
 (function(){
   const si=document.getElementById('searchInput'),sk=document.getElementById('searchKbd'),sc=document.getElementById('searchClear'),
@@ -402,6 +450,13 @@ footer a{color:rgba(184,137,10,.45);text-decoration:none}footer a:hover{color:va
   vb.forEach(b=>b.addEventListener('click',()=>{vb.forEach(x=>x.classList.remove('active'));b.classList.add('active');grid.classList.toggle('list-view',b.dataset.view==='list')}));
   window.addEventListener('scroll',()=>st.classList.toggle('visible',window.scrollY>300),{passive:true});
   st.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+
+  /* Archive modal */
+  const archTrigger=document.getElementById('archiveTrigger'),archOverlay=document.getElementById('archiveOverlay'),archClose=document.getElementById('archiveClose');
+  archTrigger.addEventListener('click',()=>archOverlay.classList.add('open'));
+  archClose.addEventListener('click',()=>archOverlay.classList.remove('open'));
+  archOverlay.addEventListener('click',e=>{if(e.target===archOverlay)archOverlay.classList.remove('open')});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')archOverlay.classList.remove('open')});
 
   /* Intersection observer for scroll-reveal */
   if('IntersectionObserver' in window){
