@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Système de Grades MMA — MIGC</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0e0e0e;
+    --paper: #f5f0e8;
+    --gold: #b8973a;
+    --gold-light: #d4af5a;
+    --red: #8b1a1a;
+    --muted: #6b6560;
+    --border: rgba(184,151,58,0.25);
+    --c-white:  #e8e4dc;
+    --c-yellow: #d4a820;
+    --c-orange: #d4621a;
+    --c-green:  #2d7a3a;
+    --c-blue:   #1a4a8b;
+    --c-purple: #5a1a8b;
+    --c-brown:  #6b3a1f;
+    --c-black:  #0e0e0e;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Cormorant Garamond', serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.6;
+  }
+
+  .page {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 80px 48px;
+  }
+
+  /* ── Header ── */
+  .header {
+    text-align: center;
+    margin-bottom: 80px;
+    position: relative;
+    animation: fadeDown 1s ease both;
+  }
+
+  .header-kanji {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 72px;
+    color: var(--gold);
+    opacity: 0.18;
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    letter-spacing: 12px;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  .header-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+
+  .header h1 {
+    font-size: 46px;
+    font-weight: 300;
+    letter-spacing: 2px;
+    line-height: 1.1;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+
+  .header h1 em { font-style: italic; color: var(--red); }
+
+  .header-line {
+    width: 80px;
+    height: 1px;
+    background: var(--gold);
+    margin: 24px auto;
+  }
+
+  .header-sub {
+    font-size: 15px;
+    color: var(--muted);
+    font-weight: 300;
+    letter-spacing: 1px;
+  }
+
+  /* ── Section title ── */
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 28px;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .section-title-kanji {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 28px;
+    color: var(--gold);
+    opacity: 0.5;
+    line-height: 1;
+  }
+
+  .section-title-text {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .section-divider {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, var(--border), transparent);
+  }
+
+  /* ── Belt grid ── */
+  .belt-grid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 0;
+    border: 1px solid var(--border);
+    border-bottom: none;
+    animation: fadeUp 0.9s ease both;
+    animation-delay: 0.1s;
+  }
+
+  .belt-card {
+    padding: 20px 10px 16px;
+    text-align: center;
+    border-right: 1px solid var(--border);
+    position: relative;
+    transition: background 0.3s ease;
+    cursor: default;
+  }
+
+  .belt-card:last-child { border-right: none; }
+  .belt-card:hover { background: rgba(184,151,58,0.04); }
+  .belt-card.black { background: rgba(14,14,14,0.03); }
+
+  .belt-swatch {
+    width: 36px;
+    height: 8px;
+    border-radius: 2px;
+    margin: 0 auto 14px;
+  }
+
+  .belt-card.white  .belt-swatch { background: var(--c-white); border: 1px solid #ccc; }
+  .belt-card.yellow .belt-swatch { background: var(--c-yellow); }
+  .belt-card.orange .belt-swatch { background: var(--c-orange); }
+  .belt-card.green  .belt-swatch { background: var(--c-green); }
+  .belt-card.blue   .belt-swatch { background: var(--c-blue); }
+  .belt-card.purple .belt-swatch { background: var(--c-purple); }
+  .belt-card.brown  .belt-swatch { background: var(--c-brown); }
+  .belt-card.black  .belt-swatch { background: var(--c-black); }
+
+  .belt-kanji {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 18px;
+    color: var(--gold);
+    margin-bottom: 5px;
+    line-height: 1;
+  }
+
+  .belt-romaji {
+    font-family: 'Space Mono', monospace;
+    font-size: 7px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    margin-bottom: 7px;
+    text-transform: uppercase;
+  }
+
+  .belt-name {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: 0.5px;
+    margin-bottom: 3px;
+  }
+
+  .belt-level {
+    font-family: 'Space Mono', monospace;
+    font-size: 7px;
+    color: var(--muted);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .belt-logic {
+    font-size: 9.5px;
+    color: var(--muted);
+    font-style: italic;
+    line-height: 1.4;
+  }
+
+  /* ── Intermediate row ── */
+  .intermediate-row {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 0;
+    border: 1px solid var(--border);
+    border-top: 1px dashed rgba(184,151,58,0.3);
+    margin-bottom: 16px;
+    animation: fadeUp 0.9s ease both;
+    animation-delay: 0.15s;
+  }
+
+  .inter-cell {
+    border-right: 1px solid var(--border);
+    padding: 10px 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    min-height: 48px;
+  }
+
+  .inter-cell:last-child { border-right: none; }
+  .inter-cell.empty { background: transparent; }
+
+  .inter-swatch {
+    width: 34px;
+    height: 5px;
+    border-radius: 2px;
+    overflow: hidden;
+    display: flex;
+    flex-shrink: 0;
+  }
+
+  .inter-swatch span {
+    flex: 1;
+    display: block;
+  }
+
+  .inter-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 6.5px;
+    letter-spacing: 0.5px;
+    color: var(--muted);
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  /* ── Legend ── */
+  .belt-legend {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 64px;
+    animation: fadeUp 0.9s ease both;
+    animation-delay: 0.2s;
+  }
+
+  .legend-swatch {
+    width: 22px;
+    height: 4px;
+    border-radius: 1px;
+    overflow: hidden;
+    display: flex;
+    flex-shrink: 0;
+  }
+
+  .legend-swatch span { flex: 1; display: block; }
+
+  .legend-text {
+    font-family: 'Space Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  /* ── Timeline connector ── */
+  .timeline-connector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin: 48px 0;
+    color: var(--muted);
+    font-size: 12px;
+    font-style: italic;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .timeline-connector::before,
+  .timeline-connector::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .timeline-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--gold);
+    opacity: 0.5;
+  }
+
+  /* ── Dan table ── */
+  .dan-table {
+    width: 100%;
+    border-collapse: collapse;
+    animation: fadeUp 1s ease both;
+    animation-delay: 0.2s;
+  }
+
+  .dan-table thead tr { border-bottom: 1px solid var(--gold); }
+
+  .dan-table th {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 400;
+  }
+
+  .dan-table th:first-child { width: 80px; }
+
+  .dan-table tbody tr {
+    border-bottom: 1px solid rgba(184,151,58,0.1);
+    transition: background 0.2s ease;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .dan-table tbody tr:nth-child(1)  { animation-delay: 0.05s; }
+  .dan-table tbody tr:nth-child(2)  { animation-delay: 0.10s; }
+  .dan-table tbody tr:nth-child(3)  { animation-delay: 0.15s; }
+  .dan-table tbody tr:nth-child(4)  { animation-delay: 0.20s; }
+  .dan-table tbody tr:nth-child(5)  { animation-delay: 0.25s; }
+  .dan-table tbody tr:nth-child(6)  { animation-delay: 0.30s; }
+  .dan-table tbody tr:nth-child(7)  { animation-delay: 0.35s; }
+  .dan-table tbody tr:nth-child(8)  { animation-delay: 0.40s; }
+  .dan-table tbody tr:nth-child(9)  { animation-delay: 0.45s; }
+  .dan-table tbody tr:nth-child(10) { animation-delay: 0.50s; }
+
+  .dan-table tbody tr:hover { background: rgba(184,151,58,0.04); }
+  .dan-table tbody tr:last-child { border-bottom: none; }
+  .dan-table td { padding: 18px 16px; vertical-align: middle; }
+
+  .dan-number {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 1px;
+  }
+
+  .dan-kanji {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 22px;
+    color: var(--ink);
+    line-height: 1;
+  }
+
+  .dan-romaji {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    margin-top: 3px;
+    text-transform: uppercase;
+  }
+
+  .dan-translation {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 3px;
+  }
+
+  .dan-logic {
+    font-size: 13px;
+    color: var(--muted);
+    font-style: italic;
+    font-weight: 300;
+  }
+
+  .dan-progress-cell { width: 120px; }
+
+  .dan-bar-wrap {
+    height: 2px;
+    background: rgba(184,151,58,0.15);
+    border-radius: 1px;
+    overflow: hidden;
+  }
+
+  .dan-bar {
+    height: 100%;
+    background: linear-gradient(to right, var(--gold), var(--gold-light));
+    border-radius: 1px;
+  }
+
+  .dan-table tbody tr.milestone { background: rgba(184,151,58,0.06); }
+  .dan-table tbody tr.apex td   { border-top: 1px solid var(--gold); }
+
+  /* ── Footer ── */
+  .footer {
+    margin-top: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    animation: fadeUp 1s ease both;
+    animation-delay: 0.8s;
+  }
+
+  .footer-brand {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .footer-note {
+    font-size: 12px;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  .footer-kanji {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 18px;
+    color: var(--gold);
+    opacity: 0.4;
+  }
+
+  /* ── Animations ── */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 768px) {
+    .page { padding: 40px 20px; }
+    .belt-grid,
+    .intermediate-row { grid-template-columns: repeat(4, 1fr); }
+    .belt-grid .belt-card:nth-child(4n),
+    .intermediate-row .inter-cell:nth-child(4n) { border-right: none; }
+    .header h1 { font-size: 30px; }
+    .header-kanji { font-size: 44px; }
+    .dan-progress-cell { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-kanji">武道</div>
+    <div class="header-label">MIGC — Système de Grades</div>
+    <h1>Arts Martiaux <em>Mixtes</em></h1>
+    <div class="header-line"></div>
+    <div class="header-sub">Progression — Discipline — Compréhension</div>
+  </div>
+
+  <!-- Section ceintures -->
+  <div class="section-title">
+    <div class="section-title-kanji">帯</div>
+    <div class="section-title-text">Ceintures</div>
+    <div class="section-divider"></div>
+  </div>
+
+  <!-- Grille principale -->
+  <div class="belt-grid">
+    <div class="belt-card white">
+      <div class="belt-swatch"></div>
+      <div class="belt-kanji">初心</div>
+      <div class="belt-romaji">Shoshin</div>
+      <div class="belt-name">Blanche</div>
+      <div class="belt-level">Esprit du débutant</div>
+      <div class="belt-logic">Découverte et ouverture</div>
+    </div>
+    <div class="belt-card yellow">
+      <div class="belt-swatch"></div>
+      <div class="belt-kanji">学習</div>
+      <div class="belt-romaji">Gakushū</div>
+      <div class="belt-name">Jaune</div>
+      <div class="belt-level">Apprentissage</div>
+      <div class="belt-logic">Acquisition des bases</div>
+    </div>
+    <div class="belt-card orange">
+      <div class="belt-swatch"></div>
+      <div class="belt-kanji">基礎</div>
+      <div class="belt-romaji">Kiso</div>
+      <div class="belt-name">Orange</div>
+      <div class="belt-level">Fondations</div>
+      <div class="belt-logic">Stabilisation technique</div>
+    </div>
+    <div class="belt-card green">
+      <div class="belt-swatch"></div>
+      <div class="belt-kanji">理解</div>
+      <div class="belt-romaji">Rikai</div>
+      <div class="belt-name">Verte</div>
+      <div class="belt-level">Compréhension</div>
+      <div class="belt-logic">Logique des techniques</div>
+    </div>
+    <div class="belt-card blue">
+      <div class="belt-swatch"></div>
+      <div class="belt-kanji">応用</div>
+      <div class="belt-romaji">Ōyō</div>
+      <div class="belt-name">Bleue</div>
+      <div class="belt-level">Application</div>
+      <div class="belt-logic">Appliquer les principes</div>
+    </div>
+    <div class="belt-card purple">
+      <div class="belt-swatch"></div>
+      <div class="belt-kanji">適応</div>
+      <div class="belt-romaji">Tekiō</div>
+      <div class="belt-name">Violette</div>
+      <div class="belt-level">Adaptation</div>
+      <div class="belt-logic">Principes en situation réelle</div>
+    </div>
+    <div class="belt-card brown">
+      <div class="belt-swatch"></div>
+      <div class="belt-kanji">洗練</div>
+      <div class="belt-romaji">Senren</div>
+      <div class="belt-name">Marron</div>
+      <div class="belt-level">Raffinement</div>
+      <div class="belt-logic">Technique précise et mature</div>
+    </div>
+    <div class="belt-card black">
+      <div class="belt-swatch"></div>
+      <div class="belt-kanji">皆伝</div>
+      <div class="belt-romaji">Kaiden</div>
+      <div class="belt-name">Noire</div>
+      <div class="belt-level">Transmission complète</div>
+      <div class="belt-logic">8 à 10 ans de pratique</div>
+    </div>
+  </div>
+
+  <!-- Rangée intermédiaires enfants -->
+  <div class="intermediate-row">
+
+    <!-- Blanche → Jaune -->
+    <div class="inter-cell">
+      <div class="inter-swatch">
+        <span style="background:var(--c-white); border-right: 0.5px solid #ccc;"></span>
+        <span style="background:var(--c-yellow);"></span>
+      </div>
+      <div class="inter-label">Blanc–Jaune</div>
+    </div>
+
+    <!-- Jaune → Orange -->
+    <div class="inter-cell">
+      <div class="inter-swatch">
+        <span style="background:var(--c-yellow);"></span>
+        <span style="background:var(--c-orange);"></span>
+      </div>
+      <div class="inter-label">Jaune–Orange</div>
+    </div>
+
+    <!-- Orange → Verte -->
+    <div class="inter-cell">
+      <div class="inter-swatch">
+        <span style="background:var(--c-orange);"></span>
+        <span style="background:var(--c-green);"></span>
+      </div>
+      <div class="inter-label">Orange–Verte</div>
+    </div>
+
+    <!-- Verte → Bleue -->
+    <div class="inter-cell">
+      <div class="inter-swatch">
+        <span style="background:var(--c-green);"></span>
+        <span style="background:var(--c-blue);"></span>
+      </div>
+      <div class="inter-label">Verte–Bleue</div>
+    </div>
+
+    <!-- Bleue → Violette -->
+    <div class="inter-cell">
+      <div class="inter-swatch">
+        <span style="background:var(--c-blue);"></span>
+        <span style="background:var(--c-purple);"></span>
+      </div>
+      <div class="inter-label">Bleue–Violette</div>
+    </div>
+
+    <!-- Vide : pas d'intermédiaire Violette → Marron -->
+    <div class="inter-cell empty"></div>
+
+    <!-- Vide : pas d'intermédiaire Marron → Noire -->
+    <div class="inter-cell empty"></div>
+
+    <!-- Vide : Noire -->
+    <div class="inter-cell empty"></div>
+
+  </div>
+
+  <!-- Légende -->
+  <div class="belt-legend">
+    <div class="legend-swatch">
+      <span style="background:var(--c-white); border-right:0.5px solid #ccc;"></span>
+      <span style="background:var(--c-yellow);"></span>
+    </div>
+    <div class="legend-text">Ceintures intermédiaires — Parcours enfants (6–14 ans)</div>
+  </div>
+
+  <!-- Connector -->
+  <div class="timeline-connector">
+    <div class="timeline-dot"></div>
+    <span>La ceinture noire ouvre la voie des dan</span>
+    <div class="timeline-dot"></div>
+  </div>
+
+  <!-- Section Dan -->
+  <div class="section-title" style="animation-delay:0.3s">
+    <div class="section-title-kanji">段</div>
+    <div class="section-title-text">Grades Dan</div>
+    <div class="section-divider"></div>
+  </div>
+
+  <table class="dan-table">
+    <thead>
+      <tr>
+        <th>Dan</th>
+        <th>Caractère</th>
+        <th>Sens & Logique</th>
+        <th class="dan-progress-cell">Progression</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><div class="dan-number">1er Dan</div></td>
+        <td><div class="dan-kanji">修行</div><div class="dan-romaji">Shugyō</div></td>
+        <td><div class="dan-translation">Pratique engagée</div><div class="dan-logic">Début de la pratique profonde</div></td>
+        <td class="dan-progress-cell"><div class="dan-bar-wrap"><div class="dan-bar" style="width:10%"></div></div></td>
+      </tr>
+      <tr>
+        <td><div class="dan-number">2e Dan</div></td>
+        <td><div class="dan-kanji">研鑽</div><div class="dan-romaji">Kensan</div></td>
+        <td><div class="dan-translation">Perfectionnement</div><div class="dan-logic">Travail approfondi des principes</div></td>
+        <td class="dan-progress-cell"><div class="dan-bar-wrap"><div class="dan-bar" style="width:21%"></div></div></td>
+      </tr>
+      <tr>
+        <td><div class="dan-number">3e Dan</div></td>
+        <td><div class="dan-kanji">発展</div><div class="dan-romaji">Hatten</div></td>
+        <td><div class="dan-translation">Développement</div><div class="dan-logic">La compréhension s'élargit et s'unifie</div></td>
+        <td class="dan-progress-cell"><div class="dan-bar-wrap"><div class="dan-bar" style="width:33%"></div></div></td>
+      </tr>
+      <tr class="milestone">
+        <td><div class="dan-number">4e Dan</div></td>
+        <td><div class="dan-kanji">円熟</div><div class="dan-romaji">Enjuku</div></td>
+        <td><div class="dan-translation">Maturité</div><div class="dan-logic">La pratique devient pleinement maîtrisée</div></td>
+        <td class="dan-progress-cell"><div class="dan-bar-wrap"><div class="dan-bar" style="width:45%"></div></div></td>
+      </tr>
+      <tr class="milestone">
+        <td><div class="dan-number">5e Dan</div></td>
+        <td><div class="dan-kanji">指導</div><div class="dan-romaji">Shidō</div></td>
+        <td><div class="dan-translation">Direction</div><div class="dan-logic">Capacité affirmée à guider les autres</div></td>
+        <td class="dan-progress-cell"><div class="dan-bar-wrap"><div class="dan-bar" style="width:57%"></div></div></td>
+      </tr>
+      <tr>
+        <td><div class="dan-number">6e Dan</div></td>
+        <td><div class="dan-kanji">伝承</div><div class="dan-romaji">Denshō</div></td>
+        <td><div class="dan-translation">Transmission</div><div class="dan-logic">Transmission structurée de la discipline</div></td>
+        <td class="dan-progress-cell"><div class="dan-bar-wrap"><div class="dan-bar" style="width:67%"></div></div></td>
+      </tr>
+      <tr>
+        <td><div class="dan-number">7e Dan</div></td>
+        <td><div class="dan-kanji">洞察</div><div class="dan-romaji">Dōsatsu</div></td>
+        <td><div class="dan-translation">Discernement</div><div class="dan-logic">Compréhension très profonde du système</div></td>
+        <td class="dan-progress-cell"><div class="dan-bar-wrap"><div class="dan-bar" style="width:76%"></div></div></td>
+      </tr>
+      <tr>
+        <td><div class="dan-number">8e Dan</div></td>
+        <td><div class="dan-kanji">智徳</div><div class="dan-romaji">Chitoku</div></td>
+        <td><div class="dan-translation">Sagesse vertueuse</div><div class="dan-logic">Autorité morale et technique</div></td>
+        <td class="dan-progress-cell"><div class="dan-bar-wrap"><div class="dan-bar" style="width:85%"></div></div></td>
+      </tr>
+      <tr>
+        <td><div class="dan-number">9e Dan</div></td>
+        <td><div class="dan-kanji">規範</div><div class="dan-romaji">Kihan</div></td>
+        <td><div class="dan-translation">Modèle</div><div class="dan-logic">Référence vivante de la discipline</div></td>
+        <td class="dan-progress-cell"><div class="dan-bar-wrap"><div class="dan-bar" style="width:93%"></div></div></td>
+      </tr>
+      <tr class="apex">
+        <td><div class="dan-number">10e Dan</div></td>
+        <td><div class="dan-kanji">道極</div><div class="dan-romaji">Dōkyoku</div></td>
+        <td><div class="dan-translation">Accomplissement de la voie</div><div class="dan-logic">Incarnation complète de la discipline</div></td>
+        <td class="dan-progress-cell"><div class="dan-bar-wrap"><div class="dan-bar" style="width:100%"></div></div></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="footer-brand">MIGC — MMA Grading System</div>
+    <div class="footer-note">De l'ouverture à l'incarnation</div>
+    <div class="footer-kanji">道</div>
+  </div>
+
+</div>
+</body>
+</html>
