@@ -1,0 +1,826 @@
+
+<style>
+:root{--bg:#0d1117;--sf:#161b22;--sf2:#21262d;--bd:#30363d;--tx:#e6edf3;--mu:#8b949e;--gold:#d4a520;--gn:#3fb950;--am:#d29922;--bl:#58a6ff;--rd:#f85149;--pu:#a371f7;--cy:#22d3ee;--or:#f0883e;--pk:#ec4899;}
+*{box-sizing:border-box;margin:0;padding:0;}
+.app{background:var(--bg);color:var(--tx);padding:8px;border-radius:10px;font-family:var(--font-sans);}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-bottom:6px;}
+.stat{background:var(--sf);border:.5px solid var(--bd);border-radius:6px;padding:5px;text-align:center;}
+.stat-n{font-size:15px;font-weight:500;}
+.stat-l{font-size:9px;color:var(--mu);margin-top:1px;}
+.ns{color:#56d364;}.nv{color:#3fb950;}.nr{color:#f85149;}
+.toolbar{display:flex;gap:4px;margin-bottom:6px;flex-wrap:wrap;align-items:center;}
+.search{flex:1;min-width:100px;height:25px;padding:0 8px;font-size:11px;border:.5px solid var(--bd);border-radius:12px;background:var(--sf);color:var(--tx);}
+.search::placeholder{color:var(--mu);}.search:focus{outline:none;border-color:var(--bl);}
+.fbtn,.vbtn{padding:2px 8px;border-radius:12px;border:.5px solid var(--bd);background:transparent;color:var(--mu);cursor:pointer;font-size:10px;}
+.fbtn.on{background:var(--bl);color:#0d1117;border-color:var(--bl);font-weight:500;}
+.vbtn.on{background:var(--pu);color:#fff;border-color:var(--pu);}
+.main{display:grid;grid-template-columns:32% 68%;gap:6px;min-height:540px;}
+.panel{background:var(--sf);border:.5px solid var(--bd);border-radius:8px;overflow:hidden;display:flex;flex-direction:column;}
+.ph{padding:4px 10px;border-bottom:.5px solid var(--bd);font-size:9px;font-weight:500;color:var(--mu);letter-spacing:.04em;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;}
+.pscroll{flex:1;overflow-y:auto;padding:5px;}
+.ccard{display:flex;align-items:center;gap:4px;padding:5px 5px;border-radius:5px;border:.5px solid var(--bd);margin-bottom:3px;background:var(--sf2);cursor:pointer;transition:border-color .1s;}
+.ccard:hover,.ccard.sel{border-color:var(--bl);}
+.ccard.sel{background:#0c1e35;}.ccard.refused{opacity:.35;}
+.cflag{font-size:12px;width:16px;text-align:center;flex-shrink:0;}
+.ci{flex:1;min-width:0;}
+.cname{font-size:11px;font-weight:500;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.crole{font-size:9px;color:var(--mu);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cbadge{font-size:8px;padding:1px 4px;border-radius:3px;font-weight:500;flex-shrink:0;}
+.bc{background:#0c2040;color:#58a6ff;}.ba{background:#091a0f;color:#3fb950;}.bo{background:#1a1005;color:#d29922;}.bx{background:#1a0514;color:#ec4899;}
+.adot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.ads{background:#d4a520;}.ad{background:#3fb950;}.aac{background:#d29922;}.ain{background:#f85149;}.ap2{background:#6e7681;}
+.spill{font-size:9px;padding:1px 5px;border-radius:6px;cursor:pointer;white-space:nowrap;flex-shrink:0;border:none;font-family:var(--font-sans);}
+.s-pending{background:#1c1c24;color:#6e7681;}.s-contacted{background:#0c2040;color:#58a6ff;}
+.s-interested{background:#1a1005;color:#d29922;}.s-verbal_yes{background:#091a0f;color:#3fb950;}
+.s-signed{background:#0d2818;color:#56d364;}.s-refused{background:#2a0a0a;color:#f85149;}
+.xbtn{font-size:9px;width:13px;height:13px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:none;background:transparent;color:var(--mu);cursor:pointer;flex-shrink:0;}
+.xbtn:hover{background:#2a0a0a;color:#f85149;}
+.ndot{width:5px;height:5px;border-radius:50%;background:var(--am);flex-shrink:0;}
+.tabs{display:flex;border-bottom:.5px solid var(--bd);flex-shrink:0;overflow-x:auto;}
+.tab{padding:5px 10px;font-size:10px;color:var(--mu);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;flex-shrink:0;}
+.tab.on{color:var(--tx);border-bottom-color:var(--bl);}
+.tab-content{flex:1;overflow-y:auto;padding:6px;}
+/* CHAIN MAP */
+.prog-bar-wrap{display:flex;align-items:center;gap:7px;padding:2px 0 8px;}
+.pbar{flex:1;height:3px;background:var(--bd);border-radius:2px;overflow:hidden;}
+.pbar-fill{height:100%;background:var(--gn);transition:width .3s;}
+.pbar-txt{font-size:9px;color:var(--mu);white-space:nowrap;}
+.chain-row{display:flex;align-items:flex-start;gap:5px;margin-bottom:7px;}
+.chain-lbl{font-size:9px;font-weight:500;padding:3px 6px;border-radius:4px;white-space:nowrap;flex-shrink:0;min-width:95px;text-align:center;letter-spacing:.02em;align-self:flex-start;margin-top:3px;}
+.chain-path{display:flex;align-items:flex-start;gap:0;flex-wrap:wrap;}
+.arrow{color:var(--mu);font-size:10px;padding:0 2px;align-self:center;flex-shrink:0;}
+.cnode{padding:2px 6px;border-radius:4px;font-size:10px;cursor:pointer;white-space:nowrap;border:.5px solid;max-width:88px;overflow:hidden;text-overflow:ellipsis;margin:1px;}
+.cnode:hover{filter:brightness(1.3);}
+.cnode.sel{outline:1.5px solid #fff;outline-offset:1px;}
+.n-pending{background:#1c1c24;border-color:#30363d;color:#8b949e;}
+.n-contacted{background:#0c2040;border-color:#1f4a9c;color:#79c0ff;}
+.n-interested{background:#1a1005;border-color:#4d3210;color:#e3b341;}
+.n-verbal_yes{background:#091a0f;border-color:#1a5c35;color:#56d364;}
+.n-signed{background:#0d2818;border-color:#2e7c42;color:#86efac;}
+.n-refused{background:#2a0a0a;border-color:#6b1f1f;color:#f85149;}
+.n-fixed{background:#1a1205;border-color:#d4a52055;color:#d4a520;}
+.fork-block{display:flex;flex-direction:column;gap:2px;}
+.sub-row{display:flex;align-items:center;gap:0;}
+/* MOTOR */
+.msec{margin-bottom:7px;}
+.msec-h{font-size:9px;font-weight:500;color:var(--mu);letter-spacing:.04em;padding:2px 0;border-bottom:.5px solid var(--bd);margin-bottom:4px;}
+.mcard{padding:5px 7px;border-radius:5px;margin-bottom:3px;border-left:3px solid;cursor:pointer;}
+.mcard:hover{filter:brightness(1.1);}
+.mc-now{border-left-color:var(--gn);background:#071a0e;}
+.mc-unlock{border-left-color:var(--cy);background:#051a1f;}
+.mc-chain{border-left-color:var(--bl);background:#070f1a;}
+.mc-wait{border-left-color:var(--am);background:#1a1005;}
+.mc-block{border-left-color:var(--mu);background:#111118;}
+.mc-n{font-size:11px;font-weight:500;color:var(--tx);}
+.mc-msg{font-size:10px;color:var(--mu);margin-top:1px;line-height:1.3;}
+.mc-lv{font-size:10px;color:var(--gn);margin-top:2px;font-style:italic;}
+/* PROFILE */
+.prof-hd{padding:8px 10px;border-bottom:.5px solid var(--bd);flex-shrink:0;}
+.ph-nm{font-size:13px;font-weight:500;color:var(--tx);}
+.ph-rl{font-size:10px;color:var(--mu);margin-top:1px;}
+.ph-meta{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px;}
+.phbadge{font-size:9px;padding:1px 5px;border-radius:3px;font-weight:500;}
+.p1{background:#0d2818;color:#56d364;}.p2{background:#091a0f;color:#3fb950;}
+.p3{background:#0c2040;color:#58a6ff;}.p4{background:#1a1005;color:#d29922;}.p5{background:#1c1c24;color:#6e7681;}
+.stepper{display:flex;gap:2px;flex-wrap:wrap;margin-top:5px;}
+.sstep{padding:2px 6px;border-radius:8px;border:.5px solid var(--bd);font-size:9px;cursor:pointer;background:transparent;color:var(--mu);}
+.sstep.cur{font-weight:500;}.sstep.done{opacity:.3;}
+.rfbtn{padding:2px 6px;border-radius:8px;border:.5px solid var(--rd);font-size:9px;cursor:pointer;background:transparent;color:var(--rd);}
+.prof-bd{overflow-y:auto;flex:1;padding:7px 10px;}
+.psec{margin-bottom:8px;}
+.psec-h{font-size:9px;font-weight:500;color:var(--mu);letter-spacing:.04em;padding-bottom:2px;border-bottom:.5px solid var(--bd);margin-bottom:4px;}
+.lever{background:var(--sf2);border-radius:5px;padding:5px 8px;font-size:11px;color:var(--mu);line-height:1.4;border-left:3px solid var(--gold);}
+.intro-b{background:#070f1a;border-radius:5px;padding:5px 8px;font-size:11px;color:#79c0ff;line-height:1.4;border-left:3px solid var(--bl);font-style:italic;}
+.arg{display:flex;gap:5px;margin-bottom:3px;}
+.argn{width:13px;height:13px;border-radius:50%;background:var(--sf2);font-size:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--mu);margin-top:1px;}
+.argt{font-size:11px;color:var(--tx);line-height:1.35;}
+.avoid-i{font-size:10px;color:var(--rd);background:#2a0a0a;border-radius:3px;padding:2px 5px;margin-bottom:2px;line-height:1.3;}
+.chain-out{background:#051a0f;border-radius:4px;padding:4px 7px;font-size:10px;color:#56d364;line-height:1.3;margin-bottom:2px;}
+.note-ta{width:100%;padding:5px 7px;border:.5px solid var(--bd);border-radius:5px;font-size:10px;color:var(--tx);background:var(--sf2);resize:none;height:55px;font-family:var(--font-sans);}
+.note-ta:focus{outline:none;border-color:var(--bl);}
+.sbtn{margin-top:3px;padding:2px 8px;border-radius:4px;border:.5px solid var(--bd);background:transparent;color:var(--mu);cursor:pointer;font-size:9px;}
+.sbtn.ok{color:var(--gn);border-color:var(--gn);}
+/* KANBAN */
+.kanban{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;padding:4px;}
+.kcol{display:flex;flex-direction:column;gap:2px;}
+.kcol-h{font-size:9px;color:var(--mu);padding:2px 5px;background:var(--sf2);border-radius:4px;text-align:center;}
+.kcard{padding:3px 5px;border-radius:4px;border:.5px solid var(--bd);background:var(--sf2);cursor:pointer;font-size:10px;color:var(--tx);}
+.kcard:hover{border-color:var(--bl);}
+/* ORGCHART */
+.org-wrap{padding:4px 0;}
+.org-section{margin-bottom:10px;}
+.org-sh{font-size:9px;font-weight:500;letter-spacing:.06em;padding:2px 6px;border-radius:3px;margin-bottom:5px;display:inline-block;}
+.org-grid{display:flex;flex-wrap:wrap;gap:4px;}
+.org-box{padding:4px 7px;border-radius:5px;border:.5px solid;cursor:pointer;min-width:80px;text-align:center;}
+.org-box:hover{filter:brightness(1.2);}
+.ob-name{font-size:10px;font-weight:500;line-height:1.2;}
+.ob-role{font-size:8px;opacity:.7;margin-top:1px;line-height:1.2;}
+.ob-status{font-size:8px;margin-top:2px;font-weight:500;}
+/* status variants for org boxes */
+.ob-fixed{background:#16200a;border-color:#d4a52055;}.ob-fixed .ob-name{color:var(--gold);}
+.ob-signed{background:#0d2818;border-color:#2e7c42;}.ob-signed .ob-name{color:#86efac;}
+.ob-verbal{background:#091a0f;border-color:#1a5c35;}.ob-verbal .ob-name{color:#56d364;}
+.ob-active{background:#0c2040;border-color:#1f4a9c;}.ob-active .ob-name{color:#79c0ff;}
+.ob-pending{background:#1c1c24;border-color:#30363d;}.ob-pending .ob-name{color:#8b949e;}
+.ob-empty{background:#111118;border-color:#1e1e24;border-style:dashed;}.ob-empty .ob-name{color:#444;}
+.org-connector{display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--bd);padding:1px 0;width:100%;}
+.org-col-grid{display:grid;gap:5px;}
+.back-btn{padding:2px 7px;border-radius:5px;border:.5px solid var(--bd);background:transparent;color:var(--mu);cursor:pointer;font-size:9px;margin-right:4px;}
+.back-btn:hover{border-color:var(--bl);color:var(--bl);}
+.legend-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px;}
+.leg-i{display:flex;align-items:center;gap:3px;font-size:9px;color:var(--mu);}
+.leg-d{width:8px;height:8px;border-radius:2px;border:.5px solid;}
+</style>
+<div class="app">
+<div class="stats">
+  <div class="stat"><div class="stat-n ns" id="ns">0</div><div class="stat-l">Signés</div></div>
+  <div class="stat"><div class="stat-n nv" id="nv">0</div><div class="stat-l">OUI verbal</div></div>
+  <div class="stat"><div class="stat-n" id="nc">0</div><div class="stat-l">En cours</div></div>
+  <div class="stat"><div class="stat-n" id="np">29</div><div class="stat-l">En attente</div></div>
+  <div class="stat"><div class="stat-n nr" id="no">0</div><div class="stat-l">Refus</div></div>
+</div>
+<div class="toolbar">
+  <input class="search" type="text" placeholder="Rechercher..." id="search" oninput="render()">
+  <button class="fbtn on" onclick="setFilter('all')">Tous</button>
+  <button class="fbtn" onclick="setFilter('comite')">Comité</button>
+  <button class="fbtn" onclick="setFilter('comm')">Commissions</button>
+  <button class="fbtn" onclick="setFilter('ambassadeur')">Ambass.</button>
+  <button class="fbtn" onclick="setFilter('org')">Orgs</button>
+  <button class="fbtn" onclick="setFilter('active')">Actifs</button>
+</div>
+<div class="main">
+  <div class="panel">
+    <div class="ph"><span id="lcnt">29 contacts</span><span style="font-size:9px;opacity:.6;">clic = profil</span></div>
+    <div class="pscroll" id="clist"></div>
+  </div>
+  <div class="panel" id="rpanel">
+    <div class="tabs" id="rtabs"></div>
+    <div class="tab-content" id="rcontent"></div>
+  </div>
+</div>
+</div>
+<script>
+const SC=['pending','contacted','interested','verbal_yes','signed'];
+const SL={pending:'Non contacté',contacted:'Contacté',interested:'Intéressé',verbal_yes:'OUI verbal',signed:'Signé ✓',refused:'Refus'};
+const AC={direct_star:'ads',direct:'ad',accessible:'aac',indirect:'ain',phase2:'ap2'};
+const CC={comite:'bc',comm:'bc',ambassadeur:'ba',org:'bo',special:'bx'};
+
+const C=[
+// ── COMITÉ DIRECTEUR ───────────────────────────────────────────────────
+{id:'renzo',flag:'🇧🇷',name:'Renzo Gracie',role:'Prés. Commission Grading',cat:'comite',access:'direct_star',pri:1,ph:1,unlocks:['royce'],req:[],via:null,
+ key:'Âme technique du MIGC. Sa signature débloque Royce et légitime tout le référentiel.',
+ intro:'Renzo, tu es la première personne que je veux à bord — non pas pour ton nom, mais pour ton expertise sur les systèmes de progression martiale.',
+ args:['Seul architecte possible du référentiel technique MMA — pas comme figure, comme bâtisseur réel.','Héritage Gracie : Carlos a codifié le BJJ, Royce l\'a montré au monde, toi tu structures le MMA pour 50 ans.','66 académies mondiales deviennent pionnières — tes instructeurs = examinateurs MIGC certifiés.'],
+ avoid:['Ne pas commencer par la rémunération.','Ne jamais mentionner d\'anciens projets de grades ratés.']},
+
+{id:'nogueira',flag:'🇧🇷',name:'Antonio Nogueira',role:'Vice-Président',cat:'comite',access:'direct_star',pri:1,ph:1,unlocks:['fedor'],req:[],via:null,
+ key:'Demander à Nogueira d\'appeler Fedor AVANT le contact Bertrand — respect mutuel depuis PRIDE.',
+ intro:'Minotauro, je t\'appelle pour quelque chose qui me tient profondément à cœur — pas un projet parmi d\'autres.',
+ args:['Premier représentant du MMA brésilien et latino au Comité mondial — voix d\'un continent entier.','Nom sur l\'acte fondateur de l\'institution qui structure le MMA pour les 50 prochaines années.','Le fonds de retraite — construire ce qu\'on n\'a pas eu nous-mêmes dans nos carrières.'],
+ avoid:['Ne pas supposer un accord préalable.']},
+
+{id:'perillo',flag:'🇮🇹',name:'Luigi Perillo',role:'Trésorier',cat:'comite',access:'direct_star',pri:1,ph:1,unlocks:['brave_cf_org'],req:[],via:null,
+ key:'Finance + sport combat + réseau MENA = profil rarissime. Son réseau ouvre BRAVE CF.',
+ intro:'Luigi, je te présente un projet qui arrive à maturité et pour lequel ton profil est unique au monde.',
+ args:['Seul profil combinant finance institutionnelle + passion sport combat + réseau MENA.','Supervise les flux financiers MIGC avec IA Guardian — co-signature >10 000 CHF.','Fonds de retraite 530M€ à 20 ans — besoin d\'un Trésorier de cette stature dès J+1.'],
+ avoid:['Ne pas demander une signature immédiate — pitch complet d\'abord.']},
+
+{id:'royce',flag:'🇧🇷',name:'Royce Gracie',role:'Fondateur d\'Honneur',cat:'comite',access:'direct',pri:2,ph:2,unlocks:[],req:['renzo'],via:null,
+ key:'"Ton cousin Renzo est là — tu manques à l\'appel de la famille."',
+ intro:'Royce, je sors d\'un appel avec Renzo. Il m\'a posé la question directement : est-ce que Royce est là ?',
+ args:['Sans toi, le MMA tel qu\'on le connaît n\'existe pas — ton nom doit être sur l\'acte fondateur.','Rôle Fondateur d\'Honneur : 4 à 6 jours/an, grandes cérémonies — aucune charge opérationnelle.','Héritage Hélio Gracie : le BJJ a un système de grades mondial — le MMA va enfin l\'avoir.'],
+ avoid:['Ne jamais mentionner d\'anciens projets de grades qui ont échoué.','Ne pas parler de complexité — le rôle est simple et précis.']},
+
+{id:'fedor',flag:'🇷🇺',name:'Fedor Emelianenko',role:'Fondateur d\'Honneur',cat:'comite',access:'direct',pri:2,ph:2,unlocks:['rizin','aca'],req:['nogueira'],via:null,
+ key:'Nogueira appelle Fedor AVANT Bertrand. Neutralité suisse = argument central absolu.',
+ intro:'Fedor, je t\'appelle non pas pour un show — pour une institution qui n\'existe pas encore.',
+ args:['MIGC = association suisse indépendante — neutre, aucun agenda géopolitique, aucune appartenance.','Fonds de retraite pour les combattants — construire ce qu\'aucune légende n\'a eu.','10 ans d\'invincibilité méritent une institution permanente, pas seulement des mémoires.'],
+ avoid:['Éviter tout sujet géopolitique.','Ne jamais traiter sa nationalité russe comme un problème.']},
+
+{id:'zahabi',flag:'🇨🇦',name:'Firas Zahabi',role:'Membre Technique',cat:'comite',access:'direct',pri:2,ph:2,unlocks:['gsp'],req:[],via:null,
+ key:'Approche 100% intellectuelle. Sa validation auprès de GSP vaut 10 argumentaires Bertrand.',
+ intro:'Firas, tu réfléchis au MMA comme un système depuis des années. C\'est exactement ce dont on a besoin.',
+ args:['Seul profil avec rigueur systémique MMA + capacité d\'abstraction pour bâtir un référentiel complet.','Architecte des 230 critères de progression — niveau par niveau, discipline par discipline.','Si tu es là, GSP saura que c\'est sérieux. Ton signal vaut tout.'],
+ avoid:['Ne pas proposer un rôle honorifique — il veut un rôle opérationnel réel avec du fond.']},
+
+{id:'gsp',flag:'🇨🇦',name:'Georges St-Pierre',role:'Président d\'Honneur',cat:'comite',access:'direct',pri:3,ph:3,unlocks:[],req:['zahabi'],via:null,
+ key:'Approcher SEULEMENT après Zahabi confirmé. Dire : "Firas est là et dit que c\'est sérieux."',
+ intro:'Georges, c\'est Bertrand. Je t\'appelle après Firas — il m\'a dit de t\'appeler et qu\'il était là.',
+ args:['L\'ATP du MMA — co-fondateur de l\'institution que le sport attendait depuis 30 ans.','Président d\'Honneur : visibilité max, contrainte min — 4 à 6 jours/an, zéro risque réputationnel.','Dans 20 ans quand chaque combattant aura un grade certifié, son nom sera sur l\'acte fondateur.'],
+ avoid:['Ne jamais approcher avant d\'avoir Zahabi confirmé.']},
+
+{id:'kavanagh',flag:'🇮🇪',name:'John Kavanagh',role:'Membre Développement',cat:'comite',access:'direct',pri:3,ph:3,unlocks:['bisping'],req:[],via:null,
+ key:'Réseau McGregor = multiplicateur de crédibilité mondial dans tous les marchés anglophones.',
+ intro:'John, tu as construit SBG à partir de rien. Tu sais mieux que quiconque ce que ça signifie.',
+ args:['Voix institutionnelle du MMA européen — personne n\'a son réseau et sa légitimité sur ce continent.','Ses athlètes (McGregor, Nelson) bénéficient directement du système — il le construit pour eux.','Via son réseau, Bisping et d\'autres ambassadeurs européens deviennent naturellement accessibles.'],
+ avoid:[]},
+
+{id:'gane',flag:'🇫🇷',name:'Ciryl Gane',role:'Représentant Athlètes',cat:'comite',access:'direct',pri:3,ph:3,unlocks:[],req:[],via:null,
+ key:'Approche fraternelle en français. Lever d\'emblée l\'objection contrat UFC — compatible.',
+ intro:'Ciryl, j\'aurais pu choisir un retraité pour ce siège. J\'ai choisi un actif. Je t\'ai choisi toi.',
+ args:['Les décisions qui protègeront les combattants de demain doivent être prises par quelqu\'un qui vit ça aujourd\'hui.','Contrat UFC totalement compatible — MIGC est une autorité de certification, pas une org concurrente.','Premier Français en finale UFC HW — 2ème page d\'histoire en étant co-fondateur.'],
+ avoid:['Ne pas tarder à rassurer sur la compatibilité contrat UFC.']},
+
+{id:'lembo',flag:'🇺🇸',name:'Nick Lembo',role:'Secrétaire Général',cat:'comite',access:'indirect',pri:4,ph:4,unlocks:[],req:['ratner_step'],via:'Marc Ratner (intro préalable)',
+ key:'"Le travail de votre vie mérite une maison permanente mondiale." Passer par Ratner d\'abord.',
+ intro:'Nick, Marc Ratner m\'a suggéré de vous appeler directement après vous avoir contacté.',
+ args:['Co-auteur des Unified Rules MMA — il a littéralement écrit les règles du sport mondial.','SG MIGC = consécration de 25 ans dans une institution mondiale permanente.','Lien avec toutes les commissions athlétiques mondiales — valeur institutionnelle inestimable.'],
+ avoid:['Ne jamais approcher sans l\'introduction préalable de Marc Ratner.']},
+
+// ── COMMISSIONS ──────────────────────────────────────────────────────────
+{id:'big_john',flag:'🇺🇸',name:'Big John McCarthy',role:'Comm. Technique & Grading',cat:'comm',access:'accessible',pri:3,ph:3,unlocks:[],req:[],via:null,
+ key:'Co-inventeur du terme "MMA", arbitre UFC 2, co-auteur Unified Rules. Autorité réglementaire incontestable.',
+ intro:'John, personne au monde n\'a votre légitimité sur les règles du combat — c\'est exactement ce que la Commission Technique a besoin.',
+ args:['Co-inventeur du terme MMA + co-auteur Unified Rules — dimension réglementaire que Renzo n\'a pas.','30 ans d\'expérience terrain comme arbitre depuis UFC 2 (1994).','Triple Referee of the Year — respecté par toutes les organisations mondiales.'],
+ avoid:[]},
+
+{id:'cordeiro',flag:'🇧🇷',name:'Raphaël Cordeiro',role:'Comm. Technique & Grading',cat:'comm',access:'direct',pri:3,ph:3,unlocks:[],req:[],via:null,
+ key:'Head coach Kings MMA (Cyborg, Dos Anjos, Silva). Contact vert direct Bertrand. École brésilienne dans le référentiel.',
+ intro:'Raphaël, l\'école brésilienne est la plus représentée dans le MMA élite mondial — elle doit être dans le référentiel.',
+ args:['Spécialiste Muay Thai & MMA élite — garant que les critères de grades reflètent le fighting brésilien.','A entraîné Cris Cyborg, Rafael Dos Anjos, Wanderlei Silva — légitimité terrain absolue.','Contact vert direct de Bertrand — approche directe possible.'],
+ avoid:[]},
+
+{id:'bareman',flag:'🇳🇿',name:'Eugene Bareman',role:'Comm. Technique & Grading',cat:'comm',access:'direct',pri:3,ph:3,unlocks:[],req:[],via:null,
+ key:'Head coach City Kickboxing (Adesanya, Volkanovski). Incarne l\'internationalisation du MMA hors USA-Brésil.',
+ intro:'Eugene, City Kickboxing a montré que le MMA élite peut venir de n\'importe où — c\'est la vision du MIGC.',
+ args:['Coach d\'Israel Adesanya, Alexander Volkanovski, Carlos Ulberg — école Pacifique dans le référentiel.','Vision holistique du combattant — incarne l\'internationalisation du MMA moderne.','Contact vert de Bertrand — approche directe possible.'],
+ avoid:[]},
+
+{id:'cormier',flag:'🇺🇸',name:'Daniel Cormier',role:'Prés. Comm. Ranking',cat:'comm',access:'accessible',pri:3,ph:3,unlocks:[],req:[],via:null,
+ key:'DC : double champion UFC + analyste ESPN = a vécu et analyse les classements depuis l\'intérieur.',
+ intro:'DC, personne ne comprend mieux la valeur des classements dans le MMA que toi — ni comme combattant ni comme analyste.',
+ args:['Double champion UFC LHW + HW + Lutteur olympique JO 2004 — légitimité athlétique absolue.','Analyste ESPN daily — expert des classements, compétitions et valeur des combattants.','Contrat ESPN compatible avec siège Commission MIGC — le confirmer d\'emblée.'],
+ avoid:[]},
+
+{id:'ratner',flag:'🇺🇸',name:'Marc Ratner',role:'Comm. Ranking & Compétitions',cat:'comm',access:'direct',pri:3,ph:3,unlocks:[],req:[],via:null,
+ key:'Ex-VP UFC réglementation. Contact vert direct Bertrand. Option SG si Lembo indisponible.',
+ intro:'Marc, tu es la mémoire institutionnelle du MMA — ton expertise est indispensable au Comité Ranking.',
+ args:['Ex-VP Réglementation UFC + ex-Directeur Nevada Athletic Commission — 30 ans de jurisprudence MMA.','Contact vert direct de Bertrand — approche directe immédiate.','Option Secrétaire Général si Nick Lembo indisponible.'],
+ avoid:[]},
+
+{id:'couture',flag:'🇺🇸',name:'Randy Couture',role:'Comm. Ranking & Ambassadeur USA',cat:'comm',access:'accessible',pri:4,ph:4,unlocks:[],req:[],via:null,
+ key:'5x champion UFC + ex-militaire = profil institutionnel US le plus solide. Double rôle Commission + Ambass.',
+ intro:'Randy, ton profil athlétique + institutionnel est unique dans le MMA américain.',
+ args:['5x Champion UFC HW+LHW + Hall of Fame + ex-militaire — crédibilité institutionnelle US inégalée.','Commission Ranking + Ambassadeur USA — double rôle naturel, synergies évidentes.','Très actif dans le développement institutionnel post-carrière.'],
+ avoid:[]},
+
+{id:'erick_paulson',flag:'🇺🇸',name:'Erick Paulson',role:'Comm. Ranking & Compétitions',cat:'comm',access:'direct',pri:3,ph:3,unlocks:[],req:[],via:null,
+ key:'Champion SHOOTO 1997. Wrestling, BJJ, Catch. A entraîné Brock Lesnar, Josh Barnett. Vision 360° indispensable.',
+ intro:'Erick, tu es l\'encyclopédie vivante des arts martiaux — c\'est exactement ce que la Commission Ranking nécessite.',
+ args:['Maîtrise du wrestling, BJJ et catch au niveau mondial — vision 360° unique pour les critères de ranking.','A entraîné Brock Lesnar, Josh Barnett — légitimité terrain confirmée.','Contact direct Bertrand — approche directe possible.'],
+ avoid:[]},
+
+{id:'greg_jackson',flag:'🇺🇸',name:'Greg Jackson',role:'Comm. Éthique & Intégrité',cat:'comm',access:'direct',pri:3,ph:3,unlocks:[],req:[],via:null,
+ key:'Directeur Jackson-Wink MMA. 15+ champions du monde. Connu pour son refus de travailler avec des entourages peu éthiques.',
+ intro:'Greg, tu es connu dans toute l\'industrie pour ton éthique sans compromis — c\'est le profil idéal.',
+ args:['15+ champions du monde entraînés — légitimité coach absolue dans le MMA élite mondial.','Refuse régulièrement des athlètes dont l\'entourage ne correspond pas à ses valeurs — éthique incontestable.','Contact direct Bertrand — approche directe possible.'],
+ avoid:[]},
+
+{id:'wittman',flag:'🇺🇸',name:'Trevor Wittman',role:'Comm. Éthique & Intégrité',cat:'comm',access:'direct',pri:3,ph:3,unlocks:[],req:[],via:null,
+ key:'Head coach ONX (Gaethje, Namajunas). Coach de l\'Année ESPN 2019. Réputation éthique irréprochable.',
+ intro:'Trevor, ta réputation dans l\'industrie est celle de quelqu\'un au-dessus de tout soupçon.',
+ args:['A entraîné Justin Gaethje, Rose Namajunas — nouvelle génération de coaches avec éthique et rigueur.','ESPN Coach of the Year 2019 — reconnaissance publique de son travail éthique.','Contact vert direct Bertrand — approche directe possible.'],
+ avoid:[]},
+
+{id:'amanda_nunes',flag:'🇧🇷',name:'Amanda Nunes',role:'Prés. Comm. Protection Sociale',cat:'comm',access:'accessible',pri:3,ph:3,unlocks:[],req:[],via:null,
+ key:'Double championne UFC (BW+FW). A parlé publiquement de la précarité des combattants en fin de carrière.',
+ intro:'Amanda, tu es la personne qui incarne le mieux pourquoi cette commission existe.',
+ args:['Double championne UFC BantamWeight + FeatherWeight — The Lioness, figure féminine MMA absolue.','A parlé publiquement de la précarité des combattants — son témoignage est le message le plus puissant.','Représente le MMA féminin à son plus haut niveau dans la Commission Protection Sociale.'],
+ avoid:[]},
+
+{id:'shevchenko',flag:'🇰🇬',name:'Valentina Shevchenko',role:'Comm. Protection Sociale',cat:'comm',access:'accessible',pri:3,ph:3,unlocks:[],req:[],via:null,
+ key:'La Bala. Ex-championne UFC FW. Kirghizstan = combattante venue d\'une région sans protection sociale.',
+ intro:'Valentina, tu représentes tout ce que le MIGC veut promouvoir : talent pur, zéro filet de sécurité à l\'origine.',
+ args:['Née au Kirghizstan — incarne l\'absence de protection sociale dans les régions MMA émergentes.','Ex-championne UFC FlyWeight — légitimité sportive de très haut niveau.','Représente l\'Asie Centrale dans la Commission — zone prioritaire de déploiement MIGC.'],
+ avoid:[]},
+
+{id:'dj',flag:'🇺🇸',name:'Demetrius Johnson',role:'Comm. Protection Sociale',cat:'comm',access:'direct',pri:3,ph:3,unlocks:[],req:[],via:null,
+ key:'Mighty Mouse. 11 défenses de titre record UFC. A traversé UFC → ONE Championship. Sagesse pratique unique.',
+ intro:'DJ, tu as traversé l\'ensemble du spectre de l\'industrie — c\'est cette sagesse que la commission nécessite.',
+ args:['11 défenses de titre consécutives — record absolu UFC, longévité exceptionnelle à documenter.','A navigué UFC → ONE Championship — expérience unique des négociations et transitions de carrière.','Contact direct Bertrand — approche directe possible.'],
+ avoid:[]},
+
+{id:'ubaldo',flag:'🇲🇽',name:'Ubaldo Maroquin',role:'Prés. Comm. Développement + Amb. LATAM',cat:'comm',access:'direct_star',pri:2,ph:2,unlocks:[],req:[],via:null,
+ key:'Contact ★ direct Bertrand. Mexique = 2ème communauté MMA mondiale. Double rôle naturel.',
+ intro:'Ubaldo, l\'Amérique Latine est le continent MMA qui mérite le plus d\'être représenté à ce niveau.',
+ args:['Mexique = 2ème marché MMA mondial après les USA — sa présidence ici est stratégique.','Double rôle Commission Développement (Président) + Ambassadeur LATAM — synergies naturelles.','Réseau continental unique pour déployer les grades dans toute l\'Amérique hispanique.'],
+ avoid:[]},
+
+// ── AMBASSADEURS ──────────────────────────────────────────────────────────
+{id:'ngannou',flag:'🇨🇲',name:'Francis Ngannou',role:'Comm. Protection Sociale + Amb. Afrique',cat:'ambassadeur',access:'direct_star',pri:1,ph:1,unlocks:[],req:[],via:null,
+ key:'Contact ★ direct Bertrand. Fondateur Ngannou Foundation. Commission Protection Sociale + Ambassadeur Afrique.',
+ intro:'Francis, je t\'appelle pour quelque chose qui dépasse le MMA tel qu\'on le connaît aujourd\'hui.',
+ args:['Commission Protection Sociale : la figure la plus engagée de l\'histoire du MMA pour les droits des athlètes.','Ambassadeur Afrique MIGC : premier officiel dans l\'histoire des sports de combat mondiaux.','Ngannou Foundation + MIGC = pipeline certif. combattants africains sans structure.'],
+ avoid:['Ne pas traiter comme si c\'était acquis — pitch complet nécessaire.']},
+
+{id:'vignal',flag:'🇫🇷',name:'Patrick Vignal',role:'Comm. Développement + Gouvernements EU',cat:'ambassadeur',access:'direct_star',pri:1,ph:1,unlocks:[],req:[],via:null,
+ key:'A co-construit la légalisation MMA France avec Bertrand. Seul profil politique+martial au monde.',
+ intro:'Patrick, après tout ce qu\'on a traversé ensemble pour la légalisation — je veux te montrer l\'étape suivante.',
+ args:['Seul profil monde : a écrit la loi MMA + pratique 45 ans + réseau gouvernemental EU actif.','Légaliser d\'abord, structurer ensuite — le MIGC est la suite logique naturelle de son combat.','Futur Président Fédération Française MMA = relais naturel MIGC auprès des ministères européens.'],
+ avoid:['Ne pas parler de politique partisane.']},
+
+{id:'khabib',flag:'🇷🇺',name:'Khabib Nurmagomedov',role:'Comm. Éthique + Amb. MENA/CIS',cat:'ambassadeur',access:'accessible',pri:3,ph:3,unlocks:[],req:[],via:'Ali Abdelaziz (agent)',
+ key:'Via Ali Abdelaziz. Eagle FC UAE compatible — MIGC certifie, ne promeut pas. Neutralité suisse.',
+ intro:'Ali, j\'ai un rôle pour Khabib — Ambassadeur d\'une institution mondiale indépendante.',
+ args:['Commission Éthique + Ambassadeur MENA/CIS — double rôle naturel, image morale exceptionnelle.','MIGC neutre géopolitiquement — aucune appartenance nationale, argument central pour lui.','Eagle FC UAE totalement compatible — clarifier en premier pour lever l\'obstacle psychologique.'],
+ avoid:['Ne jamais parler de géopolitique.','Rassurer sur compatibilité Eagle FC en tout premier.']},
+
+{id:'bisping',flag:'🇬🇧',name:'Michael Bisping',role:'Ambassadeur Europe/UK',cat:'ambassadeur',access:'accessible',pri:4,ph:4,unlocks:[],req:['kavanagh'],via:'Réseau Kavanagh',
+ key:'Via réseau SBG/McGregor. Star ESPN/BT Sport — son audience = mégaphone MIGC en UK.',
+ intro:'',
+ args:['200+ podcasts MMA — premier vecteur de notoriété MIGC dans le marché anglophone européen.','Premier champion UFC britannique — légitimité UK inégalée pour un Ambassadeur Europe.','Via Kavanagh : "John m\'a dit que tu serais le bon profil pour ce rôle."'],
+ avoid:[]},
+
+{id:'sudo',flag:'🇯🇵',name:'Genki Sudo',role:'Ambassadeur Japon',cat:'ambassadeur',access:'indirect',pri:5,ph:5,unlocks:[],req:['rizin'],via:'Via RIZIN',
+ key:'Sénateur japonais + champion PRIDE = légitimité politique + sportive unique. Contraintes fortes.',
+ intro:'',
+ args:['Sénateur japonais actif — son soutien donne au MIGC une légitimité politique nationale inédite.','Champion PRIDE : pont entre l\'héritage PRIDE et le MIGC institutionnel.','Rôle très light en temps — respecter absolument ses contraintes sénatoriales.'],
+ avoid:['Respecter ses contraintes politiques — ne pas demander un engagement public trop visible.']},
+
+// ── CONTACTS SPÉCIAUX ─────────────────────────────────────────────────────
+{id:'mohammed_shahid',flag:'🇧🇭',name:'Mohammed Shahid',role:'CEO BRAVE CF — Contact direct',cat:'special',access:'direct_star',pri:1,ph:1,unlocks:['brave_cf_org'],req:[],via:null,
+ key:'Contact direct de Bertrand chez BRAVE CF. Relation personnelle → adhésion institutionnelle de l\'org.',
+ intro:'Mohammed, tu es l\'une des premières personnes à qui je voulais présenter ce qu\'on bâtit.',
+ args:['Relation personnelle → porte institutionnelle vers BRAVE CF (Sheikh Salman Al Khalifa).','BRAVE CF présent dans 130+ pays — légitimité mondiale immédiate pour le MIGC.','Son soutien personnel crédibilise toute la démarche MIGC dans la zone MENA.'],
+ avoid:['Construire la confiance personnelle avant toute demande institutionnelle.']},
+
+{id:'epstein',flag:'🇺🇸',name:'Lawrence Epstein',role:'COO UFC — Contact direct',cat:'special',access:'direct_star',pri:2,ph:2,unlocks:['ufc'],req:[],via:null,
+ key:'COO UFC. Alliés depuis 20 ans. Ont co-mené la légalisation MMA en France. Contact naturel Phase 2.',
+ intro:'Lawrence, on se connaît depuis 20 ans — je veux te parler de quelque chose avant que ça devienne public.',
+ args:['20 ans d\'alliance — ont combattu ensemble pour la légalisation MMA en France.','Son soutien personnel au sein de l\'UFC est le meilleur préparateur de l\'adhésion institutionnelle.','Contact privilégié pour préparer le terrain UFC quand 7+ organisations auront signé.'],
+ avoid:['Ne pas lui demander d\'engager l\'UFC maintenant — cultiver la relation d\'abord.']},
+
+// ── ORGANISATIONS ─────────────────────────────────────────────────────────
+{id:'cage_warriors',flag:'🏴󠁧󠁢󠁷󠁬󠁳󠁿',name:'Cage Warriors',role:'Org. fondatrice #1 Europe',cat:'org',access:'direct_star',pri:1,ph:1,unlocks:[],req:[],via:null,
+ key:'Bertrand ami direct du CEO Graham Boylan. Premier signataire Europe = effet signal immédiat.',
+ intro:'Graham, Cage Warriors est la première organisation que je veux à bord.',
+ args:['Alumni trackés dans le ranking universel même après Cage Warriors — McGregor, Bisping, Holloway.','Organisation Fondatrice #1 d\'Europe — premier nom dans l\'histoire du MMA structuré.','5% levy sur bourses combattants uniquement — pas sur le CA de l\'organisation.'],
+ avoid:['Ne pas parler de conflit avec l\'UFC.']},
+
+{id:'ares',flag:'🇫🇷',name:'Ares MMA',role:'Org. française — Paris',cat:'org',access:'direct',pri:1,ph:1,unlocks:[],req:[],via:null,
+ key:'Organisation française basée à Paris. Promoteur naturel MIGC pour zone francophone + Afrique.',
+ intro:'La zone francophone mérite une organisation pilote à sa hauteur — Ares est ce choix naturel.',
+ args:['Promoteur officiel MIGC pour la zone francophone Europe + Afrique francophone subsaharienne.','Co-fondateur du standard international depuis Paris — rayonnement mondial.','Cérémonies de grades Black+ en France — vitrine MIGC sur le marché francophone.'],
+ avoid:[]},
+
+{id:'brave_cf_org',flag:'🇧🇭',name:'BRAVE CF (org.)',role:'Organisation officielle MENA',cat:'org',access:'accessible',pri:2,ph:2,unlocks:[],req:['mohammed_shahid'],via:'Mohammed Shahid → Sheikh Salman',
+ key:'Via Mohammed Shahid (CEO, contact direct Bertrand) → Sheikh Salman pour l\'adhésion officielle.',
+ intro:'Sheikh Salman, Mohammed Shahid m\'a parlé de vous — je souhaitais vous présenter directement.',
+ args:['130+ pays de présence — DSP certifié pour leurs combattants sur tout le réseau mondial BRAVE CF.','Organisation Fondatrice #1 MENA — co-décideur des standards, soutien royal Bahreïn.','Légitimité diplomatique renforcée pour le MIGC dans toute la région MENA.'],
+ avoid:['Approcher seulement après avoir cultivé la relation avec Mohammed Shahid.']},
+
+{id:'ksw',flag:'🇵🇱',name:'KSW',role:'Org. #1 Europe Centrale',cat:'org',access:'direct',pri:2,ph:2,unlocks:['oktagon'],req:[],via:null,
+ key:'KSW signé → Oktagon suit naturellement. Leader incontesté Europe Centrale et de l\'Est.',
+ intro:'Martin, KSW est l\'organisation la plus importante d\'Europe centrale — nous constituons les 10 fondateurs.',
+ args:['80 000 spectateurs record en Europe — leurs champions méritent un ranking universel reconnu.','Leur signature entraîne Oktagon et tout l\'écosystème CEE.','2 sièges au Comité fondateur — co-écrire les règles du MMA mondial depuis Varsovie.'],
+ avoid:[]},
+
+{id:'oktagon',flag:'🇨🇿',name:'Oktagon MMA',role:'Org. Tchéquie/Slovaquie',cat:'org',access:'accessible',pri:3,ph:3,unlocks:[],req:['ksw'],via:'Réseau KSW',
+ key:'"KSW vient de rejoindre — votre place de co-fondateur CEE est encore disponible."',
+ intro:'',
+ args:['Record européen 60 000 spectateurs (Deutsche Bank Park) — label international indispensable.','Approcher après KSW : "votre place de co-fondateur CEE est encore disponible."','2.3 milliards d\'impressions sociales 2025 — leur audience amplifie massivement le MIGC.'],
+ avoid:[]},
+
+{id:'pfl',flag:'🇺🇸',name:'PFL / Bellator',role:'2ème écosystème MMA mondial',cat:'org',access:'accessible',pri:3,ph:3,unlocks:[],req:[],via:null,
+ key:'Format saison + playoffs = données ranking MMA les plus riches de toute l\'industrie mondiale.',
+ intro:'Peter, votre modèle saison unique génère les meilleures données de classement dans le MMA.',
+ args:['PFL + Bellator fusionnés = 2ème puissance MMA mondiale — leur absence des fondateurs serait remarquée.','Format saison génère les données ranking idéales pour l\'algorithme MIGC.','Compliance réglementaire dans 50+ pays simplifiée avec intégration DSP MIGC.'],
+ avoid:[]},
+
+{id:'rizin',flag:'🇯🇵',name:'RIZIN',role:'Héritière PRIDE — Japon',cat:'org',access:'accessible',pri:3,ph:3,unlocks:['sudo'],req:['fedor'],via:'Réseau Fedor/PRIDE',
+ key:'Fedor à bord = porte RIZIN ouverte. "Fedor m\'a suggéré de vous contacter directement."',
+ intro:'Sakakibara-san, Fedor m\'a suggéré de vous contacter directement.',
+ args:['Héritière de l\'esprit PRIDE — le MIGC est l\'institution que PRIDE méritait d\'avoir.','Fedor Fondateur d\'Honneur : tout le réseau PRIDE s\'ouvre avec lui à bord.','Genki Sudo comme Ambassadeur Japon — légitimité politique + sportive combinée.'],
+ avoid:[]},
+
+{id:'aca',flag:'🇷🇺',name:'ACA MMA',role:'Leader Russie/CIS',cat:'org',access:'indirect',pri:4,ph:4,unlocks:[],req:['fedor'],via:'Réseau Fedor',
+ key:'SEULEMENT après que Fedor soit officiellement signé. Sensibilité géopolitique maximale.',
+ intro:'',
+ args:['Réseau ex-URSS incomparable — 200M+ pratiquants potentiels dans la zone CIS.','Fedor Fondateur d\'Honneur = signal de neutralité politique clair pour eux.','Soutien gouvernemental = légitimité institutionnelle dans toute la région.'],
+ avoid:['JAMAIS approcher avant Fedor officiellement signé.','Éviter tout sujet géopolitique.']},
+
+{id:'one_champ',flag:'🇸🇬',name:'ONE Championship',role:'Org. #1 Asie',cat:'org',access:'indirect',pri:4,ph:4,unlocks:[],req:[],via:'Contact commun Asie à identifier',
+ key:'Très fermé institutionnellement. Trouver un contact commun via l\'écosystème ONE avant d\'approcher.',
+ intro:'',
+ args:['Plus grande organisation d\'Asie — leur présence rend le MIGC incontournable sur tout le continent.','MMA + Muay Thai + Kickboxing : leurs disciplines élargissent le scope de certification MIGC.','Valorisation multi-milliards — leur intégration est un signal fort pour les investisseurs.'],
+ avoid:['Ne pas approcher directement sans introduction.']},
+
+{id:'ufc',flag:'🇺🇸',name:'UFC',role:'Org. #1 mondiale — Phase 2',cat:'org',access:'phase2',pri:5,ph:5,unlocks:[],req:['min7orgs'],via:'Lawrence Epstein (contact direct)',
+ key:'NE PAS APPROCHER EN PREMIER. Cultiver Epstein, attendre 7+ orgs. La pression s\'installera.',
+ intro:'',
+ args:['Quand 7 orgs ont signé, l\'absence UFC devient un problème pour eux — pas pour le MIGC.','Lawrence Epstein est le contact direct — 20 ans d\'alliance, légalisation France ensemble.','Intégration sans cotisation initiale possible : données combattants DSP en échange.'],
+ avoid:['JAMAIS approcher en premier — un refus précoce plomberait toute la stratégie.']},
+];
+
+const UNLOCK_MSG={
+ 'renzo→royce':'"Ton cousin Renzo est là — tu manques à l\'appel de la famille."',
+ 'nogueira→fedor':'Demander à Nogueira d\'appeler Fedor AVANT le contact de Bertrand.',
+ 'zahabi→gsp':'"Firas est là et dit que c\'est sérieux" — signal qui vaut tous les argumentaires.',
+ 'fedor→rizin':'Ouvrir avec : "Fedor m\'a suggéré de vous contacter directement."',
+ 'fedor→aca':'Approcher ACA SEULEMENT après Fedor officiellement signé.',
+ 'perillo→brave_cf_org':'Perillo introduit Bertrand auprès de Sheikh Salman Al Khalifa.',
+ 'mohammed_shahid→brave_cf_org':'Mohammed Shahid (CEO, contact direct) facilite accès à Sheikh Salman.',
+ 'kavanagh→bisping':'Via réseau SBG : "John m\'a suggéré de t\'appeler pour ce rôle."',
+ 'ksw→oktagon':'"KSW vient de rejoindre les fondateurs — votre place CEE est encore disponible."',
+ 'rizin→sudo':'Via organisation RIZIN, obtenir introduction à Genki Sudo (sénateur).',
+ 'epstein→ufc':'Epstein prépare le terrain en interne UFC avant l\'approche officielle.',
+};
+
+// ── ORG CHART DATA ────────────────────────────────────────────────────────
+const ORG = {
+  direction:[
+    {label:'Bertrand Amoussou',sub:'Président Fondateur',id:'bertrand_fixed',fixed:true},
+    {label:'Yann Dib',sub:'DG intérim (Sport7)',id:'yann_fixed',fixed:true},
+    {label:'Sport7 Labs',sub:'DT / Opérateur tech.',id:'sport7_fixed',fixed:true},
+  ],
+  comite:[
+    {label:'Bertrand Amoussou',sub:'Président',id:'bertrand_fixed',fixed:true},
+    {label:'GSP',sub:'Président d\'Honneur',id:'gsp'},
+    {label:'A. Nogueira',sub:'Vice-Président',id:'nogueira'},
+    {label:'Nick Lembo',sub:'Secrétaire Général',id:'lembo'},
+    {label:'L. Perillo',sub:'Trésorier',id:'perillo'},
+    {label:'F. Zahabi',sub:'Membre Technique',id:'zahabi'},
+    {label:'J. Kavanagh',sub:'Développement',id:'kavanagh'},
+    {label:'Ciryl Gane',sub:'Repr. Athlètes',id:'gane'},
+    {label:'Sport7 Labs',sub:'Siège permanent',id:'sport7_fixed',fixed:true},
+    {label:'Élu par 10 Orgs',sub:'Repr. C5',id:'rep_orgs_empty',fixed:false,empty:true},
+  ],
+  hon:[
+    {label:'Royce Gracie',sub:'Fondateur d\'Honneur 🇧🇷',id:'royce'},
+    {label:'Fedor Emelianenko',sub:'Fondateur d\'Honneur 🇷🇺',id:'fedor'},
+    {label:'Renzo Gracie',sub:'Fondateur d\'Honneur 🇧🇷',id:'renzo'},
+  ],
+  commissions:[
+    {name:'Technique & Grading',color:'#3fb950',members:[
+      {label:'Renzo Gracie',sub:'Président 🇧🇷',id:'renzo'},
+      {label:'Big John McCarthy',sub:'Membre 🇺🇸',id:'big_john'},
+      {label:'R. Cordeiro',sub:'Membre 🇧🇷',id:'cordeiro'},
+      {label:'E. Bareman',sub:'Membre 🇳🇿',id:'bareman'},
+    ]},
+    {name:'Ranking & Compétitions',color:'#58a6ff',members:[
+      {label:'Daniel Cormier',sub:'Président 🇺🇸',id:'cormier'},
+      {label:'Marc Ratner',sub:'Membre 🇺🇸',id:'ratner'},
+      {label:'Randy Couture',sub:'Membre 🇺🇸',id:'couture'},
+      {label:'Erick Paulson',sub:'Membre 🇺🇸',id:'erick_paulson'},
+    ]},
+    {name:'Éthique & Intégrité',color:'#d29922',members:[
+      {label:'Fedor Emelianenko',sub:'Président 🇷🇺',id:'fedor'},
+      {label:'Greg Jackson',sub:'Membre 🇺🇸',id:'greg_jackson'},
+      {label:'Trevor Wittman',sub:'Membre 🇺🇸',id:'wittman'},
+      {label:'Khabib Nurmagomedov',sub:'Membre 🇷🇺',id:'khabib'},
+    ]},
+    {name:'Protection Sociale & Athlètes',color:'#ec4899',members:[
+      {label:'Amanda Nunes',sub:'Présidente 🇧🇷',id:'amanda_nunes'},
+      {label:'Francis Ngannou',sub:'Membre 🇨🇲',id:'ngannou'},
+      {label:'V. Shevchenko',sub:'Membre 🇰🇬',id:'shevchenko'},
+      {label:'Demetrius Johnson',sub:'Membre 🇺🇸',id:'dj'},
+    ]},
+    {name:'Développement',color:'#a371f7',members:[
+      {label:'U. Maroquin',sub:'Président 🇲🇽',id:'ubaldo'},
+      {label:'Patrick Vignal',sub:'Membre 🇫🇷',id:'vignal'},
+      {label:'Audie Attar',sub:'Membre 🇺🇸',id:'attar_empty',empty:true},
+      {label:'Ali Abdelaziz',sub:'Membre 🇪🇬',id:'abdelaziz_empty',empty:true},
+    ]},
+  ],
+  ambassadeurs:[
+    {label:'Antonio Nogueira',sub:'Brésil / Amériques 🇧🇷',id:'nogueira'},
+    {label:'Francis Ngannou',sub:'Afrique 🇨🇲',id:'ngannou'},
+    {label:'Ubaldo Maroquin',sub:'LATAM 🇲🇽',id:'ubaldo'},
+    {label:'Khabib Nurmagomedov',sub:'MENA / CIS 🇷🇺',id:'khabib'},
+    {label:'Patrick Vignal',sub:'Europe / Gouv. 🇫🇷',id:'vignal'},
+    {label:'Michael Bisping',sub:'Europe / UK 🇬🇧',id:'bisping'},
+    {label:'Randy Couture',sub:'USA 🇺🇸',id:'couture'},
+    {label:'Genki Sudo',sub:'Japon 🇯🇵',id:'sudo'},
+    {label:'Mark Hunt',sub:'Océanie 🇳🇿',id:'hunt_empty',empty:true},
+  ],
+  orgs:[
+    {label:'Cage Warriors',sub:'🏴󠁧󠁢󠁷󠁬󠁳󠁿 Europe',id:'cage_warriors'},
+    {label:'Ares MMA',sub:'🇫🇷 France',id:'ares'},
+    {label:'BRAVE CF',sub:'🇧🇭 MENA',id:'brave_cf_org'},
+    {label:'KSW',sub:'🇵🇱 CEE',id:'ksw'},
+    {label:'Oktagon',sub:'🇨🇿 CEE',id:'oktagon'},
+    {label:'PFL/Bellator',sub:'🇺🇸 International',id:'pfl'},
+    {label:'RIZIN',sub:'🇯🇵 Japon',id:'rizin'},
+    {label:'ACA MMA',sub:'🇷🇺 CIS',id:'aca'},
+    {label:'ONE Championship',sub:'🇸🇬 Asie',id:'one_champ'},
+    {label:'UFC',sub:'🇺🇸 Phase 2',id:'ufc'},
+  ],
+};
+
+const CHAIN_DEFS=[
+  {label:'Famille Gracie',color:'#3fb950',bg:'#071a0e',
+   render:(st)=>`<div class="chain-path">${nd('renzo',st,true)}${ar()}${nd('royce',st)}</div>`},
+  {label:'PRIDE / Asie',color:'#58a6ff',bg:'#070f1a',
+   render:(st)=>`<div class="chain-path" style="align-items:flex-start;">${nd('nogueira',st,true)}${ar()}<div class="fork-block"><div class="sub-row">${nd('fedor',st)}${ar()}<div class="fork-block"><div class="sub-row">${nd('rizin',st)}${ar()}${nd('sudo',st)}</div><div class="sub-row" style="margin-top:2px;">${nd('aca',st)}</div></div></div></div></div>`},
+  {label:'Technique → GSP',color:'#d29922',bg:'#1a1005',
+   render:(st)=>`<div class="chain-path">${nd('zahabi',st)}${ar()}${nd('gsp',st)}</div>`},
+  {label:'Orgs Europe',color:'#a371f7',bg:'#0f0a1f',
+   render:(st)=>`<div class="chain-path" style="flex-direction:column;gap:3px;"><div class="sub-row">${nd('cage_warriors',st,true)}<span style="color:var(--mu);padding:0 3px;font-size:9px;align-self:center;">·</span>${nd('ares',st)}</div><div class="sub-row">${nd('ksw',st)}${ar()}${nd('oktagon',st)}</div></div>`},
+  {label:'BRAVE CF / MENA',color:'#f0883e',bg:'#1f0f05',
+   render:(st)=>`<div class="chain-path" style="align-items:flex-start;"><div class="fork-block"><div class="sub-row">${nd('mohammed_shahid',st,true)}</div><div class="sub-row" style="margin-top:2px;">${nd('perillo',st,true)}</div></div>${ar()}${nd('brave_cf_org',st)}</div>`},
+  {label:'Ambassadeurs ★',color:'#22d3ee',bg:'#051a1f',
+   render:(st)=>`<div class="chain-path" style="flex-direction:column;gap:3px;"><div class="sub-row">${nd('ngannou',st,true)}<span style="color:var(--mu);padding:0 2px;font-size:9px;align-self:center;">·</span>${nd('vignal',st,true)}<span style="color:var(--mu);padding:0 2px;font-size:9px;align-self:center;">·</span>${nd('ubaldo',st,true)}</div><div class="sub-row">${nd('kavanagh',st)}${ar()}${nd('bisping',st)}</div></div>`},
+  {label:'MENA / Asie ext.',color:'#ec4899',bg:'#1f051a',
+   render:(st)=>`<div class="chain-path">${nd('khabib',st)}<span style="color:var(--mu);padding:0 3px;font-size:9px;align-self:center;">·</span>${nd('one_champ',st)}</div>`},
+  {label:'USA inst.',color:'#f0883e',bg:'#1a0d05',
+   render:(st)=>`<div class="chain-path" style="align-items:flex-start;">${nd('epstein',st,true)}${ar()}<div class="fork-block"><div class="sub-row">${nd('lembo',st)}</div><div class="sub-row" style="margin-top:2px;">${nd('couture',st)}</div></div></div>`},
+  {label:'UFC — Phase 2',color:'#6e7681',bg:'#111118',
+   render:(st)=>`<div class="chain-path" style="align-items:center;"><span style="font-size:9px;color:#6e7681;margin-right:4px;">7+ orgs →</span>${nd('ufc',st)}</div>`},
+];
+
+let statuses={},notes={},filter='all',selectedId=null,activeTab='orgchart',loading=true;
+
+async function loadState(){
+  try{const r=await window.storage.get('migc-v4');if(r&&r.value){const d=JSON.parse(r.value);statuses=d.s||{};notes=d.n||{};}}catch(e){}
+  loading=false;render();
+}
+async function saveState(){try{await window.storage.set('migc-v4',JSON.stringify({s:statuses,n:notes}));}catch(e){}}
+
+function getS(id){return statuses[id]||'pending';}
+function advance(id,e){if(e)e.stopPropagation();const s=getS(id);if(s==='refused')return;const i=SC.indexOf(s);if(i<SC.length-1)statuses[id]=SC[i+1];saveState();render();}
+function refuse(id,e){if(e)e.stopPropagation();statuses[id]='refused';saveState();render();}
+function undo(id,e){if(e)e.stopPropagation();statuses[id]='pending';saveState();render();}
+function setS(id,s){statuses[id]=s;saveState();render();}
+function setFilter(f){filter=f;render();}
+function setTab(t){activeTab=t;selectedId=null;render();}
+function selectContact(id){selectedId=id;renderRight();renderList();}
+
+function confirmed(){return new Set(C.filter(c=>['signed','verbal_yes'].includes(getS(c.id))).map(c=>c.id));}
+function signedOrgs(){return C.filter(c=>c.cat==='org'&&['signed','verbal_yes'].includes(getS(c.id))).length;}
+function reqsMet(c){
+  const conf=confirmed();const oc=signedOrgs();
+  return(c.req||[]).every(r=>{if(r==='min7orgs')return oc>=7;if(r==='ratner_step')return true;return conf.has(r);});
+}
+function reqsPending(c){
+  const conf=confirmed();const oc=signedOrgs();
+  return(c.req||[]).filter(r=>{if(r==='min7orgs')return oc<7;if(r==='ratner_step')return false;return!conf.has(r);})
+    .map(r=>{if(r==='min7orgs')return signedOrgs()+'/7 orgs';const rc=C.find(x=>x.id===r);return rc?rc.name:r;});
+}
+
+function filteredContacts(){
+  const q=(document.getElementById('search')||{}).value||'';
+  const ql=q.toLowerCase();
+  return C.filter(c=>{
+    const s=getS(c.id);
+    if(filter==='comite'&&c.cat!=='comite')return false;
+    if(filter==='comm'&&c.cat!=='comm')return false;
+    if(filter==='ambassadeur'&&c.cat!=='ambassadeur')return false;
+    if(filter==='org'&&c.cat!=='org'&&c.cat!=='special')return false;
+    if(filter==='active'&&!['contacted','interested','verbal_yes'].includes(s))return false;
+    if(ql&&!(c.name.toLowerCase().includes(ql)||c.role.toLowerCase().includes(ql)))return false;
+    return true;
+  });
+}
+
+// ORG BOX RENDERING
+function getOBClass(item){
+  if(item.fixed)return'ob-fixed';
+  if(item.empty)return'ob-empty';
+  const s=getS(item.id);
+  if(s==='signed')return'ob-signed';
+  if(s==='verbal_yes')return'ob-verbal';
+  if(s==='contacted'||s==='interested')return'ob-active';
+  return'ob-pending';
+}
+function getOBStatus(item){
+  if(item.fixed)return'— Fondateur';
+  if(item.empty)return'— À définir';
+  const s=getS(item.id);
+  const m={pending:'— En attente',contacted:'— Contacté',interested:'— Intéressé',verbal_yes:'— OUI verbal ✓',signed:'— Signé ✓',refused:'— Refus'};
+  return m[s]||'';
+}
+function obClick(item){if(!item.fixed&&!item.empty&&C.find(x=>x.id===item.id))selectContact(item.id);}
+
+function obHtml(item){
+  const cls=getOBClass(item);
+  const st=getOBStatus(item);
+  const clickable=!item.fixed&&!item.empty&&C.find(x=>x.id===item.id)?'cursor:pointer;':'cursor:default;';
+  return`<div class="org-box ${cls}" style="${clickable}" onclick="obClick({id:'${item.id||''}',fixed:${!!item.fixed},empty:${!!item.empty}})">
+    <div class="ob-name">${item.label}</div>
+    <div class="ob-role">${item.sub}</div>
+    <div class="ob-status">${st}</div>
+  </div>`;
+}
+
+function renderOrgChart(){
+  const prog=C.filter(c=>['signed','verbal_yes'].includes(getS(c.id))).length;
+  const pct=Math.round(prog/C.length*100);
+  let h=`<div class="org-wrap">
+  <div class="prog-bar-wrap">
+    <div class="pbar"><div class="pbar-fill" style="width:${pct}%"></div></div>
+    <span class="pbar-txt">${prog}/${C.length} contacts confirmés (${pct}%)</span>
+  </div>
+  <div class="legend-row">
+    <div class="leg-i"><div class="leg-d" style="background:#16200a;border-color:#d4a52055;"></div>Fondateur</div>
+    <div class="leg-i"><div class="leg-d" style="background:#0d2818;border-color:#2e7c42;"></div>Signé</div>
+    <div class="leg-i"><div class="leg-d" style="background:#091a0f;border-color:#1a5c35;"></div>OUI verbal</div>
+    <div class="leg-i"><div class="leg-d" style="background:#0c2040;border-color:#1f4a9c;"></div>En cours</div>
+    <div class="leg-i"><div class="leg-d" style="background:#1c1c24;border-color:#30363d;"></div>En attente</div>
+  </div>`;
+
+  // Direction
+  h+=`<div class="org-section"><div class="org-sh" style="background:#16200a;color:#d4a520;">DIRECTION OPÉRATIONNELLE</div><div class="org-grid">${ORG.direction.map(i=>obHtml(i)).join('')}</div></div>`;
+
+  // Comite
+  h+=`<div class="org-section"><div class="org-sh" style="background:#0c2040;color:#58a6ff;">COMITÉ DIRECTEUR (10 SIÈGES)</div><div class="org-grid">${ORG.comite.map(i=>obHtml(i)).join('')}</div></div>`;
+
+  // Fondateurs d'honneur
+  h+=`<div class="org-section"><div class="org-sh" style="background:#091a0f;color:#3fb950;">FONDATEURS D'HONNEUR</div><div class="org-grid">${ORG.hon.map(i=>obHtml(i)).join('')}</div></div>`;
+
+  // Commissions
+  h+=`<div class="org-section"><div class="org-sh" style="background:#1a1005;color:#d29922;">5 COMMISSIONS SPÉCIALISÉES</div>`;
+  ORG.commissions.forEach(comm=>{
+    h+=`<div style="margin-bottom:5px;"><div style="font-size:9px;color:${comm.color};padding:1px 0 3px;border-bottom:.5px solid ${comm.color}22;margin-bottom:4px;">${comm.name}</div><div class="org-grid">${comm.members.map(i=>obHtml(i)).join('')}</div></div>`;
+  });
+  h+='</div>';
+
+  // Ambassadeurs
+  h+=`<div class="org-section"><div class="org-sh" style="background:#0f0a1f;color:#a371f7;">9 AMBASSADEURS RÉGIONAUX</div><div class="org-grid">${ORG.ambassadeurs.map(i=>obHtml(i)).join('')}</div></div>`;
+
+  // Orgs
+  h+=`<div class="org-section"><div class="org-sh" style="background:#1a1005;color:#d29922;">10 ORGANISATIONS FONDATRICES</div><div class="org-grid">${ORG.orgs.map(i=>obHtml(i)).join('')}</div></div>`;
+
+  h+=`<div style="margin-top:4px;padding:5px 8px;background:#16200a;border-radius:5px;border:.5px solid #d4a52033;font-size:9px;color:#d4a520;">ASSOCIATION DE PRÉVOYANCE MIGC · Conseil de Surveillance indépendant · Objectif 530M€ à 20 ans · Flux jamais via Sport7</div>`;
+  h+='</div>';
+  return h;
+}
+
+function nd(id,st,star=false){
+  const c=C.find(x=>x.id===id);if(!c)return'';
+  const s=st[id]||'pending';
+  const sel=selectedId===id?' sel':'';
+  return`<div class="cnode n-${s}${sel}" onclick="selectContact('${id}')" title="${c.name}">${star?'★ ':''}${c.name}</div>`;
+}
+function ar(){return`<span class="arrow">→</span>`;}
+
+function renderChains(){
+  const prog=C.filter(c=>['signed','verbal_yes'].includes(getS(c.id))).length;
+  const pct=Math.round(prog/C.length*100);
+  let h=`<div class="prog-bar-wrap"><div class="pbar"><div class="pbar-fill" style="width:${pct}%"></div></div><span class="pbar-txt">${prog}/${C.length} confirmés</span></div>`;
+  CHAIN_DEFS.forEach(ch=>{
+    h+=`<div class="chain-row"><div class="chain-lbl" style="background:${ch.bg};color:${ch.color};border:.5px solid ${ch.color}44;">${ch.label}</div>${ch.render(statuses)}</div>`;
+  });
+  return h;
+}
+
+function renderMotor(){
+  const conf=confirmed();
+  const callNow=[],unlocked=[],inProg=[],blocked=[];
+  C.forEach(c=>{
+    const s=getS(c.id);
+    if(['signed','verbal_yes','refused'].includes(s))return;
+    const met=reqsMet(c);const pend=reqsPending(c);
+    const justUnlocked=(c.req||[]).some(r=>r!=='ratner_step'&&conf.has(r));
+    if(!met){blocked.push({c,pend});return;}
+    if(['contacted','interested'].includes(s)){inProg.push(c);return;}
+    if(justUnlocked&&s==='pending'){unlocked.push(c);return;}
+    if(c.access==='direct_star'&&s==='pending'){callNow.push(c);}
+  });
+  const chains=[];
+  C.forEach(c=>{
+    if(!['signed','verbal_yes'].includes(getS(c.id)))return;
+    (c.unlocks||[]).forEach(uid=>{
+      const uc=C.find(x=>x.id===uid);if(!uc)return;
+      if(['signed','verbal_yes','refused'].includes(getS(uid)))return;
+      const key=`${c.id}→${uid}`;
+      chains.push({from:c,to:uc,msg:UNLOCK_MSG[key]||`${c.name} confirmé → approcher ${uc.name}`});
+    });
+  });
+  let h='';
+  const mc=(type,c,msg,lv)=>`<div class="mcard mc-${type}" onclick="selectContact('${c.id}')"><div class="mc-n">${c.flag} ${c.name}</div>${msg?`<div class="mc-msg">${msg}</div>`:''}${lv?`<div class="mc-lv">${lv}</div>`:''}</div>`;
+  if(callNow.length)h+=`<div class="msec"><div class="msec-h">APPELER MAINTENANT — CONTACTS ★</div>${callNow.slice(0,6).map(c=>mc('now',c,c.role,c.key)).join('')}</div>`;
+  if(unlocked.length)h+=`<div class="msec"><div class="msec-h">DÉBLOQUÉ PAR VOS CONFIRMATIONS</div>${unlocked.slice(0,4).map(c=>mc('unlock',c,(c.req||[]).filter(r=>r!=='ratner_step').map(r=>{const rc=C.find(x=>x.id===r);return rc?rc.name:r;}).join(', '),c.key)).join('')}</div>`;
+  if(chains.length)h+=`<div class="msec"><div class="msec-h">CHAÎNES D'INFLUENCE ACTIVES</div>${chains.map(({from,to,msg})=>`<div class="mcard mc-chain" onclick="selectContact('${to.id}')"><div class="mc-n">${from.flag} ${from.name} → ${to.flag} ${to.name}</div><div class="mc-msg">${msg}</div></div>`).join('')}</div>`;
+  if(inProg.length)h+=`<div class="msec"><div class="msec-h">EN COURS — SUIVRE</div>${inProg.map(c=>mc('wait',c,SL[getS(c.id)],c.key)).join('')}</div>`;
+  const bl=blocked.filter(x=>x.c.access!=='phase2');
+  if(bl.length)h+=`<div class="msec"><div class="msec-h">EN ATTENTE DE PRÉREQUIS</div>${bl.slice(0,4).map(({c,pend})=>mc('block',c,'Attend : '+pend.join(', '),'','')).join('')}</div>`;
+  const ufc_b=blocked.find(x=>x.c.id==='ufc');
+  if(ufc_b)h+=`<div class="msec"><div class="msec-h">UFC — PHASE 2</div><div class="mcard mc-block" onclick="selectContact('ufc')"><div class="mc-n">🇺🇸 UFC — attendre ${signedOrgs()}/7 orgs + cultiver Lawrence Epstein</div></div></div>`;
+  if(!h)h=`<div style="padding:16px;font-size:11px;color:var(--mu);text-align:center;">Avancez les statuts des contacts ★ dans la liste pour activer le moteur.</div>`;
+  return h;
+}
+
+function renderKanban(){
+  const cols={pending:[],contacted:[],interested:[],verbal_yes:[],signed:[]};
+  C.forEach(c=>{const s=getS(c.id);if(s==='refused')return;if(cols[s])cols[s].push(c);});
+  const lbl={pending:'En attente',contacted:'Contacté',interested:'Intéressé',verbal_yes:'OUI verbal',signed:'Signé ✓'};
+  return`<div class="kanban">${Object.entries(cols).map(([s,items])=>`<div class="kcol"><div class="kcol-h">${lbl[s]} (${items.length})</div>${items.map(c=>`<div class="kcard" onclick="selectContact('${c.id}')"><div>${c.flag} <b>${c.name}</b></div><div style="font-size:9px;color:var(--mu);margin-top:1px;">${c.role}</div></div>`).join('')}</div>`).join('')}</div>`;
+}
+
+function renderProfile(c){
+  const s=getS(c.id);const met=reqsMet(c);const pend=reqsPending(c);
+  const chains=[];
+  (c.unlocks||[]).forEach(uid=>{
+    const uc=C.find(x=>x.id===uid);if(!uc)return;
+    if(['signed','verbal_yes','refused'].includes(getS(uid)))return;
+    const key=`${c.id}→${uid}`;
+    chains.push({to:uc,msg:UNLOCK_MSG[key]||`Facilite l'approche de ${uc.name}`});
+  });
+  const phC=['','p1','p2','p3','p4','p5'][c.ph]||'p1';
+  return`<div class="prof-hd">
+    <div style="display:flex;align-items:flex-start;gap:7px;margin-bottom:5px;">
+      <span style="font-size:18px;">${c.flag}</span>
+      <div><div class="ph-nm">${c.name}</div><div class="ph-rl">${c.role}</div></div>
+    </div>
+    <div class="ph-meta">
+      <span class="cbadge ${CC[c.cat]||'bc'}">${{comite:'Comité',comm:'Commission',ambassadeur:'Ambassadeur',org:'Organisation',special:'Contact clef'}[c.cat]}</span>
+      <span class="phbadge ${phC}">Phase ${c.ph}</span>
+      ${c.via?`<span style="font-size:9px;color:var(--mu);">↳ ${c.via}</span>`:''}
+      ${!met&&pend.length?`<span style="font-size:9px;padding:1px 5px;border-radius:3px;background:#2a0a0a;color:var(--rd);">Attend : ${pend.join(', ')}</span>`:''}
+    </div>
+    <div class="stepper">
+      ${SC.map(st=>`<button class="sstep s-${st}${st===s?' cur':''}${SC.indexOf(st)<SC.indexOf(s)?' done':''}" onclick="setS('${c.id}','${st}')">${SL[st]}</button>`).join('')}
+      <button class="rfbtn" onclick="refuse('${c.id}',null)">✕ Refus</button>
+      ${s==='refused'?`<button class="rfbtn" style="border-color:var(--gn);color:var(--gn);" onclick="undo('${c.id}',null)">↩ Annuler</button>`:''}
+    </div>
+  </div>
+  <div class="prof-bd">
+    <div class="psec"><div class="psec-h">LEVIER CLEF</div><div class="lever">${c.key}</div></div>
+    ${c.intro?`<div class="psec"><div class="psec-h">INTRO D'APPROCHE</div><div class="intro-b">"${c.intro}"</div></div>`:''}
+    ${c.args&&c.args.length?`<div class="psec"><div class="psec-h">ARGUMENTS</div>${c.args.map((a,i)=>`<div class="arg"><div class="argn">${i+1}</div><div class="argt">${a}</div></div>`).join('')}</div>`:''}
+    ${c.avoid&&c.avoid.length?`<div class="psec"><div class="psec-h">À ÉVITER</div>${c.avoid.map(a=>`<div class="avoid-i">✕  ${a}</div>`).join('')}</div>`:''}
+    ${chains.length?`<div class="psec"><div class="psec-h">DÉBLOQUE</div>${chains.map(ch=>`<div class="chain-out">→ <b>${ch.to.flag} ${ch.to.name}</b> — ${ch.msg}</div>`).join('')}</div>`:''}
+    <div class="psec"><div class="psec-h">NOTES</div>
+      <textarea class="note-ta" id="nt-${c.id}" placeholder="Date appel, réaction, points clefs...">${notes[c.id]||''}</textarea>
+      <button class="sbtn" id="sb-${c.id}" onclick="saveNote('${c.id}')">Enregistrer</button>
+    </div>
+  </div>`;
+}
+
+function saveNote(id){
+  const el=document.getElementById('nt-'+id);if(!el)return;
+  notes[id]=el.value;saveState();
+  const b=document.getElementById('sb-'+id);
+  if(b){b.classList.add('ok');b.textContent='Enregistré ✓';setTimeout(()=>{b.classList.remove('ok');b.textContent='Enregistrer';},1500);}
+  renderList();
+}
+
+function renderList(){
+  const items=filteredContacts();
+  document.getElementById('lcnt').textContent=items.length+' contact'+(items.length!==1?'s':'');
+  document.getElementById('clist').innerHTML=items.map(c=>{
+    const s=getS(c.id);const r=s==='refused';const sel=selectedId===c.id;
+    const hn=!!(notes[c.id]&&notes[c.id].trim());
+    return`<div class="ccard${r?' refused':''}${sel?' sel':''}" onclick="selectContact('${c.id}')">
+      <span class="cflag">${c.flag}</span>
+      <div class="ci"><div class="cname">${c.name}</div><div class="crole">${c.via?'↳ '+c.via:c.role}</div></div>
+      ${hn?`<div class="ndot" title="Note"></div>`:''}
+      <span class="cbadge ${CC[c.cat]||'bc'}">${{comite:'C',comm:'K',ambassadeur:'A',org:'O',special:'★'}[c.cat]}</span>
+      <div class="adot ${AC[c.access]}"></div>
+      ${r?`<button class="spill s-refused" onclick="undo('${c.id}',event)">↩</button>`
+        :`<button class="spill s-${s}" onclick="advance('${c.id}',event)">${SL[s]}</button>
+         <button class="xbtn" onclick="refuse('${c.id}',event)">✕</button>`}
+    </div>`;
+  }).join('');
+}
+
+function renderRight(){
+  const rc=document.getElementById('rcontent');
+  const rt=document.getElementById('rtabs');
+  if(selectedId){
+    const c=C.find(x=>x.id===selectedId);
+    if(c){
+      rt.innerHTML=`<button class="back-btn" onclick="clearSel()">← Retour</button><span style="font-size:10px;color:var(--mu);padding:5px 4px;">${c.flag} ${c.name}</span>`;
+      rc.innerHTML=renderProfile(c);
+      return;
+    }
+  }
+  const tabs=['orgchart','chemins','moteur','kanban'];
+  const labels=['Organigramme','Chemins','Moteur','Kanban'];
+  rt.innerHTML=tabs.map((t,i)=>`<div class="tab${activeTab===t?' on':''}" onclick="setTab('${t}')">${labels[i]}</div>`).join('');
+  if(activeTab==='orgchart')rc.innerHTML=renderOrgChart();
+  else if(activeTab==='chemins')rc.innerHTML=renderChains();
+  else if(activeTab==='moteur')rc.innerHTML=renderMotor();
+  else rc.innerHTML=renderKanban();
+}
+
+function clearSel(){selectedId=null;render();}
+
+function updateStats(){
+  let s=0,v=0,ci=0,p=0,r=0;
+  C.forEach(c=>{const st=getS(c.id);
+    if(st==='signed')s++;else if(st==='verbal_yes')v++;
+    else if(st==='contacted'||st==='interested')ci++;
+    else if(st==='pending')p++;else if(st==='refused')r++;
+  });
+  document.getElementById('ns').textContent=s;
+  document.getElementById('nv').textContent=v;
+  document.getElementById('nc').textContent=ci;
+  document.getElementById('np').textContent=p;
+  document.getElementById('no').textContent=r;
+}
+
+function updateFilters(){
+  document.querySelectorAll('.fbtn').forEach(b=>{
+    const f=(b.getAttribute('onclick')||'').match(/'([^']+)'/)?.[1];
+    if(f)b.classList.toggle('on',f===filter);
+  });
+}
+
+function render(){
+  if(loading)return;
+  updateStats();updateFilters();renderList();renderRight();
+}
+
+loadState();
+</script>
