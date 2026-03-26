@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BDO × Myrillion Labs — Analyse Partenariat</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:        #0d1117;
+  --bg2:       #161b22;
+  --bg3:       #1c2330;
+  --border:    #30363d;
+  --border2:   #21262d;
+  --text:      #e6edf3;
+  --text2:     #8b949e;
+  --text3:     #6e7681;
+  --gold:      #d4a843;
+  --gold2:     #f0c060;
+  --gold-dim:  rgba(212,168,67,0.12);
+  --blue:      #4a9eff;
+  --blue-dim:  rgba(74,158,255,0.10);
+  --teal:      #39d0a0;
+  --teal-dim:  rgba(57,208,160,0.10);
+  --purple:    #a78bfa;
+  --purple-dim:rgba(167,139,250,0.10);
+  --red:       #f87171;
+  --red-dim:   rgba(248,113,113,0.10);
+  --amber:     #fbbf24;
+  --amber-dim: rgba(251,191,36,0.10);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Outfit', sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ─── HEADER ─────────────────────────────── */
+.header {
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 48px 64px 40px;
+  position: relative;
+  overflow: hidden;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  top: -120px; right: -120px;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(212,168,67,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+.header-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--gold-dim);
+  border: 1px solid rgba(212,168,67,0.25);
+  color: var(--gold);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+}
+.header-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
+.header-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 42px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -.5px;
+  margin-bottom: 12px;
+}
+.header-title span { color: var(--gold); }
+.header-sub {
+  font-size: 15px;
+  color: var(--text2);
+  max-width: 620px;
+  margin-bottom: 36px;
+}
+.header-meta {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+.meta-item { display: flex; flex-direction: column; gap: 3px; }
+.meta-label { font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--text3); }
+.meta-value { font-size: 14px; font-weight: 500; color: var(--text); }
+
+/* ─── NAV ─────────────────────────────────── */
+.nav {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 0 64px;
+  display: flex;
+  gap: 2px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.nav-btn {
+  padding: 16px 18px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: 'Outfit', sans-serif;
+  color: var(--text2);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all .2s;
+  white-space: nowrap;
+}
+.nav-btn:hover { color: var(--text); }
+.nav-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+/* ─── LAYOUT ──────────────────────────────── */
+.main { padding: 48px 64px; max-width: 1400px; }
+.section { display: none; }
+.section.active { display: block; animation: fadeIn .25s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+.section-intro {
+  font-size: 14px;
+  color: var(--text2);
+  max-width: 740px;
+  margin-bottom: 32px;
+  line-height: 1.7;
+}
+
+/* ─── STAT ROW ────────────────────────────── */
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 32px;
+}
+.stat {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 22px 24px;
+  transition: border-color .2s;
+}
+.stat:hover { border-color: var(--border2); }
+.stat-val { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 600; margin-bottom: 4px; }
+.stat-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .07em; color: var(--text3); }
+.stat-sub { font-size: 12px; color: var(--text2); margin-top: 2px; }
+
+/* ─── GRID ────────────────────────────────── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+/* ─── CARD ────────────────────────────────── */
+.card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+}
+.card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 16px;
+  color: var(--text);
+}
+.card-title.gold { color: var(--gold); }
+
+/* ─── SERVICE BLOCKS ──────────────────────── */
+.svc-list { display: flex; flex-direction: column; gap: 10px; }
+.svc {
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.svc.target { border-color: var(--gold); background: var(--gold-dim); }
+.svc.secondary { border-color: rgba(74,158,255,0.3); background: var(--blue-dim); }
+.svc.synergy { border-color: var(--border2); }
+.svc.caution { border-color: rgba(248,113,113,0.3); background: var(--red-dim); }
+.svc-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.svc-name { font-size: 13px; font-weight: 600; }
+.svc-body { font-size: 12px; color: var(--text2); line-height: 1.55; }
+.svc-why {
+  font-size: 12px;
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 8px;
+  line-height: 1.55;
+}
+
+/* ─── BADGES ──────────────────────────────── */
+.badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+.badge-gold { background: var(--gold-dim); color: var(--gold); border: 1px solid rgba(212,168,67,0.25); }
+.badge-blue { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(74,158,255,0.2); }
+.badge-teal { background: var(--teal-dim); color: var(--teal); border: 1px solid rgba(57,208,160,0.2); }
+.badge-purple { background: var(--purple-dim); color: var(--purple); border: 1px solid rgba(167,139,250,0.2); }
+.badge-red { background: var(--red-dim); color: var(--red); border: 1px solid rgba(248,113,113,0.2); }
+.badge-amber { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(251,191,36,0.2); }
+.badge-dim { background: rgba(255,255,255,0.05); color: var(--text2); border: 1px solid var(--border); }
+
+/* ─── PROS / CONS ─────────────────────────── */
+.pros-cons { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+.pc-block { background: var(--bg2); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
+.pc-head { padding: 14px 20px; font-size: 12px; font-weight: 600; letter-spacing: .04em; }
+.pc-head.pro { background: var(--teal-dim); color: var(--teal); border-bottom: 1px solid rgba(57,208,160,0.15); }
+.pc-head.con { background: var(--red-dim); color: var(--red); border-bottom: 1px solid rgba(248,113,113,0.15); }
+.pc-body { padding: 16px 20px; display: flex; flex-direction: column; gap: 8px; }
+.pc-item {
+  font-size: 12px;
+  color: var(--text2);
+  line-height: 1.55;
+  padding: 9px 12px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 8px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.pc-item-icon { flex-shrink: 0; margin-top: 1px; font-size: 13px; }
+
+/* ─── MODELS ──────────────────────────────── */
+.model {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 14px;
+  transition: border-color .2s;
+}
+.model:hover { border-color: rgba(212,168,67,0.3); }
+.model.featured { border-color: rgba(212,168,67,0.4); }
+.model-head {
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg3);
+}
+.model-head-left { display: flex; align-items: center; gap: 12px; }
+.model-number {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--gold-dim);
+  border: 1px solid rgba(212,168,67,0.3);
+  color: var(--gold);
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.model-title { font-size: 14px; font-weight: 600; }
+.model-body { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; }
+.model-col { padding: 20px 24px; border-right: 1px solid var(--border); }
+.model-col:last-child { border-right: none; }
+.model-col-label { font-size: 10px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--text3); margin-bottom: 8px; }
+.model-col-text { font-size: 12px; color: var(--text2); line-height: 1.6; }
+.model-pitch { padding: 16px 24px; border-top: 1px solid var(--border); background: rgba(212,168,67,0.04); }
+.model-pitch-label { font-size: 10px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+.model-pitch-text {
+  font-size: 12px;
+  font-style: italic;
+  color: var(--text2);
+  line-height: 1.7;
+  padding: 12px 16px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 8px;
+  border-left: 2px solid rgba(212,168,67,0.4);
+}
+
+/* ─── STEPS ───────────────────────────────── */
+.steps { display: flex; flex-direction: column; gap: 0; }
+.step { display: grid; grid-template-columns: 80px 20px 1fr; gap: 0 20px; padding-bottom: 28px; }
+.step-num {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  color: var(--text3);
+  text-align: right;
+  padding-top: 2px;
+}
+.step-connector { display: flex; flex-direction: column; align-items: center; }
+.step-dot {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 1px;
+  border: 2px solid;
+}
+.step-line { flex: 1; width: 1px; background: var(--border); margin: 5px 0; }
+.step-content {}
+.step-title { font-size: 13px; font-weight: 600; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.step-body { font-size: 12px; color: var(--text2); line-height: 1.65; }
+.step-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+
+/* ─── CONTACT CARDS ───────────────────────── */
+.contact {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 22px;
+  margin-bottom: 12px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color .2s;
+}
+.contact:hover { border-color: rgba(212,168,67,0.3); }
+.contact::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px; height: 100%;
+}
+.contact.gold-border::before { background: var(--gold); }
+.contact.blue-border::before { background: var(--blue); }
+.contact.teal-border::before { background: var(--teal); }
+.contact.purple-border::before { background: var(--purple); }
+.contact-name { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+.contact-role { font-size: 12px; color: var(--text3); margin-bottom: 10px; }
+.contact-why { font-size: 12px; color: var(--text2); line-height: 1.6; margin-bottom: 10px; }
+.contact-hook {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 8px;
+  display: inline-block;
+}
+
+/* ─── PITCH BLOCKS ────────────────────────── */
+.pitch-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.pitch-block {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.pitch-head {
+  padding: 12px 16px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg3);
+}
+.pitch-text {
+  padding: 16px;
+  font-size: 12px;
+  color: var(--text2);
+  font-style: italic;
+  line-height: 1.7;
+}
+
+/* ─── CAUTION ─────────────────────────────── */
+.caution {
+  background: rgba(251,191,36,0.06);
+  border: 1px solid rgba(251,191,36,0.25);
+  border-left: 3px solid var(--amber);
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin-bottom: 20px;
+}
+.caution-title { font-size: 12px; font-weight: 700; color: var(--amber); margin-bottom: 5px; }
+.caution-body { font-size: 12px; color: var(--text2); line-height: 1.6; }
+
+/* ─── CHECKLIST ───────────────────────────── */
+.checklist { display: flex; flex-direction: column; gap: 6px; }
+.check-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  font-size: 12px;
+  color: var(--text2);
+  padding: 10px 14px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 8px;
+  line-height: 1.55;
+}
+.check-icon { flex-shrink: 0; margin-top: 1px; color: var(--teal); font-size: 13px; }
+
+/* ─── POTENTIAL BOX ───────────────────────── */
+.potential-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-top: 20px; }
+.potential-item {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  font-size: 12px;
+  color: var(--text2);
+  line-height: 1.65;
+}
+
+/* ─── DIVIDER ─────────────────────────────── */
+.divider {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--text);
+  margin: 32px 0 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ─── FOOTER ──────────────────────────────── */
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 24px 64px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 48px;
+}
+.footer-left { font-size: 12px; color: var(--text3); }
+.footer-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 14px;
+  color: var(--gold);
+  font-weight: 600;
+  letter-spacing: .02em;
+}
+
+/* ─── RESPONSIVE ──────────────────────────── */
+@media (max-width: 900px) {
+  .header, .nav, .main, .footer { padding-left: 24px; padding-right: 24px; }
+  .stat-row { grid-template-columns: 1fr 1fr; }
+  .grid-2, .grid-3, .pros-cons, .model-body, .pitch-pair { grid-template-columns: 1fr; }
+  .model-col { border-right: none; border-bottom: 1px solid var(--border); }
+  .potential-row { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-badge">Note stratégique confidentielle</div>
+  <h1 class="header-title">BDO France <span>×</span> Myrillion Labs<br>Analyse Partenariat</h1>
+  <p class="header-sub">Étude complète du potentiel de distribution via BDO France — structure, opportunités, modèles d'accord, méthode d'approche et contacts prioritaires.</p>
+  <div class="header-meta">
+    <div class="meta-item">
+      <span class="meta-label">Préparé par</span>
+      <span class="meta-value">Myrillion Labs</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Vecteur d'introduction</span>
+      <span class="meta-value">Thibault Verbiest · Metalaw</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Statut BDO</span>
+      <span class="meta-value">5e réseau mondial · CA 288M€ (2025)</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Priorité</span>
+      <span class="meta-value" style="color:var(--gold)">Haute — M2–3</span>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <button class="nav-btn active" onclick="show('structure')">1. Structure BDO</button>
+  <button class="nav-btn" onclick="show('potentiel')">2. Potentiel</button>
+  <button class="nav-btn" onclick="show('modeles')">3. Modèles d'accord</button>
+  <button class="nav-btn" onclick="show('approche')">4. Méthode d'approche</button>
+  <button class="nav-btn" onclick="show('contacts')">5. Contacts & Pitchs</button>
+</nav>
+
+<div class="main">
+
+<!-- ═══ SECTION 1 : STRUCTURE ═══ -->
+<div id="section-structure" class="section active">
+  <p class="section-intro">BDO France est le 5e réseau mondial d'audit, d'expertise et de conseil. Son positionnement PME/ETI et sa dynamique Advisory en pleine accélération en font un partenaire structurellement différent des Big 4 — et beaucoup plus accessible.</p>
+
+  <div class="stat-row">
+    <div class="stat">
+      <div class="stat-val" style="color:var(--gold)">288M€</div>
+      <div class="stat-label">CA 2025</div>
+      <div class="stat-sub">+9% vs 2024 · +15% en 2024</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val" style="color:var(--teal)">2 000+</div>
+      <div class="stat-label">Collaborateurs</div>
+      <div class="stat-sub">~50 bureaux en France</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val" style="color:var(--blue)">164</div>
+      <div class="stat-label">Pays</div>
+      <div class="stat-sub">120 000 collaborateurs mondiaux</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val" style="color:var(--purple)">5e</div>
+      <div class="stat-label">Rang mondial</div>
+      <div class="stat-sub">Après les Big 4</div>
+    </div>
+  </div>
+
+  <div class="grid-2" style="gap:16px;margin-bottom:24px">
+    <div class="card">
+      <div class="card-title">ADN & positionnement stratégique</div>
+      <div class="svc-list">
+        <div class="svc synergy">
+          <div class="svc-body"><strong style="color:var(--text)">Cible historique :</strong> PME, ETI et mid-market — pas uniquement les grands comptes comme les Big 4. C'est exactement la clientèle qui a des trésoreries crypto non gérées.</div>
+        </div>
+        <div class="svc synergy">
+          <div class="svc-body"><strong style="color:var(--text)">Entreprise à Mission :</strong> Premier cabinet d'audit français à adopter ce statut. Raison d'être : <em>"Être le socle et le tremplin de ceux qui investissent l'avenir."</em> Culture ouverte à l'innovation non-standard.</div>
+        </div>
+        <div class="svc synergy">
+          <div class="svc-body"><strong style="color:var(--text)">Transformation digitale :</strong> Investissement dans l'IA (Superlinear), plan stratégique 2031 centré sur la digitalisation. BDO cherche activement des solutions tech à embarquer.</div>
+        </div>
+        <div class="svc synergy">
+          <div class="svc-body"><strong style="color:var(--text)">Leadership :</strong> Arnaud Naudan (Président Directoire), Grégoire Bisson (DG). Structure Directoire = prises de décision plus agiles qu'une structure partnership classique.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Les 5 pôles — analyse d'accessibilité Myrillion</div>
+      <div class="svc-list">
+        <div class="svc target">
+          <div class="svc-head">
+            <span class="svc-name">BDO Advisory — Conseil</span>
+            <span class="badge badge-gold">🎯 Cible principale</span>
+          </div>
+          <div class="svc-body">Restructuring, M&A, transaction services, transformation & performance. Acquisitions récentes : June Partners, AIRPAJE, Advance Capital (PE mid-market).</div>
+          <div class="svc-why">Porte d'entrée naturelle — les conseillers Advisory touchent des dirigeants en transformation dont beaucoup ont des crypto. Pas soumis aux règles d'indépendance de l'audit.</div>
+        </div>
+        <div class="svc secondary">
+          <div class="svc-head">
+            <span class="svc-name">Expertise Comptable</span>
+            <span class="badge badge-blue">🎯 Cible secondaire</span>
+          </div>
+          <div class="svc-body">Tenue comptable, reporting, comptes consolidés. Clients PME/ETI en relation permanente.</div>
+          <div class="svc-why">Canal de prescription naturel : l'expert-comptable voit les flux crypto dans les bilans avant tout le monde.</div>
+        </div>
+        <div class="svc synergy">
+          <div class="svc-head">
+            <span class="svc-name">Juridique & Fiscal</span>
+            <span class="badge badge-amber">Synergique</span>
+          </div>
+          <div class="svc-body">Avocats à la cour, fiscalité d'entreprise et internationale.</div>
+          <div class="svc-why">Thibault Verbiest (Metalaw) = porte d'entrée directe. Les fiscalistes BDO traitent la fiscalité crypto — ils ont besoin d'un outil de gouvernance opérationnel.</div>
+        </div>
+        <div class="svc caution">
+          <div class="svc-head">
+            <span class="svc-name">Audit Légal</span>
+            <span class="badge badge-red">⚠ Hors scope</span>
+          </div>
+          <div class="svc-body">Commissariat aux comptes, certification des comptes annuels.</div>
+          <div class="svc-why">Règles d'indépendance strictes — un auditeur légal ne peut pas commercialement référencer des prestataires à ses clients. À éviter absolument.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="border-left: 3px solid var(--teal)">
+    <div class="card-title">Dynamique 2025–2031 — pourquoi le timing est favorable</div>
+    <div class="grid-3">
+      <div style="font-size:13px;color:var(--text2);line-height:1.65;padding:16px;background:rgba(255,255,255,0.03);border-radius:10px">BDO France vise dans son plan 2031 à <strong style="color:var(--text)">"consolider des expertises pluridisciplinaires couvrant les enjeux financiers, opérationnels, technologiques et réglementaires."</strong> Les crypto-actifs sont exactement à cette intersection.</div>
+      <div style="font-size:13px;color:var(--text2);line-height:1.65;padding:16px;background:rgba(255,255,255,0.03);border-radius:10px">BDO Advisory a absorbé <strong style="color:var(--text)">Advance Capital</strong> (PE mid-market) en 2024. Leurs clients fonds ont des portefeuilles de startups Web3 avec des trésoreries crypto. Besoin immédiat d'une solution institutionnelle.</div>
+      <div style="font-size:13px;color:var(--text2);line-height:1.65;padding:16px;background:rgba(255,255,255,0.03);border-radius:10px">BDO cite explicitement la <strong style="color:var(--text)">"transformation digitale et l'IA"</strong> comme axes prioritaires 2026. Un partenariat IA + DeFi s'inscrit parfaitement dans ce narratif — et différencie BDO des Big 4 sur ce segment.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SECTION 2 : POTENTIEL ═══ -->
+<div id="section-potentiel" class="section">
+  <p class="section-intro">L'analyse honnête et équilibrée — les raisons pour lesquelles ce partenariat a du sens, et les limites réelles à anticiper avant de lancer la démarche.</p>
+
+  <div class="pros-cons">
+    <div class="pc-block">
+      <div class="pc-head pro">✓ Arguments pour le partenariat</div>
+      <div class="pc-body">
+        <div class="pc-item"><span class="pc-item-icon">🎯</span><span>Base clients PME/ETI = exactement la cible Myrillion. BDO voit les crypto dans les bilans mais ne peut pas conseiller sur la partie DeFi opérationnelle seul.</span></div>
+        <div class="pc-item"><span class="pc-item-icon">📈</span><span>BDO Advisory est en forte croissance et cherche à élargir son offre. Un module "crypto treasury advisory" leur donne un avantage différenciant vs les Big 4 sur ce segment.</span></div>
+        <div class="pc-item"><span class="pc-item-icon">🤖</span><span>BDO investit dans l'IA (Superlinear). L'AI Governance Generator parle exactement leur langage — outil IA B2B institutionnel, pas grand public.</span></div>
+        <div class="pc-item"><span class="pc-item-icon">🌍</span><span>BDO est international — 164 pays. Un accord BDO France peut ouvrir les marchés Belgique, Suisse, Luxembourg, UAE via le réseau mondial.</span></div>
+        <div class="pc-item"><span class="pc-item-icon">🏅</span><span>"Entreprise à Mission" avec culture d'innovation déclarée. Bien plus réceptif à des partenariats non-standards qu'un Big 4 traditionnel.</span></div>
+        <div class="pc-item"><span class="pc-item-icon">🤝</span><span>Thibault Verbiest = porte d'entrée directe et chaleureuse. Ce n'est pas un cold outreach — c'est une introduction de confiance dans un monde où les relations comptent tout.</span></div>
+      </div>
+    </div>
+    <div class="pc-block">
+      <div class="pc-head con">⚠ Limites & risques à anticiper</div>
+      <div class="pc-body">
+        <div class="pc-item"><span class="pc-item-icon">🚫</span><span><strong>L'audit légal est interdit.</strong> Les commissaires aux comptes ne peuvent PAS commercialement référencer Myrillion (règles d'indépendance). Passer exclusivement par Advisory/Expertise/Juridique.</span></div>
+        <div class="pc-item"><span class="pc-item-icon">🐌</span><span><strong>Processus de décision long.</strong> Même via une intro chaleureuse, un accord de partenariat BDO prendra 2–4 mois minimum. Prévoir un timeline réaliste.</span></div>
+        <div class="pc-item"><span class="pc-item-icon">📋</span><span><strong>Due diligence institutionnelle.</strong> BDO voudra auditer Myrillion avant de s'associer — structure légale, assurances, conformité, références. Être prêt à ce niveau de scrutin.</span></div>
+        <div class="pc-item"><span class="pc-item-icon">💼</span><span><strong>Cadre : formation & conseil, pas distribution financière.</strong> BDO Advisory peut recommander et former, mais ne peut pas "distribuer" des produits d'investissement au sens réglementaire.</span></div>
+        <div class="pc-item"><span class="pc-item-icon">📊</span><span><strong>Track record requis.</strong> BDO ne s'associe pas à une entité sans références clients. Idéalement 3–5 clients actifs avant d'initier la démarche formelle.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="border-left: 3px solid var(--purple)">
+    <div class="card-title">Le potentiel chiffré — ce que BDO représente comme canal</div>
+    <div class="potential-row">
+      <div class="potential-item">BDO France dispose de <strong style="color:var(--text)">50 bureaux régionaux</strong> touchant des milliers de PME/ETI. Si 1% des clients a une tréso crypto déployable → plusieurs centaines de prospects qualifiés.</div>
+      <div class="potential-item">BDO Advisory a intégré <strong style="color:var(--text)">Advance Capital</strong> (PE mid-market). Ces fonds ont des participations dans des startups Web3/tech avec tréso crypto — cible directe pour le Morpho Institutional.</div>
+      <div class="potential-item">Un accord BDO France active potentiellement le réseau <strong style="color:var(--text)">BDO international (164 pays)</strong> — Belgique, Suisse, Luxembourg, UAE : tous des marchés prioritaires de Myrillion.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SECTION 3 : MODÈLES ═══ -->
+<div id="section-modeles" class="section">
+  <p class="section-intro">Trois modèles de partenariat possibles, du plus simple au plus intégré. La formation est le point d'entrée naturel et réglementairement propre.</p>
+
+  <div class="caution">
+    <div class="caution-title">⚠ Point réglementaire important</div>
+    <div class="caution-body">BDO Advisory peut recommander des prestataires à ses clients dans le cadre de missions de conseil. Mais BDO ne peut pas "distribuer" des produits financiers sans agrément. Le bon cadre juridique est : <strong>formation professionnelle + prescription de prestataire</strong>. Thibault Verbiest peut structurer cela proprement en une semaine.</div>
+  </div>
+
+  <div class="model featured">
+    <div class="model-head">
+      <div class="model-head-left">
+        <div class="model-number">1</div>
+        <div class="model-title">Partenariat Formation & Certification</div>
+      </div>
+      <span class="badge badge-gold">Modèle recommandé · Entrée naturelle</span>
+    </div>
+    <div class="model-body">
+      <div class="model-col">
+        <div class="model-col-label">Ce que Myrillion apporte</div>
+        <div class="model-col-text">Module "Crypto Treasury Management" de 3h co-brandé BDO × Myrillion. Certificat de participation. AI Governance Generator accessible aux clients formés. Support pédagogique BDO-brandé.</div>
+      </div>
+      <div class="model-col">
+        <div class="model-col-label">Ce que BDO gagne</div>
+        <div class="model-col-text">Module différenciant sur un sujet demandé. Facturation formation à ses clients (BDO facture, redevance à Myrillion). Position de leadership. Avantage concurrentiel vs Big 4.</div>
+      </div>
+      <div class="model-col">
+        <div class="model-col-label">Modèle économique</div>
+        <div class="model-col-text">BDO facture €1,500/demi-journée. Myrillion reçoit 40% = €600/session. Myrillion forme les formateurs BDO → multiplication via les 50 bureaux.</div>
+      </div>
+    </div>
+    <div class="model-pitch">
+      <div class="model-pitch-label">Argument pour BDO</div>
+      <div class="model-pitch-text">"Vos clients PME/ETI vous posent des questions sur leur crypto. Vous n'avez pas encore de réponse structurée. Myrillion vous donne un module clé en main, co-brandé BDO, que vos équipes Advisory et expertise-comptable peuvent délivrer dès demain. Vous restez l'expert de confiance — nous vous donnons la matière première."</div>
+    </div>
+  </div>
+
+  <div class="model featured">
+    <div class="model-head">
+      <div class="model-head-left">
+        <div class="model-number">2</div>
+        <div class="model-title">Accord de Prescription / Referral</div>
+      </div>
+      <span class="badge badge-purple">Priorité stratégique · Flux clients récurrents</span>
+    </div>
+    <div class="model-body">
+      <div class="model-col">
+        <div class="model-col-label">Ce que Myrillion apporte</div>
+        <div class="model-col-text">Fiche produit co-brandée, template de recommandation client, AI Governance Generator en marque blanche BDO. Formation des conseillers (2h) pour identifier et qualifier les clients cibles.</div>
+      </div>
+      <div class="model-col">
+        <div class="model-col-label">Ce que BDO gagne</div>
+        <div class="model-col-text">Commission de prescription (10% honoraires setup + 5% fees SMA annuels). Valeur ajoutée pour le client sans effort supplémentaire. Renforcement de la relation sur un sujet stratégique.</div>
+      </div>
+      <div class="model-col">
+        <div class="model-col-label">Volume attendu</div>
+        <div class="model-col-text">3 clients BDO référés par trimestre. 10 bureaux actifs = 30 introductions/an. À 30% de conversion = 9 clients/an issus de BDO seul.</div>
+      </div>
+    </div>
+    <div class="model-pitch">
+      <div class="model-pitch-label">Argument pour BDO Advisory</div>
+      <div class="model-pitch-text">"Vos équipes rencontrent des dirigeants avec des trésoreries crypto non optimisées. Vous ne pouvez pas les gérer directement — mais vous pouvez les orienter vers le meilleur spécialiste. Myrillion vous donne un accord de prescription avec commission et les outils pour identifier et qualifier ces clients en 10 minutes."</div>
+    </div>
+  </div>
+
+  <div class="model">
+    <div class="model-head">
+      <div class="model-head-left">
+        <div class="model-number">3</div>
+        <div class="model-title">Co-développement & Co-branding intégré</div>
+      </div>
+      <span class="badge badge-teal">Modèle ambitieux · Après track record M12+</span>
+    </div>
+    <div class="model-body">
+      <div class="model-col">
+        <div class="model-col-label">Vision</div>
+        <div class="model-col-text">BDO × Myrillion co-développent un "Guide de la Gouvernance des Actifs Numériques pour les PME/ETI" — publié sous les deux marques. BDO distribue à son réseau, Myrillion exécute les mandats.</div>
+      </div>
+      <div class="model-col">
+        <div class="model-col-label">Contenu joint</div>
+        <div class="model-col-text">Livre blanc co-brandé. Module formation certifiante. Template d'audit de tréso crypto. Études de cas clients communs. Présence commune aux événements Finance Innovation.</div>
+      </div>
+      <div class="model-col">
+        <div class="model-col-label">Timing réaliste</div>
+        <div class="model-col-text">Nécessite 6–12 mois de relation établie + 5 clients communs. À construire après les modèles 1 et 2. Objectif M12–18, pas le point de départ.</div>
+      </div>
+    </div>
+    <div class="model-pitch">
+      <div class="model-pitch-label">La vision long terme</div>
+      <div class="model-pitch-text">"BDO devient la référence française pour l'accompagnement des PME/ETI dans leur transformation vers les actifs numériques — avec Myrillion comme bras armé opérationnel. Nos marques combinées créent une offre unique qu'aucun concurrent ne peut répliquer rapidement."</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SECTION 4 : APPROCHE ═══ -->
+<div id="section-approche" class="section">
+  <p class="section-intro">Comment activer ce partenariat de manière professionnelle, en respectant la culture institutionnelle de BDO. L'introduction de Thibault Verbiest est le levier décisif — ne pas brûler les étapes.</p>
+
+  <div class="caution">
+    <div class="caution-title">Règle d'or : ne jamais contacter l'audit légal</div>
+    <div class="caution-body">Les commissaires aux comptes BDO sont soumis aux règles d'indépendance. Tout contact commercial via ce département sera refusé et risque de créer une mauvaise première impression. La porte d'entrée est exclusivement <strong>BDO Advisory</strong>, <strong>Expertise Comptable</strong>, et <strong>Juridique & Fiscal</strong> via Thibault Verbiest.</div>
+  </div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">Étape 1</div>
+      <div class="step-connector">
+        <div class="step-dot" style="border-color:var(--teal);background:var(--teal-dim)"></div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-title">Thibault Verbiest prépare l'introduction <span class="badge badge-teal">Cette semaine · Préalable absolu</span></div>
+        <div class="step-body">Avant tout contact BDO, Thibault identifie son contact précis dans le réseau BDO — idéalement un associé BDO Advisory ou un directeur Juridique & Fiscal. Il rédige un email d'introduction en 3 phrases qui positionne Myrillion comme "la solution que ses clients lui demandent." Ce n'est pas un pitch commercial — c'est une mise en relation entre professionnels de confiance. Cette étape est non-négociable avant tout autre mouvement.</div>
+        <div class="step-chips">
+          <span class="badge badge-teal">Thibault Verbiest</span>
+          <span class="badge badge-dim">Réseau avocats/auditeurs Paris</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">Étape 2</div>
+      <div class="step-connector">
+        <div class="step-dot" style="border-color:var(--blue);background:var(--blue-dim)"></div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-title">Premier call 30 min — "Explorer, pas pitcher" <span class="badge badge-blue">J+7 à J+14</span></div>
+        <div class="step-body">L'objectif du premier appel n'est PAS de vendre Myrillion. C'est de comprendre la réalité BDO : est-ce que leurs clients posent des questions crypto ? Qui traite le sujet ? Ont-ils déjà une politique partenaire sur les actifs numériques ? Le format "curiosité professionnelle" est bien plus efficace qu'un pitch dans un environnement institutionnel. Joey Dib + Thibault Verbiest participent ensemble.</div>
+        <div class="step-chips">
+          <span class="badge badge-blue">Joey Dib + Thibault Verbiest</span>
+          <span class="badge badge-dim">30 min max · écoute avant pitch</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">Étape 3</div>
+      <div class="step-connector">
+        <div class="step-dot" style="border-color:var(--gold);background:var(--gold-dim)"></div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-title">Livrer une démonstration de valeur immédiate <span class="badge badge-gold">J+14 à J+21</span></div>
+        <div class="step-body">Après le premier call, envoyer un "cadeau de valeur" : rapport Dead Money Calculator sur un cas anonymisé PME française ("startup SaaS €2M de tréso USDC sur Binance — voici ce qu'elle perd par mois") + un exemple complet d'output AI Governance Generator. BDO voit le produit en action avant toute négociation commerciale. L'objectif : que l'interlocuteur BDO montre spontanément ce document à ses collègues et à ses clients.</div>
+        <div class="step-chips">
+          <span class="badge badge-gold">Demo AI Governance Generator</span>
+          <span class="badge badge-amber">Cas pratique anonymisé PME</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">Étape 4</div>
+      <div class="step-connector">
+        <div class="step-dot" style="border-color:var(--amber);background:var(--amber-dim)"></div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-title">Proposer un pilote sur 1 bureau régional <span class="badge badge-amber">J+30 à J+60</span></div>
+        <div class="step-body">Ne pas demander un accord national d'emblée — erreur classique avec les grands cabinets. Proposer un pilote sur UN bureau (BDO Lyon où Advisory est actif, ou BDO Paris Lamartine). Objectif : former 5 conseillers sur le sujet crypto en 2h, outiller avec la fiche de qualification client, mesurer les leads générés en 30 jours. Ce format "pilote mesurable" est exactement le langage que BDO comprend.</div>
+        <div class="step-chips">
+          <span class="badge badge-amber">Pilote 1 bureau d'abord</span>
+          <span class="badge badge-dim">KPIs clairs et mesurables</span>
+          <span class="badge badge-dim">BDO Lyon ou Paris Lamartine</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">Étape 5</div>
+      <div class="step-connector">
+        <div class="step-dot" style="border-color:var(--purple);background:var(--purple-dim)"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-title">Accord national après validation du pilote <span class="badge badge-purple">J+90 à J+120</span></div>
+        <div class="step-body">Avec 2–3 clients pilotes générés et un bilan chiffré (X leads, Y conversions, Z€ de valeur générée), proposer l'accord national : formation de tous les bureaux Advisory + Expertise, accord de prescription formalisé, co-branding sur les supports, accès AI Governance Generator pour tous les conseillers BDO. À ce stade, BDO a vu le produit fonctionner sur ses propres clients — la conviction est intrinsèque.</div>
+        <div class="step-chips">
+          <span class="badge badge-purple">Accord national formalisé</span>
+          <span class="badge badge-teal">Co-branding + prescription</span>
+          <span class="badge badge-dim">50 bureaux actifs</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SECTION 5 : CONTACTS ═══ -->
+<div id="section-contacts" class="section">
+  <p class="section-intro">Les bons interlocuteurs chez BDO France — et le discours précis pour chacun d'entre eux.</p>
+
+  <div class="divider">Interlocuteurs prioritaires</div>
+
+  <div class="contact gold-border">
+    <div class="contact-name">Associés BDO Advisory — Conseil en Transformation & Performance</div>
+    <div class="contact-role">Direction nationale BDO Advisory · Paris (siège) + Lyon</div>
+    <div class="contact-why">BDO Advisory est la division en plus forte croissance — c'est là que les ambitions de différenciation sont les plus fortes. Les associés Advisory cherchent des offres nouvelles pour leurs clients ETI. La crypto treasury advisory est une offre manquante dans leur portefeuille actuel.</div>
+    <div class="contact-hook" style="background:var(--gold-dim);color:var(--gold)">Accès via : Thibault Verbiest (réseau avocats d'affaires) · LinkedIn ciblé sur associés BDO Advisory</div>
+  </div>
+
+  <div class="contact blue-border">
+    <div class="contact-name">Grégoire Bisson — Directeur Général BDO France</div>
+    <div class="contact-role">DG de BDO France · Co-pilote du plan stratégique 2031</div>
+    <div class="contact-why">Niveau de décision pour un accord de partenariat national. Ne pas contacter en premier — arriver à lui après validation du pilote par un associé Advisory. C'est lui qui avalise les partenariats stratégiques. Thibault Verbiest peut accéder à ce niveau si le pilote est concluant.</div>
+    <div class="contact-hook" style="background:var(--blue-dim);color:var(--blue)">Niveau : accord national uniquement · Ne pas approcher à froid</div>
+  </div>
+
+  <div class="contact teal-border">
+    <div class="contact-name">Directeurs département Juridique & Fiscal BDO</div>
+    <div class="contact-role">Avocats à la cour · Fiscalité d'entreprise · Fiscalité internationale</div>
+    <div class="contact-why">Thibault Verbiest est avocat — ce département est sa porte d'entrée naturelle chez BDO. Les fiscalistes BDO traitent déjà les questions de fiscalité crypto. Ils ont besoin de s'appuyer sur un expert DeFi pour la partie opérationnelle. Myrillion est ce partenaire manquant.</div>
+    <div class="contact-hook" style="background:var(--teal-dim);color:var(--teal)">Accès direct : Thibault Verbiest via réseau barreaux parisiens</div>
+  </div>
+
+  <div class="contact purple-border">
+    <div class="contact-name">Directeurs de bureaux régionaux — Lyon, Bordeaux, Toulouse, Nantes</div>
+    <div class="contact-role">Responsables bureau régional · Mix expertise comptable + advisory + juridique</div>
+    <div class="contact-why">Les bureaux régionaux sont plus agiles et moins bureaucratiques que Paris. Un directeur régional peut tester le module formation sur ses clients sans attendre une validation nationale.</div>
+    <div class="contact-hook" style="background:var(--purple-dim);color:var(--purple)">Cible pilote : BDO Lyon (Advisory fort) ou BDO Paris Lamartine (siège)</div>
+  </div>
+
+  <div class="divider" style="margin-top:40px">Pitchs par interlocuteur</div>
+
+  <div class="pitch-pair">
+    <div class="pitch-block">
+      <div class="pitch-head" style="color:var(--gold)">Pour un Associé BDO Advisory</div>
+      <div class="pitch-text">"Vous accompagnez des ETI et des portfolios PE. Beaucoup ont des trésoreries crypto non documentées — c'est un angle mort dans vos missions. Myrillion vous donne une offre clé en main : un outil IA de gouvernance (AI Governance Generator), une méthode de déploiement institutionnel sur Morpho Blue, et un accord de prescription. Vous identifiez le client, vous faites l'introduction, vous touchez une commission. Nous gérons l'exécution."</div>
+    </div>
+    <div class="pitch-block">
+      <div class="pitch-head" style="color:var(--blue)">Pour un Directeur Juridique & Fiscal</div>
+      <div class="pitch-text">"Vos clients vous interrogent sur la fiscalité crypto — mais derrière la question fiscale, il y a souvent une tréso non structurée. Myrillion produit la documentation de gouvernance complète co-signée par Metalaw (Thibault Verbiest) que vous intégrez dans votre dossier fiscal. Un outil qui renforce votre mission et protège vos clients. Pour ceux qui veulent aller plus loin, Myrillion déploie le capital — vous percevez une commission de prescription."</div>
+    </div>
+    <div class="pitch-block">
+      <div class="pitch-head" style="color:var(--teal)">Pour un Expert-Comptable BDO</div>
+      <div class="pitch-text">"Dans les bilans de vos clients PME/ETI, vous voyez des lignes crypto-actifs. Votre client vous demande comment optimiser cette poche. Myrillion est votre réponse : nous produisons en 4 minutes la documentation de gouvernance et le plan de déploiement. Vous restez l'expert de la partie comptable et fiscale — nous gérons la partie DeFi. Accord de prescription : vous référez, vous percevez votre commission."</div>
+    </div>
+    <div class="pitch-block">
+      <div class="pitch-head" style="color:var(--purple)">Pour le DG — Accord national</div>
+      <div class="pitch-text">"BDO se positionne comme 'le socle de ceux qui investissent l'avenir.' Vos clients PME/ETI investissent dans les actifs numériques sans cadre de gouvernance. Myrillion apporte ce cadre, avec l'IA comme fer de lance. Un accord BDO × Myrillion fait de vous le premier cabinet d'audit et conseil français à proposer une réponse institutionnelle complète sur la gestion de tréso DeFi. Différenciation concurrentielle immédiate vs les Big 4."</div>
+    </div>
+  </div>
+
+  <div class="divider" style="margin-top:40px">Ce qu'il faut avoir préparé avant le premier contact</div>
+  <div class="card" style="border-left: 3px solid var(--amber)">
+    <div class="checklist">
+      <div class="check-item"><span class="check-icon">✓</span><span><strong style="color:var(--text)">3–5 références clients</strong> (même anonymisées) — BDO ne s'associe pas à une entité sans track record visible</span></div>
+      <div class="check-item"><span class="check-icon">✓</span><span><strong style="color:var(--text)">Un exemple concret d'output AI Governance Generator</strong> — document complet, professionnel, co-brandé Metalaw × Myrillion</span></div>
+      <div class="check-item"><span class="check-icon">✓</span><span><strong style="color:var(--text)">Une fiche produit BDO-brandée d'1 page</strong> préparée par Benjamin Bouchard — "Comment Myrillion accompagne les clients BDO sur leur tréso crypto"</span></div>
+      <div class="check-item"><span class="check-icon">✓</span><span><strong style="color:var(--text)">Un accord de partenariat rédigé par Thibault Verbiest</strong> — clair sur les commissions, responsabilités et limites réglementaires</span></div>
+      <div class="check-item"><span class="check-icon">✓</span><span><strong style="color:var(--text)">La preuve du partenariat Morpho</strong> — "Distributeur officiel d'un protocole à $13B TVL, partenaire de SG Forge et Apollo" change la perception instantanément chez BDO</span></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<div class="footer">
+  <div class="footer-left">Confidentiel — Usage interne Myrillion Labs · Ne pas diffuser</div>
+  <div class="footer-logo">Myrillion Labs LLC</div>
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('section-' + id).classList.add('active');
+  const ids = ['structure','potentiel','modeles','approche','contacts'];
+  document.querySelectorAll('.nav-btn')[ids.indexOf(id)].classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
